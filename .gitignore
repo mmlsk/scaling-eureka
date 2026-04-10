@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Runtime
+.cache/
+tmp/
+temp/
+
+# OS
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# SSL Certificates (if stored locally - NOT RECOMMENDED)
+*.pem
+*.key
+*.crt
+*.cer
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# IDE temp files
+.editorconfig
+.eslintignore
+.prettierignore
+
+# Testing
+coverage/
+.nyc_output/
+
+# System files
+.editorconfig
+.gitattributes
