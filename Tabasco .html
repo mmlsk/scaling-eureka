@@ -3042,12 +3042,46 @@ function switchMed(btn,key){
 function mSet(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
 function mBadge(id,cls,text){const el=document.getElementById(id);if(!el)return;el.className='calc-badge '+cls;el.textContent=text;}
 
+// ── Medical Validation Utilities ──
+const medicalValidation = {
+  creatinine: (val) => val >= 0.1 && val <= 20,
+  age: (val) => val >= 0 && val <= 120,
+  weight: (val) => val >= 1 && val <= 300,
+  height: (val) => val >= 50 && val <= 250,
+  temperature: (val) => val >= 35 && val <= 42,
+  heartRate: (val) => val >= 30 && val <= 220,
+  systolicBP: (val) => val >= 70 && val <= 250,
+  diastolicBP: (val) => val >= 40 && val <= 150,
+  validate: function(field, value) {
+    if (!this[field]) return true;
+    return this[field](value);
+  },
+  getError: function(field, value) {
+    const ranges = {
+      creatinine: '0.1–20 mg/dL',
+      age: '0–120 lat',
+      weight: '1–300 kg',
+      height: '50–250 cm',
+      temperature: '35–42°C',
+      heartRate: '30–220 bpm',
+      systolicBP: '70–250 mmHg',
+      diastolicBP: '40–150 mmHg'
+    };
+    return `BŁĄD: ${field} poza zakresem (${ranges[field] || 'niedozwolony'})`;
+  }
+};
+
 // ── eGFR CKD-EPI 2021 ──
 function mCalcEGFR(){
   const scr=+document.getElementById('egfr-scr').value;
   const age=+document.getElementById('egfr-age').value;
   const sex=document.getElementById('egfr-sex').value;
-  if(!scr||!age) return;
+  
+  // Validate inputs
+  if(!scr||!age) { mSet('egfr-val','---'); mSet('egfr-interp','Brak danych'); return; }
+  if(!medicalValidation.creatinine(scr)) { mSet('egfr-val','BŁĄD'); mSet('egfr-interp', medicalValidation.getError('creatinine', scr)); return; }
+  if(!medicalValidation.age(age)) { mSet('egfr-val','BŁĄD'); mSet('egfr-interp', medicalValidation.getError('age', age)); return; }
+  
   const kappa=sex==='F'?0.7:0.9,alpha=sex==='F'?-0.241:-0.302,femFactor=sex==='F'?1.012:1;
   const r=scr/kappa;
   const gfr=142*Math.pow(Math.min(r,1),alpha)*Math.pow(Math.max(r,1),-1.200)*Math.pow(0.9938,age)*femFactor;
@@ -3069,7 +3103,13 @@ function mCalcCG(){
   const age=+document.getElementById('cg-age').value;
   const wt=+document.getElementById('cg-wt').value;
   const sex=document.getElementById('cg-sex').value;
-  if(!scr||!age||!wt) return;
+  
+  // Validate inputs
+  if(!scr||!age||!wt) { mSet('cg-val','---'); mSet('cg-interp','Brak danych'); return; }
+  if(!medicalValidation.creatinine(scr)) { mSet('cg-val','BŁĄD'); mSet('cg-interp', medicalValidation.getError('creatinine', scr)); return; }
+  if(!medicalValidation.age(age)) { mSet('cg-val','BŁĄD'); mSet('cg-interp', medicalValidation.getError('age', age)); return; }
+  if(!medicalValidation.weight(wt)) { mSet('cg-val','BŁĄD'); mSet('cg-interp', medicalValidation.getError('weight', wt)); return; }
+  
   const crcl=((140-age)*wt/(72*scr))*(sex==='F'?0.85:1);
   const c=Math.round(crcl);
   mSet('cg-val',c);
@@ -3181,11 +3221,16 @@ function mCalcCentor(){
 function mCalcBMI(){
   const wt=+document.getElementById('bmi-wt').value;
   const ht=+document.getElementById('bmi-ht').value;
-  if(!wt||!ht) return;
+  
+  // Validate inputs
+  if(!wt||!ht) { mSet('bmi-val','---'); mSet('bsa-val','---'); mSet('bmi-interp','Brak danych'); return; }
+  if(!medicalValidation.weight(wt)) { mSet('bmi-val','BŁĄD'); mSet('bsa-val','BŁĄD'); mSet('bmi-interp', medicalValidation.getError('weight', wt)); return; }
+  if(!medicalValidation.height(ht)) { mSet('bmi-val','BŁĄD'); mSet('bsa-val','BŁĄD'); mSet('bmi-interp', medicalValidation.getError('height', ht)); return; }
+  
   const h=ht/100,bmi=wt/(h*h),bsa=Math.sqrt((wt*ht)/3600);
   mSet('bmi-val',bmi.toFixed(1));mSet('bsa-val',bsa.toFixed(2));
   let cls,lev,interp;
-  if(bmi<18.5){cls='warn';lev='Niedowaga';interp='BMI&lt;18.5';}
+  if(bmi<18.5){cls='warn';lev='Niedowaga';interp='BMI<18.5';}
   else if(bmi<25){cls='ok';lev='Norma';interp='18.5–24.9';}
   else if(bmi<30){cls='warn';lev='Nadwaga';interp='25–29.9';}
   else if(bmi<35){cls='crit';lev='Otyłość I';interp='30–34.9';}
@@ -3199,9 +3244,9 @@ function mCalcCP(){
   const s=['cp-bil','cp-alb','cp-inr','cp-asc','cp-enc'].reduce((a,id)=>a+ +document.getElementById(id).value,0);
   mSet('cp-val',s);
   let cls,lev,interp;
-  if(s<=6){cls='ok';lev='Klasa A';interp='Śmiertelność &lt;5% / rok. Dobra rezerwa.';}
+  if(s<=6){cls='ok';lev='Klasa A';interp='Śmiertelność <5% / rok. Dobra rezerwa.';}
   else if(s<=9){cls='warn';lev='Klasa B';interp='Śmiertelność 20–30% / rok. Umiarkowana.';}
-  else{cls='crit';lev='Klasa C';interp='Śmiertelność &gt;80% / rok. Zła rezerwa.';}
+  else{cls='crit';lev='Klasa C';interp='Śmiertelność >80% / rok. Zła rezerwa.';}
   mBadge('cp-cls',cls,lev);mSet('cp-interp',interp);
 }
 
