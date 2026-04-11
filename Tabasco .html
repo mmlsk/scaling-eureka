@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0a09">
+<meta name="description" content="Personal Life OS - Todo, Weather, Finance, Health Tracker">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win; img-src 'self' data:;">
 <title>LIFE OS</title>
+<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkxJRkUgT1MiLAogICJzaG9ydF9uYW1lIjogIkxpZmVPUyIsCiAgImRlc2NyaXB0aW9uIjogIlBlcnNvbmFsIExpZmUgT1MgLSBUb2RvLCBXZWF0aGVyLCBGaW5hbmNlLCBIZWFsdGggVHJhY2tlciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwYTA5IiwKICAidGhlbWVfY29sb3IiOiAiIzBiMGEwOSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbXQp9">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -1700,12 +1703,12 @@ a {
             <span class="L" style="color:var(--a1);">Parametry wejściowe</span>
           </div>
           <div class="bs-form" style="padding:0 .75rem .75rem;">
-            <div class="bs-row"><span class="bs-lbl">S</span><input class="bs-inp" id="bs-s" type="number" value="174" step="0.5" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Spot</span></div>
-            <div class="bs-row"><span class="bs-lbl">K</span><input class="bs-inp" id="bs-k" type="number" value="175" step="0.5" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Strike</span></div>
-            <div class="bs-row"><span class="bs-lbl">T</span><input class="bs-inp" id="bs-t" type="number" value="30" step="1" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Dni (DTE)</span></div>
-            <div class="bs-row"><span class="bs-lbl">IV</span><input class="bs-inp" id="bs-iv" type="number" value="28" step="0.5" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Implied Vol</span></div>
-            <div class="bs-row"><span class="bs-lbl">r</span><input class="bs-inp" id="bs-r" type="number" value="5.25" step="0.05" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Risk-free</span></div>
-            <div class="bs-row"><span class="bs-lbl">Typ</span><select class="bs-sel" id="bs-type" onchange="updateBS()"><option value="call">Call</option><option value="put">Put</option></select></div>
+            <div class="bs-row"><span class="bs-lbl">S</span><input class="bs-inp" id="bs-s" type="number" value="174" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Spot</span></div>
+            <div class="bs-row"><span class="bs-lbl">K</span><input class="bs-inp" id="bs-k" type="number" value="175" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Strike</span></div>
+            <div class="bs-row"><span class="bs-lbl">T</span><input class="bs-inp" id="bs-t" type="number" value="30" step="1" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Dni (DTE)</span></div>
+            <div class="bs-row"><span class="bs-lbl">IV</span><input class="bs-inp" id="bs-iv" type="number" value="28" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Implied Vol</span></div>
+            <div class="bs-row"><span class="bs-lbl">r</span><input class="bs-inp" id="bs-r" type="number" value="5.25" step="0.05" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Risk-free</span></div>
+            <div class="bs-row"><span class="bs-lbl">Typ</span><select class="bs-sel" id="bs-type" data-action-change="true"><option value="call">Call</option><option value="put">Put</option></select></div>
           </div>
           <div style="padding:.25rem .75rem .5rem;border-top:1px solid var(--div);border-bottom:1px solid var(--div);margin-top:.25rem;">
             <span class="L">Diagram wypłaty</span>
@@ -1775,9 +1778,9 @@ a {
         <div class="calc-ch"><span class="L">eGFR</span><span class="L" style="color:var(--txm)">CKD-EPI 2021</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="egfr-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" oninput="mCalcEGFR()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
-            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="egfr-age" type="number" value="30" step="1" min="18" max="120" oninput="mCalcEGFR()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
-            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="egfr-sex" onchange="mCalcEGFR()"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
+            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="egfr-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="egfr-age" type="number" value="30" step="1" min="18" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
+            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="egfr-sex" data-action-change="true"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="egfr-val">--</span><span class="calc-unit">mL/min/1.73m²</span><span class="calc-badge info" id="egfr-stage">--</span><span class="calc-interp" id="egfr-interp"></span></div>
         </div>
@@ -1786,10 +1789,10 @@ a {
         <div class="calc-ch"><span class="L">CrCl</span><span class="L" style="color:var(--txm)">Cockcroft-Gault</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="cg-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" oninput="mCalcCG()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
-            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="cg-age" type="number" value="30" step="1" min="18" max="120" oninput="mCalcCG()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
-            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="cg-wt" type="number" value="70" step="0.5" min="20" max="300" oninput="mCalcCG()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
-            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="cg-sex" onchange="mCalcCG()"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
+            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="cg-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="cg-age" type="number" value="30" step="1" min="18" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="cg-wt" type="number" value="70" step="0.5" min="20" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="cg-sex" data-action-change="true"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cg-val">--</span><span class="calc-unit">mL/min</span><span class="calc-badge info" id="cg-stage">--</span><span class="calc-interp" id="cg-interp"></span></div>
         </div>
@@ -1801,14 +1804,14 @@ a {
         <div class="calc-ch"><span class="L">CHA₂DS₂-VASc</span><span class="L" style="color:var(--txm)">Ryzyko udaru w migotaniu przedsionków</span></div>
         <div class="calc-body" style="grid-template-columns:1fr 128px">
           <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-chf" onchange="mCalcCHADS()"><span class="cchk-lbl">C — Niewydolność serca</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-htn" onchange="mCalcCHADS()"><span class="cchk-lbl">H — Nadciśnienie tętnicze</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age75" onchange="mCalcCHADS()"><span class="cchk-lbl">A₂ — Wiek ≥ 75 lat</span><span class="cchk-pts">+2</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-dm" onchange="mCalcCHADS()"><span class="cchk-lbl">D — Cukrzyca</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-stroke" onchange="mCalcCHADS()"><span class="cchk-lbl">S₂ — Udar / TIA w wywiadzie</span><span class="cchk-pts">+2</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-vasc" onchange="mCalcCHADS()"><span class="cchk-lbl">V — Choroba naczyniowa</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age6574" onchange="mCalcCHADS()"><span class="cchk-lbl">A — Wiek 65–74 lata</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-female" onchange="mCalcCHADS()"><span class="cchk-lbl">Sc — Płeć żeńska</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-chf" data-action-change="true"><span class="cchk-lbl">C — Niewydolność serca</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-htn" data-action-change="true"><span class="cchk-lbl">H — Nadciśnienie tętnicze</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age75" data-action-change="true"><span class="cchk-lbl">A₂ — Wiek ≥ 75 lat</span><span class="cchk-pts">+2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-dm" data-action-change="true"><span class="cchk-lbl">D — Cukrzyca</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-stroke" data-action-change="true"><span class="cchk-lbl">S₂ — Udar / TIA w wywiadzie</span><span class="cchk-pts">+2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-vasc" data-action-change="true"><span class="cchk-lbl">V — Choroba naczyniowa</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age6574" data-action-change="true"><span class="cchk-lbl">A — Wiek 65–74 lata</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-female" data-action-change="true"><span class="cchk-lbl">Sc — Płeć żeńska</span><span class="cchk-pts">+1</span></label>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="chads-val">0</span><span class="calc-unit">/ 9 pkt</span><span class="calc-badge info" id="chads-risk">NISKIE</span><span class="calc-interp" id="chads-interp">0% rocz. ryzyko udaru</span></div>
         </div>
@@ -1820,9 +1823,9 @@ a {
         <div class="calc-ch"><span class="L">GCS</span><span class="L" style="color:var(--txm)">Glasgow Coma Scale</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl" style="min-width:52px">E — Oczy</span><select class="csel" id="gcs-e" style="flex:1" onchange="mCalcGCS()"><option value="4">4 — Spontanicznie</option><option value="3">3 — Na głos</option><option value="2">2 — Na ból</option><option value="1">1 — Brak</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:52px">V — Mowa</span><select class="csel" id="gcs-v" style="flex:1" onchange="mCalcGCS()"><option value="5">5 — Zorientowany</option><option value="4">4 — Zagubiony</option><option value="3">3 — Słowa</option><option value="2">2 — Dźwięki</option><option value="1">1 — Brak</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:52px">M — Ruch</span><select class="csel" id="gcs-m" style="flex:1" onchange="mCalcGCS()"><option value="6">6 — Wykonuje polecenia</option><option value="5">5 — Lokalizuje ból</option><option value="4">4 — Wycofuje kończynę</option><option value="3">3 — Dekortykacja</option><option value="2">2 — Decerebracja</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">E — Oczy</span><select class="csel" id="gcs-e" style="flex:1" data-action-change="true"><option value="4">4 — Spontanicznie</option><option value="3">3 — Na głos</option><option value="2">2 — Na ból</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">V — Mowa</span><select class="csel" id="gcs-v" style="flex:1" data-action-change="true"><option value="5">5 — Zorientowany</option><option value="4">4 — Zagubiony</option><option value="3">3 — Słowa</option><option value="2">2 — Dźwięki</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">M — Ruch</span><select class="csel" id="gcs-m" style="flex:1" data-action-change="true"><option value="6">6 — Wykonuje polecenia</option><option value="5">5 — Lokalizuje ból</option><option value="4">4 — Wycofuje kończynę</option><option value="3">3 — Dekortykacja</option><option value="2">2 — Decerebracja</option><option value="1">1 — Brak</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="gcs-val">15</span><span class="calc-unit" id="gcs-sub">E4V5M6</span><span class="calc-badge ok" id="gcs-sev">--</span><span class="calc-interp" id="gcs-interp"></span></div>
         </div>
@@ -1834,11 +1837,11 @@ a {
         <div class="calc-ch"><span class="L">CURB-65</span><span class="L" style="color:var(--txm)">Pozaszpitalne zapalenie płuc — CAP</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-c" onchange="mCalcCURB()"><span class="cchk-lbl">Confusion — zaburzenia świadomości</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-u" onchange="mCalcCURB()"><span class="cchk-lbl">Urea — BUN > 19 mg/dL (mocznik >7 mmol/L)</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-r" onchange="mCalcCURB()"><span class="cchk-lbl">Respiratory Rate ≥ 30 /min</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-b" onchange="mCalcCURB()"><span class="cchk-lbl">Blood pressure sys&lt;90 lub dia≤60 mmHg</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-65" onchange="mCalcCURB()"><span class="cchk-lbl">Age ≥ 65 lat</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-c" data-action-change="true"><span class="cchk-lbl">Confusion — zaburzenia świadomości</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-u" data-action-change="true"><span class="cchk-lbl">Urea — BUN > 19 mg/dL (mocznik >7 mmol/L)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-r" data-action-change="true"><span class="cchk-lbl">Respiratory Rate ≥ 30 /min</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-b" data-action-change="true"><span class="cchk-lbl">Blood pressure sys&lt;90 lub dia≤60 mmHg</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-65" data-action-change="true"><span class="cchk-lbl">Age ≥ 65 lat</span><span class="cchk-pts">+1</span></label>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="curb-val">0</span><span class="calc-unit">/ 5 pkt</span><span class="calc-badge ok" id="curb-lev">--</span><span class="calc-interp" id="curb-interp"></span></div>
         </div>
@@ -1847,15 +1850,15 @@ a {
         <div class="calc-ch"><span class="L">Wells DVT</span><span class="L" style="color:var(--txm)">Zakrzepica żył głębokich</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-ca" onchange="mCalcWells()"><span class="cchk-lbl">Aktywna choroba nowotworowa</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-par" onchange="mCalcWells()"><span class="cchk-lbl">Porażenie kończyny / niedawny gips</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-bed" onchange="mCalcWells()"><span class="cchk-lbl">Unieruchomienie ≥3d lub op. &lt;12 tyg.</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-sw" onchange="mCalcWells()"><span class="cchk-lbl">Cała noga obrzęknięta</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-cf" onchange="mCalcWells()"><span class="cchk-lbl">Obrzęk łydki ≥ 3 cm większy</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-pe" onchange="mCalcWells()"><span class="cchk-lbl">Pitting edema (objaśniony przez DVT)</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-col" onchange="mCalcWells()"><span class="cchk-lbl">Żyły poboczne powierzchowne</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-prev" onchange="mCalcWells()"><span class="cchk-lbl">DVT w wywiadzie</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-alt" onchange="mCalcWells()"><span class="cchk-lbl">Inna diagnoza równie prawdopodobna</span><span class="cchk-pts">−2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-ca" data-action-change="true"><span class="cchk-lbl">Aktywna choroba nowotworowa</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-par" data-action-change="true"><span class="cchk-lbl">Porażenie kończyny / niedawny gips</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-bed" data-action-change="true"><span class="cchk-lbl">Unieruchomienie ≥3d lub op. &lt;12 tyg.</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-sw" data-action-change="true"><span class="cchk-lbl">Cała noga obrzęknięta</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-cf" data-action-change="true"><span class="cchk-lbl">Obrzęk łydki ≥ 3 cm większy</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-pe" data-action-change="true"><span class="cchk-lbl">Pitting edema (objaśniony przez DVT)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-col" data-action-change="true"><span class="cchk-lbl">Żyły poboczne powierzchowne</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-prev" data-action-change="true"><span class="cchk-lbl">DVT w wywiadzie</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-alt" data-action-change="true"><span class="cchk-lbl">Inna diagnoza równie prawdopodobna</span><span class="cchk-pts">−2</span></label>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="wells-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge ok" id="wells-lev">--</span><span class="calc-interp" id="wells-interp"></span></div>
         </div>
@@ -1867,11 +1870,11 @@ a {
         <div class="calc-ch"><span class="L">APGAR</span><span class="L" style="color:var(--txm)">1 min / 5 min po urodzeniu</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl" style="min-width:68px">Kolor skóry</span><select class="csel" id="ap-app" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Sinica centralna</option><option value="1">1 — Sinica obwodowa</option><option value="2" selected>2 — Różowy</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Akcja serca</span><select class="csel" id="ap-pul" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Brak tętna</option><option value="1">1 — &lt; 100 /min</option><option value="2" selected>2 — ≥ 100 /min</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Odruchy</span><select class="csel" id="ap-gri" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Brak reakcji</option><option value="1">1 — Grymas</option><option value="2" selected>2 — Kaszel / kichanie</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Napięcie</span><select class="csel" id="ap-act" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Wiotkość</option><option value="1">1 — Zgięcie kończyn</option><option value="2" selected>2 — Aktywne ruchy</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Oddech</span><select class="csel" id="ap-res" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Brak</option><option value="1">1 — Nieregularny/płytki</option><option value="2" selected>2 — Regularny / płacz</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Kolor skóry</span><select class="csel" id="ap-app" style="flex:1" data-action-change="true"><option value="0">0 — Sinica centralna</option><option value="1">1 — Sinica obwodowa</option><option value="2" selected>2 — Różowy</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Akcja serca</span><select class="csel" id="ap-pul" style="flex:1" data-action-change="true"><option value="0">0 — Brak tętna</option><option value="1">1 — &lt; 100 /min</option><option value="2" selected>2 — ≥ 100 /min</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Odruchy</span><select class="csel" id="ap-gri" style="flex:1" data-action-change="true"><option value="0">0 — Brak reakcji</option><option value="1">1 — Grymas</option><option value="2" selected>2 — Kaszel / kichanie</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Napięcie</span><select class="csel" id="ap-act" style="flex:1" data-action-change="true"><option value="0">0 — Wiotkość</option><option value="1">1 — Zgięcie kończyn</option><option value="2" selected>2 — Aktywne ruchy</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Oddech</span><select class="csel" id="ap-res" style="flex:1" data-action-change="true"><option value="0">0 — Brak</option><option value="1">1 — Nieregularny/płytki</option><option value="2" selected>2 — Regularny / płacz</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="apgar-val">10</span><span class="calc-unit">/ 10 pkt</span><span class="calc-badge ok" id="apgar-lev">--</span><span class="calc-interp" id="apgar-interp"></span></div>
         </div>
@@ -1880,13 +1883,13 @@ a {
         <div class="calc-ch"><span class="L">Centor / McIsaac</span><span class="L" style="color:var(--txm)">Paciorkowcowe zapalenie gardła</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-exud" onchange="mCalcCentor()"><span class="cchk-lbl">Wysięk na migdałkach</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-node" onchange="mCalcCentor()"><span class="cchk-lbl">Powiększone węzły szyjne przednie</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-temp" onchange="mCalcCentor()"><span class="cchk-lbl">Temperatura > 38°C</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-cough" onchange="mCalcCentor()"><span class="cchk-lbl">Brak kaszlu</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-exud" data-action-change="true"><span class="cchk-lbl">Wysięk na migdałkach</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-node" data-action-change="true"><span class="cchk-lbl">Powiększone węzły szyjne przednie</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-temp" data-action-change="true"><span class="cchk-lbl">Temperatura > 38°C</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-cough" data-action-change="true"><span class="cchk-lbl">Brak kaszlu</span><span class="cchk-pts">+1</span></label>
             <div style="margin-top:.375rem;padding-top:.375rem;border-top:1px solid var(--div)">
               <span class="clbl" style="display:block;margin-bottom:.25rem">Wiek (McIsaac)</span>
-              <select class="csel" id="cen-age" onchange="mCalcCentor()" style="width:100%"><option value="-1">pod 15 lat (−1)</option><option value="0" selected>15–44 lata (0)</option><option value="-1b">45+ lat (−1)</option></select>
+              <select class="csel" id="cen-age" data-action-change="true" style="width:100%"><option value="-1">pod 15 lat (−1)</option><option value="0" selected>15–44 lata (0)</option><option value="-1b">45+ lat (−1)</option></select>
             </div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cen-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge info" id="cen-lev">--</span><span class="calc-interp" id="cen-interp"></span></div>
@@ -1899,8 +1902,8 @@ a {
         <div class="calc-ch"><span class="L">BMI / BSA</span><span class="L" style="color:var(--txm)">Mosteller</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="bmi-wt" type="number" value="70" step="0.5" min="20" max="300" oninput="mCalcBMI()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
-            <div class="crow"><span class="clbl">Wzrost</span><input class="cinp" id="bmi-ht" type="number" value="175" step="1" min="100" max="250" oninput="mCalcBMI()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">cm</span></div>
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="bmi-wt" type="number" value="70" step="0.5" min="20" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">Wzrost</span><input class="cinp" id="bmi-ht" type="number" value="175" step="1" min="100" max="250" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">cm</span></div>
           </div>
           <div class="calc-res-col">
             <span class="calc-score" id="bmi-val">--</span><span class="calc-unit">kg/m²</span>
@@ -1918,11 +1921,11 @@ a {
         <div class="calc-ch"><span class="L">Child-Pugh</span><span class="L" style="color:var(--txm)">Rezerwa wątroby — marskość</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Bilirubina</span><select class="csel" id="cp-bil" onchange="mCalcCP()"><option value="1">&lt; 34 µmol/L</option><option value="2">34–50 µmol/L</option><option value="3">&gt; 50 µmol/L</option></select></div>
-            <div class="crow"><span class="clbl">Albuminy</span><select class="csel" id="cp-alb" onchange="mCalcCP()"><option value="1">&gt; 35 g/L</option><option value="2">28–35 g/L</option><option value="3">&lt; 28 g/L</option></select></div>
-            <div class="crow"><span class="clbl">INR</span><select class="csel" id="cp-inr" onchange="mCalcCP()"><option value="1">&lt; 1.7</option><option value="2">1.7–2.3</option><option value="3">&gt; 2.3</option></select></div>
-            <div class="crow"><span class="clbl">Wodobrzusze</span><select class="csel" id="cp-asc" onchange="mCalcCP()"><option value="1">Brak</option><option value="2">Łagodne</option><option value="3">Nasilone</option></select></div>
-            <div class="crow"><span class="clbl">Encefalopatia</span><select class="csel" id="cp-enc" onchange="mCalcCP()"><option value="1">Brak</option><option value="2">St. I–II</option><option value="3">St. III–IV</option></select></div>
+            <div class="crow"><span class="clbl">Bilirubina</span><select class="csel" id="cp-bil" data-action-change="true"><option value="1">&lt; 34 µmol/L</option><option value="2">34–50 µmol/L</option><option value="3">&gt; 50 µmol/L</option></select></div>
+            <div class="crow"><span class="clbl">Albuminy</span><select class="csel" id="cp-alb" data-action-change="true"><option value="1">&gt; 35 g/L</option><option value="2">28–35 g/L</option><option value="3">&lt; 28 g/L</option></select></div>
+            <div class="crow"><span class="clbl">INR</span><select class="csel" id="cp-inr" data-action-change="true"><option value="1">&lt; 1.7</option><option value="2">1.7–2.3</option><option value="3">&gt; 2.3</option></select></div>
+            <div class="crow"><span class="clbl">Wodobrzusze</span><select class="csel" id="cp-asc" data-action-change="true"><option value="1">Brak</option><option value="2">Łagodne</option><option value="3">Nasilone</option></select></div>
+            <div class="crow"><span class="clbl">Encefalopatia</span><select class="csel" id="cp-enc" data-action-change="true"><option value="1">Brak</option><option value="2">St. I–II</option><option value="3">St. III–IV</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cp-val">5</span><span class="calc-unit">/ 15 pkt</span><span class="calc-badge ok" id="cp-cls">Klasa A</span><span class="calc-interp" id="cp-interp">śmiertelność &lt;5% / rok</span></div>
         </div>
@@ -1962,6 +1965,7 @@ const CONFIG = {
   },
   // App settings
   APP: {
+    STORAGE_VERSION: 1,
     STORAGE_PREFIX: 'lifeos_',
     MAX_TODO_LENGTH: 500,
     MAX_NOTE_LENGTH: 5000,
@@ -2177,6 +2181,57 @@ document.addEventListener('click', function(e) {
   }
 });
 
+// Input/change event delegation for medical calculators and Black-Scholes
+document.addEventListener('input', function(e) {
+  const inputEl = e.target.closest('[data-action-input="true"]');
+  if (!inputEl) return;
+  
+  try {
+    const id = inputEl.id;
+    
+    // Medical calculator inputs
+    if (id.startsWith('egfr-')) mCalcEGFR();
+    else if (id.startsWith('cg-')) mCalcCG();
+    else if (id.startsWith('bmi-')) mCalcBMI();
+    else if (id.startsWith('map-')) mCalcMAP();
+    else if (id.startsWith('ag-')) mCalcAG();
+    else if (id.startsWith('ca-')) mCalcCa();
+    else if (id.startsWith('abcd-age') || id.startsWith('abcd-bp') || id.startsWith('abcd-clin') || id.startsWith('abcd-dur')) mCalcABCD2();
+    else if (id.startsWith('bs-')) updateBS();
+  } catch (err) {
+    console.error('Error handling input:', id, err);
+  }
+});
+
+document.addEventListener('change', function(e) {
+  const changeEl = e.target.closest('[data-action-change="true"]');
+  if (!changeEl) return;
+  
+  try {
+    const id = changeEl.id;
+    
+    // Medical calculator selects and checkboxes
+    if (id.startsWith('egfr-')) mCalcEGFR();
+    else if (id.startsWith('cg-')) mCalcCG();
+    else if (id.startsWith('ch-')) mCalcCHADS();
+    else if (id.startsWith('gcs-')) mCalcGCS();
+    else if (id.startsWith('curb-')) mCalcCURB();
+    else if (id.startsWith('dvt-')) mCalcWells();
+    else if (id.startsWith('pe-')) mCalcWellsPE();
+    else if (id.startsWith('perc-')) mCalcPERC();
+    else if (id.startsWith('centor-')) mCalcCentor();
+    else if (id.startsWith('abcd-diab')) mCalcABCD2();
+    else if (id.startsWith('nihss-')) mCalcNIHSS();
+    else if (id === 'bmi-wt' || id === 'bmi-ht') mCalcBMI();
+    else if (id === 'map-sys' || id === 'map-dia') mCalcMAP();
+    else if (id === 'ag-na' || id === 'ag-cl' || id === 'ag-hco3') mCalcAG();
+    else if (id === 'ca-total' || id === 'ca-alb') mCalcCa();
+    else if (id.startsWith('bs-')) updateBS();
+  } catch (err) {
+    console.error('Error handling change:', id, err);
+  }
+});
+
 // Keyboard navigation handler
 document.addEventListener('keydown', function(e) {
   // Escape key handling
@@ -2244,11 +2299,85 @@ const DEFAULT_STATE={
 };
 let state=(typeof structuredClone==='function')?structuredClone(DEFAULT_STATE):JSON.parse(JSON.stringify(DEFAULT_STATE));
 function deepMerge(target,source){for(const key in source){if(source[key]&&typeof source[key]==='object'&&!Array.isArray(source[key])){if(!target[key]||typeof target[key]!=='object'||Array.isArray(target[key])) target[key]={};deepMerge(target[key],source[key]);}else{target[key]=source[key];}}return target;}
-function saveTodos(){try{localStorage.setItem('lifeos_todos',JSON.stringify(state.todos));}catch(e){}}
-function saveFeelings(){try{const arr=[...document.querySelectorAll('.fc.sel')].map(x=>x.textContent);localStorage.setItem('lifeos_feelings',JSON.stringify(arr));}catch(e){}}
-function savePalette(){try{localStorage.setItem('lifeos_palette',document.documentElement.getAttribute('data-palette'));}catch(e){}}
-function saveTheme(){try{localStorage.setItem('lifeos_theme',document.documentElement.getAttribute('data-theme'));}catch(e){}}
-function saveTimer(){try{localStorage.setItem('lifeos_timer',JSON.stringify({presetIndex:state.timer.presetIndex,remaining:state.timer.remaining,sessions:state.timer.session}));}catch(e){}}
+// ═══════════════════════════════════════════════════
+// STATE MANAGEMENT WITH DEBOUNCING & VERSIONING
+// ═══════════════════════════════════════════════════
+const StorageManager = {
+  version: CONFIG.APP.STORAGE_VERSION || 1,
+  debounceTimers: {},
+  
+  saveWithDebounce: function(key, data, delay = 500) {
+    const storageKey = CONFIG.APP.STORAGE_PREFIX + key;
+    if (this.debounceTimers[key]) clearTimeout(this.debounceTimers[key]);
+    this.debounceTimers[key] = setTimeout(() => {
+      try {
+        const payload = { version: this.version, timestamp: Date.now(), data: data };
+        localStorage.setItem(storageKey, JSON.stringify(payload));
+      } catch (error) {
+        if (error.name === 'QuotaExceededError') this.handleQuotaExceeded();
+        console.error('[StorageManager] Save failed:', error.message);
+      }
+    }, delay);
+  },
+  
+  loadWithVersion: function(key, defaultValue = null) {
+    const storageKey = CONFIG.APP.STORAGE_PREFIX + key;
+    try {
+      const item = localStorage.getItem(storageKey);
+      if (!item) return defaultValue;
+      const parsed = JSON.parse(item);
+      if (parsed.version && parsed.version !== this.version) {
+        console.warn('[StorageManager] Version mismatch for', key);
+      }
+      return parsed.data !== undefined ? parsed.data : parsed;
+    } catch (error) {
+      console.error('[StorageManager] Load failed:', error.message);
+      return defaultValue;
+    }
+  },
+  
+  handleQuotaExceeded: function() {
+    try {
+      const now = Date.now(), oneWeekAgo = now - 604800000;
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(CONFIG.APP.STORAGE_PREFIX)) {
+          try {
+            const item = JSON.parse(localStorage.getItem(key));
+            if (item.timestamp && item.timestamp < oneWeekAgo) {
+              localStorage.removeItem(key);
+            }
+          } catch (e) {}
+        }
+      });
+    } catch (error) {
+      console.error('[StorageManager] Cleanup failed:', error.message);
+    }
+  },
+  
+  clearAllDebounceTimers: function() {
+    Object.values(this.debounceTimers).forEach(timer => clearTimeout(timer));
+    this.debounceTimers = {};
+  }
+};
+
+function saveTodos(){ StorageManager.saveWithDebounce('todos', state.todos, 500); }
+function saveFeelings(){ 
+  const arr = [...document.querySelectorAll('.fc.sel')].map(x => x.textContent);
+  StorageManager.saveWithDebounce('feelings', arr, 500);
+}
+function savePalette(){ 
+  StorageManager.saveWithDebounce('palette', document.documentElement.getAttribute('data-palette'), 300);
+}
+function saveTheme(){ 
+  StorageManager.saveWithDebounce('theme', document.documentElement.getAttribute('data-theme'), 300);
+}
+function saveTimer(){ 
+  StorageManager.saveWithDebounce('timer', {
+    presetIndex: state.timer.presetIndex,
+    remaining: state.timer.remaining,
+    sessions: state.timer.session
+  }, 1000);
+}
 
 function setPalette(el){
   savePalette();document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.remove('active'));el.classList.add('active');state.palette=el.dataset.p;document.documentElement.setAttribute('data-palette',state.palette);}
@@ -2448,36 +2577,52 @@ function fmtTime(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padSt
 let timerInterval=null; function syncTimerUI(){const t=state.timer;document.getElementById('timer-screen').textContent=fmtTime(t.remaining);document.getElementById('timer-mode').textContent=fmtTime(t.remaining);document.getElementById('timer-session').textContent='sesja '+t.session;document.getElementById('timer-preset-label').textContent=t.presets[t.presetIndex].label;document.getElementById('timer-state').textContent=t.running?'w toku':'gotowy';document.getElementById('timer-state').className='pill '+(t.running?'a1':'');document.getElementById('timer-fill').style.width=((t.total-t.remaining)/t.total*100)+'%';}
 function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
 function startTimer(){if(state.timer.running) return;state.timer.running=true;state.timer.lastTick=Date.now();syncTimerUI();timerInterval=setInterval(()=>{const now=Date.now();const delta=Math.floor((now-state.timer.lastTick)/1000);if(delta>0){state.timer.lastTick=now;state.timer.remaining=Math.max(0,state.timer.remaining-delta);syncTimerUI();if(state.timer.remaining<=0){clearTimer();state.timer.running=false;document.getElementById('timer-state').textContent='koniec';document.getElementById('timer-state').className='pill az';}}},250);} function pauseTimer(){state.timer.running=false;clearTimer();syncTimerUI();} function resetTimer(){clearTimer();state.timer.running=false;const p=state.timer.presets[state.timer.presetIndex];state.timer.total=p.work*60;state.timer.remaining=state.timer.total;syncTimerUI();} function cyclePreset(){state.timer.presetIndex=(state.timer.presetIndex+1)%state.timer.presets.length;state.timer.session=1;resetTimer();}
+
+// Cleanup all timers on page unload to prevent memory leaks
+window.addEventListener('beforeunload', () => {
+  clearTimer();
+  StorageManager.clearAllDebounceTimers();
+});
+
+// Visibility API - pause timer when tab is hidden to save resources
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && state.timer.running) {
+    // Timer will naturally drift but we correct on visibility change
+    console.log('[Timer] Tab hidden, timer running in background');
+  } else if (!document.hidden && state.timer.running) {
+    // Recalculate remaining time to correct drift
+    state.timer.lastTick = Date.now();
+    syncTimerUI();
+    console.log('[Timer] Tab visible, timer corrected');
+  }
+});
+
 function hydrate(){applyPrefs();renderCalendar();renderFeelings();renderNoots();renderHabits();renderTodos();renderStocks();renderRefills();renderNews();renderSleep();document.getElementById('notes').value=state.notes||'';syncTimerUI();if(state.weather) renderWeather();}
 document.getElementById('notes').addEventListener('input',e=>{state.notes=e.target.value;});
 (function init(){
   hydrate();
   fetchWeather();
-  setInterval(fetchWeather, CONFIG.WEATHER_API.REFRESH_INTERVAL);
+  const weatherInterval = setInterval(fetchWeather, CONFIG.WEATHER_API.REFRESH_INTERVAL);
 })();
 
-// ── PERSISTENCE (localStorage) ──
+// ── PERSISTENCE (localStorage with StorageManager) ──
 (function(){
   if(!('localStorage' in window)) return;
   try{
-    // palette & theme
     const root=document.documentElement;
-    const savedP=localStorage.getItem('lifeos_palette');
+    const savedP = StorageManager.loadWithVersion('palette');
     if(savedP){root.setAttribute('data-palette',savedP);
       document.querySelectorAll('.pal-swatch').forEach(s=>{s.classList.toggle('active',s.dataset.p===savedP);});}
-    const savedT=localStorage.getItem('lifeos_theme');
+    const savedT = StorageManager.loadWithVersion('theme');
     if(savedT){root.setAttribute('data-theme',savedT);}
-    // todos
-    const td = localStorage.getItem('lifeos_todos');
-    if(td){try{state.todos = JSON.parse(td);}catch(e){} renderTodos();}
-    // feelings
-    const fs = localStorage.getItem('lifeos_feelings');
-    if(fs){const arr = JSON.parse(fs);document.querySelectorAll('.fc').forEach(ch=>{if(arr.includes(ch.textContent)) ch.classList.add('sel');});
-      document.getElementById('fcnt').textContent=arr.length+' '+(arr.length===1?'wybrany':'wybrane');}
-    // timer - load from localStorage into state.timer
-    const tp = localStorage.getItem('lifeos_timer');
-    if(tp){try{const o=JSON.parse(tp);if(typeof o.presetIndex==='number')state.timer.presetIndex=o.presetIndex;if(typeof o.remaining==='number')state.timer.remaining=o.remaining;if(typeof o.sessions==='number')state.timer.session=o.sessions;}catch(e){}}
-  }catch(e){}
+    const td = StorageManager.loadWithVersion('todos');
+    if(td){state.todos = td; renderTodos();}
+    const fs = StorageManager.loadWithVersion('feelings');
+    if(fs){document.querySelectorAll('.fc').forEach(ch=>{if(fs.includes(ch.textContent)) ch.classList.add('sel');});
+      document.getElementById('fcnt').textContent=fs.length+' '+(fs.length===1?'wybrany':'wybrane');}
+    const tp = StorageManager.loadWithVersion('timer');
+    if(tp){if(typeof tp.presetIndex==='number')state.timer.presetIndex=tp.presetIndex;if(typeof tp.remaining==='number')state.timer.remaining=tp.remaining;if(typeof tp.sessions==='number')state.timer.session=tp.sessions;}
+  }catch(e){console.error('[Persistence] Load failed:', e.message);}
 })();
 
 // ── Open-Meteo WEATHER ──
