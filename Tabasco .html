@@ -1580,6 +1580,289 @@ a {
   margin-left:auto;
   font-family:'IBM Plex Mono',monospace;
 }
+
+/* ═══════════════════════════════════════════════════
+   MARKET NEWS WIDGET STYLES
+   ═══════════════════════════════════════════════════ */
+.market-news-card {
+  grid-column: span 2;
+}
+
+.mn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent);
+}
+
+.mn-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--tx);
+  margin: 0;
+}
+
+.mn-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mn-tab {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  background: var(--bg3);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--tx);
+  transition: all 0.2s ease;
+}
+
+.mn-tab:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.mn-tab.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+
+.mn-content {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.mn-article {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--bg3);
+}
+
+.mn-article:last-child {
+  border-bottom: none;
+}
+
+.mn-article-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.mn-article-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mn-article-headline {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.mn-article-headline a {
+  color: var(--tx);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mn-article-headline a:hover {
+  color: var(--accent);
+}
+
+.mn-article-summary {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--txm);
+  line-height: 1.5;
+}
+
+.mn-article-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--txs);
+  flex-wrap: wrap;
+}
+
+.mn-sentiment {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.mn-sentiment-positive {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.mn-sentiment-negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.mn-indicator-card,
+.mn-energy-card {
+  background: var(--bg3);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--accent);
+}
+
+.mn-indicator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.mn-indicator-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--tx);
+}
+
+.mn-trend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.trend-up {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.trend-down {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.mn-indicator-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mn-value-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.mn-value-unit {
+  font-size: 0.8rem;
+  color: var(--txm);
+}
+
+.mn-indicator-date {
+  font-size: 0.75rem;
+  color: var(--txs);
+}
+
+.mn-energy-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.mn-energy-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.mn-energy-change {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.change-positive {
+  color: #22c55e;
+}
+
+.change-negative {
+  color: #ef4444;
+}
+
+.mn-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--bg3);
+}
+
+.mn-update-time {
+  color: var(--txs);
+  font-size: 0.75rem;
+}
+
+.mn-refresh-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  background: var(--bg3);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--tx);
+  transition: all 0.2s;
+}
+
+.mn-refresh-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.mn-loading {
+  text-align: center;
+  color: var(--txm);
+  padding: 2rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .market-news-card {
+    grid-column: span 1;
+  }
+  
+  .mn-article {
+    flex-direction: column;
+  }
+  
+  .mn-article-image {
+    width: 100%;
+    height: 150px;
+  }
+  
+  .mn-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .mn-tab {
+    flex: 1;
+    text-align: center;
+    min-width: 80px;
+  }
+}
 </style>
 </head>
 <body>
@@ -3863,6 +4146,408 @@ class PomodoroStatsPlugin extends PluginSystem.BasePlugin {
 }
 
 // Register example plugins
+try {
+  PluginSystem.register(CryptoPricePlugin);
+  PluginSystem.register(QuotePlugin);
+  PluginSystem.register(PomodoroStatsPlugin);
+} catch (error) {
+  console.error("[PluginSystem] Failed to register example plugins:", error);
+}
+
+// ═══════════════════════════════════════════════════
+// MARKET NEWS WIDGET PLUGIN
+// ═══════════════════════════════════════════════════
+class MarketNewsWidget extends PluginSystem.BasePlugin {
+  constructor(config) {
+    super({ 
+      id: 'market-news', 
+      name: 'Rynki i Gospodarka', 
+      version: '1.0.0', 
+      author: 'LIFE OS', 
+      description: 'Monitorowanie rynków finansowych, wiadomości ekonomicznych i danych energetycznych',
+      config: {
+        refreshInterval: CONFIG.MARKET_NEWS.REFRESH_INTERVAL,
+        maxNews: CONFIG.MARKET_NEWS.MAX_NEWS,
+        enableSentiment: CONFIG.MARKET_NEWS.ENABLE_SENTIMENT,
+        ...config
+      }
+    });
+    this.currentTab = 'news';
+    this.newsData = [];
+    this.economicData = {};
+    this.energyData = {};
+    this.lastUpdate = null;
+    this.refreshTimer = null;
+  }
+
+  async init(api) {
+    await super.init(api);
+    this.api = api;
+    await this.fetchAllData();
+    this.startAutoRefresh();
+    this.renderContainer();
+  }
+
+  async destroy() {
+    if (this.refreshTimer) clearInterval(this.refreshTimer);
+    if (this.unsubscribe) this.unsubscribe();
+    await super.destroy();
+  }
+
+  startAutoRefresh() {
+    this.refreshTimer = setInterval(async () => {
+      await this.fetchAllData();
+      if (this.container) this.renderContainer();
+    }, this.config.refreshInterval);
+  }
+
+  async fetchAllData() {
+    try {
+      await Promise.allSettled([
+        this.fetchFinnhubNews(),
+        this.fetchFREDEconomicData(),
+        this.fetchEIAEnergyData()
+      ]);
+      this.lastUpdate = new Date();
+      this.saveToCache();
+    } catch (error) {
+      console.error('[MarketNewsWidget] Error fetching data:', error);
+    }
+  }
+
+  async fetchFinnhubNews() {
+    try {
+      const now = new Date();
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const from = weekAgo.toISOString().split('T')[0];
+      const to = now.toISOString().split('T')[0];
+      
+      const response = await this.api.fetch(
+        `https://finnhub.io/api/v1/news?category=general&from=${from}&to=${to}`,
+        { headers: { 'X-Finnhub-Token': CONFIG.MARKET_NEWS.FINNHUB_API_KEY } }
+      );
+      
+      if (response && Array.isArray(response)) {
+        this.newsData = response.slice(0, this.config.maxNews).map(item => ({
+          id: item.id || Math.random().toString(36),
+          title: sanitize.text(item.headline || 'Brak tytułu'),
+          summary: sanitize.text(item.summary || ''),
+          source: sanitize.text(item.source || 'Unknown'),
+          url: item.url || '#',
+          image: item.image || '',
+          datetime: item.datetime ? new Date(item.datetime * 1000) : new Date(),
+          sentiment: item.sentiment || 'neutral'
+        }));
+      }
+    } catch (error) {
+      console.error('[MarketNewsWidget] Finnhub error:', error);
+      this.loadFromCache('news');
+    }
+  }
+
+  async fetchFREDEconomicData() {
+    try {
+      const series = [
+        { id: 'CPIAUCSL', name: 'Inflacja (CPI)', units: '%' },
+        { id: 'UNRATE', name: 'Bezrobocie', units: '%' },
+        { id: 'GDP', name: 'PKB', units: 'mld USD' },
+        { id: 'FEDFUNDS', name: 'Stopy procentowe', units: '%' }
+      ];
+
+      const promises = series.map(async (s) => {
+        try {
+          const response = await this.api.fetch(
+            `https://api.stlouisfed.org/fred/series/observations?series_id=${s.id}&api_key=${CONFIG.MARKET_NEWS.FRED_API_KEY}&file_type=json&limit=10`
+          );
+          if (response && response.observations) {
+            const data = response.observations.map(obs => ({
+              date: new Date(obs.date),
+              value: parseFloat(obs.value) || 0
+            })).reverse();
+            this.economicData[s.id] = {
+              name: s.name,
+              units: s.units,
+              data: data,
+              latest: data[0] || { value: 0, date: new Date() },
+              trend: data.length > 1 ? (data[0].value - data[1].value) / (data[1].value || 1) * 100 : 0
+            };
+          }
+        } catch (err) {
+          console.error(`[MarketNewsWidget] FRED ${s.id} error:`, err);
+        }
+      });
+
+      await Promise.all(promises);
+    } catch (error) {
+      console.error('[MarketNewsWidget] FRED error:', error);
+      this.loadFromCache('economic');
+    }
+  }
+
+  async fetchEIAEnergyData() {
+    try {
+      const endpoints = [
+        { id: 'oil', name: 'Ropa WTI', url: 'https://www.eia.gov/dnav/pet/hist/rwtcD.htm' },
+        { id: 'gas', name: 'Gaz ziemny', url: 'https://www.eia.gov/dnav/ng/hist/rngwhhdd.htm' },
+        { id: 'electricity', name: 'Elektryczność', url: 'https://www.eia.gov/electricity/monthly/' }
+      ];
+
+      // EIA API requires specific series IDs - using mock data for demo
+      // In production, replace with actual EIA API calls
+      this.energyData = {
+        oil: { name: 'Ropa WTI', price: 75.50, change: 1.2, unit: 'USD/baryłka' },
+        gas: { name: 'Gaz ziemny', price: 2.85, change: -0.5, unit: 'USD/MMBtu' },
+        electricity: { name: 'Elektryczność', price: 45.20, change: 0.3, unit: 'USD/MWh' }
+      };
+
+      // Note: Real EIA API implementation would go here
+      // Example: https://api.eia.gov/v2/series/?api_key=YOUR_KEY&...
+    } catch (error) {
+      console.error('[MarketNewsWidget] EIA error:', error);
+      this.loadFromCache('energy');
+    }
+  }
+
+  saveToCache() {
+    this.api.storage.set('marketNewsCache', {
+      news: this.newsData,
+      economic: this.economicData,
+      energy: this.energyData,
+      timestamp: Date.now()
+    });
+  }
+
+  loadFromCache(type) {
+    const cached = this.api.storage.get('marketNewsCache');
+    if (!cached || Date.now() - cached.timestamp > 3600000) return; // 1 hour max
+    
+    if (type === 'news' && cached.news) this.newsData = cached.news;
+    if (type === 'economic' && cached.economic) this.economicData = cached.economic;
+    if (type === 'energy' && cached.energy) this.energyData = cached.energy;
+  }
+
+  render(container) {
+    this.container = container;
+    this.renderContainer();
+  }
+
+  renderContainer() {
+    if (!this.container) return;
+    
+    safeDOM.clear(this.container);
+    
+    const widgetCard = this.api.createElement('div', { className: 'plugin-card market-news-card' });
+    
+    // Header with tabs
+    const header = this.api.createElement('div', { className: 'mn-header' });
+    const title = this.api.createElement('h3', { textContent: '📈 Rynki i Gospodarka', className: 'mn-title' });
+    
+    const tabs = this.api.createElement('div', { className: 'mn-tabs' });
+    ['news', 'economy', 'energy'].forEach(tabId => {
+      const tab = this.api.createElement('button', {
+        textContent: tabId === 'news' ? '📰 Wiadomości' : tabId === 'economy' ? '📊 Gospodarka' : '⚡ Energia',
+        className: `mn-tab ${this.currentTab === tabId ? 'active' : ''}`,
+        onclick: () => {
+          this.currentTab = tabId;
+          this.renderContainer();
+        }
+      });
+      tabs.appendChild(tab);
+    });
+    
+    header.appendChild(title);
+    header.appendChild(tabs);
+    widgetCard.appendChild(header);
+
+    // Content based on active tab
+    const content = this.api.createElement('div', { className: 'mn-content' });
+    
+    if (this.currentTab === 'news') {
+      content.appendChild(this.renderNews());
+    } else if (this.currentTab === 'economy') {
+      content.appendChild(this.renderEconomy());
+    } else if (this.currentTab === 'energy') {
+      content.appendChild(this.renderEnergy());
+    }
+    
+    widgetCard.appendChild(content);
+    
+    // Footer with last update
+    const footer = this.api.createElement('div', { className: 'mn-footer' });
+    const updateTime = this.lastUpdate ? this.lastUpdate.toLocaleTimeString('pl-PL') : 'Nigdy';
+    footer.appendChild(this.api.createElement('small', { 
+      textContent: `Ostatnia aktualizacja: ${updateTime}`,
+      className: 'mn-update-time'
+    }));
+    
+    const refreshBtn = this.api.createElement('button', {
+      textContent: '🔄 Odśwież',
+      className: 'mn-refresh-btn',
+      onclick: async () => {
+        await this.fetchAllData();
+        this.renderContainer();
+      }
+    });
+    
+    footer.appendChild(refreshBtn);
+    widgetCard.appendChild(footer);
+    this.container.appendChild(widgetCard);
+  }
+
+  renderNews() {
+    const container = this.api.createDocumentFragment();
+    
+    if (this.newsData.length === 0) {
+      container.appendChild(this.api.createElement('p', { textContent: 'Ładowanie wiadomości...', className: 'mn-loading' }));
+      return container;
+    }
+
+    this.newsData.forEach(news => {
+      const article = this.api.createElement('article', { className: 'mn-article' });
+      
+      if (news.image) {
+        const img = this.api.createElement('img', { 
+          src: news.image, 
+          alt: news.title,
+          className: 'mn-article-image',
+          loading: 'lazy'
+        });
+        article.appendChild(img);
+      }
+      
+      const info = this.api.createElement('div', { className: 'mn-article-info' });
+      
+      const headline = this.api.createElement('h4', { className: 'mn-article-headline' });
+      const link = this.api.createElement('a', {
+        href: news.url,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        textContent: news.title
+      });
+      headline.appendChild(link);
+      info.appendChild(headline);
+      
+      if (news.summary) {
+        info.appendChild(this.api.createElement('p', { 
+          textContent: news.summary.substring(0, 150) + (news.summary.length > 150 ? '...' : ''),
+          className: 'mn-article-summary'
+        }));
+      }
+      
+      const meta = this.api.createElement('div', { className: 'mn-article-meta' });
+      meta.appendChild(this.api.createElement('span', { 
+        textContent: news.source,
+        className: 'mn-article-source'
+      }));
+      meta.appendChild(this.api.createElement('span', { 
+        textContent: news.datetime.toLocaleDateString('pl-PL'),
+        className: 'mn-article-date'
+      }));
+      
+      if (this.config.enableSentiment && news.sentiment !== 'neutral') {
+        const sentimentBadge = this.api.createElement('span', {
+          textContent: news.sentiment === 'positive' ? '🟢 Pozytywny' : '🔴 Negatywny',
+          className: `mn-sentiment mn-sentiment-${news.sentiment}`
+        });
+        meta.appendChild(sentimentBadge);
+      }
+      
+      info.appendChild(meta);
+      article.appendChild(info);
+      container.appendChild(article);
+    });
+
+    return container;
+  }
+
+  renderEconomy() {
+    const container = this.api.createDocumentFragment();
+    
+    if (Object.keys(this.economicData).length === 0) {
+      container.appendChild(this.api.createElement('p', { textContent: 'Ładowanie danych ekonomicznych...', className: 'mn-loading' }));
+      return container;
+    }
+
+    Object.values(this.economicData).forEach(indicator => {
+      const card = this.api.createElement('div', { className: 'mn-indicator-card' });
+      
+      const header = this.api.createElement('div', { className: 'mn-indicator-header' });
+      header.appendChild(this.api.createElement('h4', { textContent: indicator.name }));
+      
+      const trendIcon = indicator.trend >= 0 ? '📈' : '📉';
+      const trendClass = indicator.trend >= 0 ? 'trend-up' : 'trend-down';
+      header.appendChild(this.api.createElement('span', { 
+        textContent: `${trendIcon} ${indicator.trend >= 0 ? '+' : ''}${indicator.trend.toFixed(2)}%`,
+        className: `mn-trend ${trendClass}`
+      }));
+      
+      card.appendChild(header);
+      
+      const value = this.api.createElement('div', { className: 'mn-indicator-value' });
+      value.appendChild(this.api.createElement('span', { 
+        textContent: indicator.latest.value.toFixed(2),
+        className: 'mn-value-number'
+      }));
+      value.appendChild(this.api.createElement('span', { 
+        textContent: indicator.units,
+        className: 'mn-value-unit'
+      }));
+      card.appendChild(value);
+      
+      const date = this.api.createElement('div', { 
+        textContent: `Dane z: ${indicator.latest.date.toLocaleDateString('pl-PL')}`,
+        className: 'mn-indicator-date'
+      });
+      card.appendChild(date);
+      
+      container.appendChild(card);
+    });
+
+    return container;
+  }
+
+  renderEnergy() {
+    const container = this.api.createDocumentFragment();
+    
+    if (Object.keys(this.energyData).length === 0) {
+      container.appendChild(this.api.createElement('p', { textContent: 'Ładowanie danych energetycznych...', className: 'mn-loading' }));
+      return container;
+    }
+
+    Object.values(this.energyData).forEach(commodity => {
+      const card = this.api.createElement('div', { className: 'mn-energy-card' });
+      
+      card.appendChild(this.api.createElement('h4', { textContent: commodity.name }));
+      
+      const priceRow = this.api.createElement('div', { className: 'mn-energy-price' });
+      priceRow.appendChild(this.api.createElement('span', { 
+        textContent: `${commodity.price.toFixed(2)} ${commodity.unit}`,
+        className: 'mn-energy-value'
+      }));
+      
+      const changeClass = commodity.change >= 0 ? 'change-positive' : 'change-negative';
+      const changeIcon = commodity.change >= 0 ? '▲' : '▼';
+      priceRow.appendChild(this.api.createElement('span', { 
+        textContent: `${changeIcon} ${commodity.change >= 0 ? '+' : ''}${commodity.change.toFixed(2)}%`,
+        className: `mn-energy-change ${changeClass}`
+      }));
+      
+      card.appendChild(priceRow);
+      container.appendChild(card);
+    });
+
+    return container;
+  }
+}
+
+// Register Market News Widget
+try {
+  PluginSystem.register(MarketNewsWidget);
+  console.log('[MarketNewsWidget] Registered successfully');
+} catch (error) {
+  console.error('[MarketNewsWidget] Registration failed:', error);
+}
+
 try {
   PluginSystem.register(CryptoPricePlugin);
   PluginSystem.register(QuotePlugin);
