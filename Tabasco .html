@@ -1992,8 +1992,20 @@ const CONFIG = {
       'https://api.open-meteo.com',
       'https://query1.finance.yahoo.com',
       'https://corsproxy.io',
-      'https://api.allorigins.win'
+      'https://api.allorigins.win',
+      'https://finnhub.io',
+      'https://fred.stlouisfed.org',
+      'https://www.eia.gov'
     ]
+  },
+  // Market News API Configuration
+  MARKET_NEWS: {
+    FINNHUB_API_KEY: "d7dbke9r01qggoenois0d7dbke9r01qggoenoisg",
+    FRED_API_KEY: "852b3228e1b9ca7a16c17e1144354f3b",
+    EIA_API_KEY: "RLMYQbIgClcwg1Fclj0j86RKwOzZ8FBT6AV4lc6P",
+    REFRESH_INTERVAL: 300000, // 5 minutes
+    MAX_NEWS: 20,
+    ENABLE_SENTIMENT: true
   }
 };
 
