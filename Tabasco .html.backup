@@ -1965,8 +1965,7 @@ const CONFIG = {
     MAX_NOTE_LENGTH: 5000,
     TIMER_UPDATE_INTERVAL: 250,
     DEFAULT_PALETTE: 'reaktor',
-    DEFAULT_THEME: 'dark',
-    STORAGE_VERSION: 1
+    DEFAULT_THEME: 'dark'
   }
 };
 
@@ -1974,23 +1973,11 @@ const CONFIG = {
 // INPUT SANITIZATION & VALIDATION MODULE
 // ═══════════════════════════════════════════════════
 const sanitize = {
-  // Escape HTML special characters to prevent XSS
   html: (str) => {
     if (typeof str !== 'string') return '';
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
-  },
-  // Create text node safely (no HTML interpretation)
-  text: (str) => {
-    if (typeof str !== 'string') return '';
-    return str.replace(/[&<>"']/g, char => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    })[char]);
   },
   trim: (str) => {
     if (typeof str !== 'string') return '';
@@ -2003,36 +1990,6 @@ const sanitize = {
   note: (str) => {
     if (typeof str !== 'string') return '';
     return str.trim().slice(0, CONFIG.APP.MAX_NOTE_LENGTH);
-  },
-  // Validate and sanitize medical calculator inputs
-  medicalInput: (val, min, max, defaultVal = 0) => {
-    const num = parseFloat(val);
-    if (isNaN(num) || num < min || num > max) return defaultVal;
-    return num;
-  },
-  // Sanitize attribute values
-  attribute: (str) => {
-    if (typeof str !== 'string') return '';
-    return str.replace(/["'<>]/g, '').slice(0, 200);
-  }
-};
-
-// Safe DOM creation utilities to prevent XSS
-const safeDOM = {
-  createText: (text) => {
-    const span = document.createElement('span');
-    span.textContent = text;
-    return span;
-  },
-  setHTML: (element, htmlString) => {
-    if (!element) return;
-    element.innerHTML = sanitize.html(htmlString);
-  },
-  createSafeElement: (tag, className, textContent) => {
-    const el = document.createElement(tag);
-    if (className) el.className = sanitize.attribute(className);
-    if (textContent) el.textContent = textContent;
-    return el;
   }
 };
 
@@ -2077,103 +2034,6 @@ async function safeAsync(fn, fallback = null, errorMessage = 'Operation failed')
     return typeof fallback === 'function' ? fallback(error) : fallback;
   }
 }
-
-// ═══════════════════════════════════════════════════
-// STATE MANAGEMENT WITH DEBOUNCING & VERSIONING
-// ═══════════════════════════════════════════════════
-const StorageManager = {
-  saveDebounceTimers: {},
-  
-  // Save with debouncing to prevent excessive writes
-  saveWithDebounce: function(key, data, delay = 500) {
-    const storageKey = CONFIG.APP.STORAGE_PREFIX + key;
-    
-    // Clear existing timer for this key
-    if (this.saveDebounceTimers[key]) {
-      clearTimeout(this.saveDebounceTimers[key]);
-    }
-    
-    // Set new debounced save
-    this.saveDebounceTimers[key] = setTimeout(() => {
-      try {
-        const versionedData = {
-          version: CONFIG.APP.STORAGE_VERSION,
-          timestamp: Date.now(),
-          data: data
-        };
-        localStorage.setItem(storageKey, JSON.stringify(versionedData));
-        delete this.saveDebounceTimers[key];
-      } catch (error) {
-        console.error('Storage save failed:', key, error.message);
-        if (error.name === 'QuotaExceededError') {
-          a11y.announce('Brak miejsca w pamięci lokalnej');
-        }
-      }
-    }, delay);
-  },
-  
-  // Load with version checking and migration support
-  loadWithVersion: function(key, defaultData) {
-    const storageKey = CONFIG.APP.STORAGE_PREFIX + key;
-    try {
-      const item = localStorage.getItem(storageKey);
-      if (!item) return defaultData;
-      
-      const parsed = JSON.parse(item);
-      
-      // Handle legacy format (no versioning)
-      if (!parsed.version) {
-        console.log('Migrating legacy data for:', key);
-        return parsed;
-      }
-      
-      // Check version compatibility
-      if (parsed.version > CONFIG.APP.STORAGE_VERSION) {
-        console.warn('Future version detected, using defaults for:', key);
-        return defaultData;
-      }
-      
-      return parsed.data || defaultData;
-    } catch (error) {
-      console.error('Storage load failed:', key, error.message);
-      return defaultData;
-    }
-  },
-  
-  // Clear all debounced timers (call on page unload)
-  clearAllTimers: function() {
-    Object.values(this.saveDebounceTimers).forEach(timer => clearTimeout(timer));
-    this.saveDebounceTimers = {};
-  }
-};
-
-// Medical calculator validation utilities
-const medicalValidation = {
-  // Validate numeric input with range checking
-  range: (value, min, max, fieldName) => {
-    const num = Number(value);
-    if (isNaN(num)) {
-      return { valid: false, error: `${fieldName}: nieprawidłowa wartość` };
-    }
-    if (num < min || num > max) {
-      return { valid: false, error: `${fieldName}: wartość poza zakresem (${min}-${max})` };
-    }
-    return { valid: true, value: num };
-  },
-  
-  // Validate clinical safety ranges
-  clinicalRange: {
-    age: (val) => medicalValidation.range(val, 0, 120, 'Wiek'),
-    scr: (val) => medicalValidation.range(val, 0.1, 20, 'Kreatynina'),
-    weight: (val) => medicalValidation.range(val, 1, 300, 'Masa ciała'),
-    height: (val) => medicalValidation.range(val, 50, 250, 'Wzrost'),
-    temperature: (val) => medicalValidation.range(val, 35, 42, 'Temperatura'),
-    heartRate: (val) => medicalValidation.range(val, 30, 220, 'Tętno'),
-    respiratoryRate: (val) => medicalValidation.range(val, 5, 60, 'Oddech'),
-    systolicBP: (val) => medicalValidation.range(val, 60, 250, 'Ciśnienie skurczowe'),
-    diastolicBP: (val) => medicalValidation.range(val, 30, 150, 'Ciśnienie rozkurczowe')
-  }
-};
 
 // ═══════════════════════════════════════════════════
 // ACCESSIBILITY UTILITIES MODULE
@@ -2343,11 +2203,11 @@ const DEFAULT_STATE={
 };
 let state=(typeof structuredClone==='function')?structuredClone(DEFAULT_STATE):JSON.parse(JSON.stringify(DEFAULT_STATE));
 function deepMerge(target,source){for(const key in source){if(source[key]&&typeof source[key]==='object'&&!Array.isArray(source[key])){if(!target[key]||typeof target[key]!=='object'||Array.isArray(target[key])) target[key]={};deepMerge(target[key],source[key]);}else{target[key]=source[key];}}return target;}
-function saveTodos(){StorageManager.saveWithDebounce('todos', state.todos, 500);}
-function saveFeelings(){const arr=[...document.querySelectorAll('.fc.sel')].map(x=>x.textContent);StorageManager.saveWithDebounce('feelings', arr, 500);}
-function savePalette(){StorageManager.saveWithDebounce('palette', document.documentElement.getAttribute('data-palette'), 300);}
-function saveTheme(){StorageManager.saveWithDebounce('theme', document.documentElement.getAttribute('data-theme'), 300);}
-function saveTimer(){StorageManager.saveWithDebounce('timer', {presetIndex:state.timer.presetIndex,remaining:state.timer.remaining,sessions:state.timer.session}, 1000);}
+function saveTodos(){try{localStorage.setItem('lifeos_todos',JSON.stringify(state.todos));}catch(e){}}
+function saveFeelings(){try{const arr=[...document.querySelectorAll('.fc.sel')].map(x=>x.textContent);localStorage.setItem('lifeos_feelings',JSON.stringify(arr));}catch(e){}}
+function savePalette(){try{localStorage.setItem('lifeos_palette',document.documentElement.getAttribute('data-palette'));}catch(e){}}
+function saveTheme(){try{localStorage.setItem('lifeos_theme',document.documentElement.getAttribute('data-theme'));}catch(e){}}
+function saveTimer(){try{localStorage.setItem('lifeos_timer',JSON.stringify({presetIndex:state.timer.presetIndex,remaining:state.timer.remaining,sessions:state.timer.session}));}catch(e){}}
 
 function setPalette(el){
   savePalette();document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.remove('active'));el.classList.add('active');state.palette=el.dataset.p;document.documentElement.setAttribute('data-palette',state.palette);}
@@ -2356,7 +2216,7 @@ function tick(){const n=new Date();const h=s=>String(s).padStart(2,'0');document
 function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');g.innerHTML='';['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evts=[4,9,15,20,23,26];let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){e.className='cd'+(day===n.getDate()?' today':'')+(evts.includes(day)?' evt':'');e.textContent=day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
 function renderFeelings(){const wrap=document.getElementById('feel-wrap');wrap.innerHTML='';state.feelingOptions.forEach(name=>{const btn=document.createElement('button');btn.className='fc'+(state.feelings.includes(name)?' sel':'');btn.textContent=name;btn.setAttribute('aria-pressed', state.feelings.includes(name) ? 'true' : 'false');btn.addEventListener('click', ()=>togF(name));wrap.appendChild(btn);});document.getElementById('fcnt').textContent=state.feelings.length+' '+(state.feelings.length===1?'wybrany':'wybrane');}
 function togF(name){if(state.feelings.includes(name)) state.feelings=state.feelings.filter(x=>x!==name); else state.feelings.push(name); renderFeelings();}
-function renderNoots(){const c=document.getElementById('noot-list');c.innerHTML='';state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';const statusDiv=document.createElement('div');statusDiv.className='nd '+sanitize.attribute(n.status);const nameSpan=document.createElement('span');nameSpan.className='nn';nameSpan.textContent=n.name;const doseSpan=document.createElement('span');doseSpan.className='ndose';doseSpan.textContent=n.dose;d.appendChild(statusDiv);d.appendChild(nameSpan);d.appendChild(doseSpan);c.appendChild(d);});}
+function renderNoots(){const c=document.getElementById('noot-list');c.innerHTML='';state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';d.innerHTML=`<div class="nd ${n.status}"></div><span class="nn">${n.name}</span><span class="ndose">${n.dose}</span>`;c.appendChild(d);});}
 function renderHabits(){const c=document.getElementById('hlist');c.innerHTML='';state.habits.forEach((h,idx)=>{const r=document.createElement('div');r.className='hr';const nm=document.createElement('span');nm.className='hn';nm.textContent=h.n;const dd=document.createElement('div');dd.className='hd';h.d.forEach((v,i)=>{const d=document.createElement('div');d.className='dot'+(v?' done':'')+(i===h.d.length-1?' cur':'');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-pressed',v?'true':'false');d.addEventListener('click',()=>{state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();});d.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();}});dd.appendChild(d);});const st=document.createElement('span');st.className='hstr mono';st.textContent=h.s+'d';r.append(nm,dd,st);c.appendChild(r);});}
 function renderTodos(){
   const c=document.getElementById('tlist');
@@ -2411,9 +2271,9 @@ document.getElementById('tinp').addEventListener('keydown',e=>{
   if(e.key==='Enter')addTodo();
 });
 </div><div class="sn">${s.n}</div></div><svg width="52" height="22" viewBox="0 0 60 24" fill="none"><path d="${s.up?up:dn}" stroke="${s.up?'var(--nom)':'var(--az)'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sp mono">$${s.p}</span><span class="sc ${s.up?'up':'dn'}">${s.c}</span>`;c.appendChild(r);});}
-function renderRefills(){const c=document.getElementById('refill-list');c.innerHTML='';state.refills.forEach(r=>{const d=document.createElement('div');d.className='ri'+(r.critical?' crit':'');const nameSpan=document.createElement('span');nameSpan.className='rn';nameSpan.textContent=sanitize.text(r.name);const barWrap=document.createElement('div');barWrap.className='rbw';const bar=document.createElement('div');bar.className='rb';bar.style.width=r.pct+'%';bar.style.background=sanitize.attribute(r.color);barWrap.appendChild(bar);const daysSpan=document.createElement('span');daysSpan.className='rd'+(r.critical?' crit':'')+' mono';daysSpan.textContent=r.days;d.appendChild(nameSpan);d.appendChild(barWrap);d.appendChild(daysSpan);c.appendChild(d);});}
+function renderRefills(){const c=document.getElementById('refill-list');c.innerHTML='';state.refills.forEach(r=>{const d=document.createElement('div');d.className='ri'+(r.critical?' crit':'');d.innerHTML=`<span class="rn">${r.name}</span><div class="rbw"><div class="rb" style="width:${r.pct}%;background:${r.color}"></div></div><span class="rd ${r.critical?'crit':''} mono">${r.days}</span>`;c.appendChild(d);});}
 const NEWS=[{t:'08:41',h:'Fed utrzymuje stopy — rynki reagują spokojnie',s:'Reuters',c:'fin'},{t:'08:22',h:'WHO: Nowe wytyczne leczenia opornej gruźlicy płuc',s:'WHO',c:'med'},{t:'07:55',h:'GPW: WIG20 otworzył się wzrostem 0.4%',s:'Parkiet',c:'fin'},{t:'07:33',h:'Trump ogłasza nowe cła na elektronikę z Azji',s:'Bloomberg',c:'pol'},{t:'07:14',h:'Meta zapowiada AI do analizy obrazów MRI',s:'TechCrunch',c:'tch'},{t:'06:58',h:'NBP: Inflacja w Polsce spada do 3.2% r/r',s:'NBP',c:'fin'},{t:'06:40',h:'Niedobór snu zwiększa ryzyko cukrzycy T2 o 27%',s:'NEJM',c:'med'},{t:'06:21',h:'NVIDIA Blackwell Ultra — +60% wydajność AI',s:'The Verge',c:'tch'},{t:'05:58',h:'Sejm: Reforma ochrony zdrowia przełożona na wrzesień',s:'PAP',c:'pol'},{t:'05:33',h:'Ropa WTI spada poniżej $78 — obawy o popyt',s:'Bloomberg',c:'fin'}];
-function renderNews(){const panes={all:[],fin:[],med:[],pol:[],tch:[]};NEWS.forEach(n=>{const item=document.createElement('div');item.className='nit';const timeSpan=document.createElement('span');timeSpan.className='ntm mono';timeSpan.textContent=sanitize.text(n.t);const contentDiv=document.createElement('div');const headlineDiv=document.createElement('div');headlineDiv.className='nh';headlineDiv.textContent=sanitize.text(n.h);const sourceDiv=document.createElement('div');sourceDiv.className='ns';sourceDiv.textContent=sanitize.text(n.s);contentDiv.appendChild(headlineDiv);contentDiv.appendChild(sourceDiv);item.appendChild(timeSpan);item.appendChild(contentDiv);panes.all.push(item);panes[n.c].push(item);});Object.entries(panes).forEach(([k,items])=>{const container=document.getElementById('np-'+k);if(container){container.innerHTML='';items.forEach(item=>container.appendChild(item.cloneNode(true)));}});} function switchN(tab,key){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.np').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById('np-'+key).classList.add('active');}
+function renderNews(){const panes={all:[],fin:[],med:[],pol:[],tch:[]};NEWS.forEach(n=>{const h=`<div class="nit"><span class="ntm mono">${n.t}</span><div><div class="nh">${n.h}</div><div class="ns">${n.s}</div></div></div>`;panes.all.push(h);panes[n.c].push(h);});Object.entries(panes).forEach(([k,items])=>{document.getElementById('np-'+k).innerHTML=items.join('');});} function switchN(tab,key){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.np').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById('np-'+key).classList.add('active');}
 function setQ(el,q){document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active','bad','med','good'));el.classList.add('active',q);state.sleepQuality=q;document.getElementById('sw').className='w c4'+(q==='bad'?' critical':'');}
 function renderSleep(){document.getElementById('sleep-start').textContent=state.sleep.start;document.getElementById('sleep-stop').textContent=state.sleep.stop;document.getElementById('sleep-total').textContent=state.sleep.total;document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active','bad','med','good'));const active=document.querySelector('.qb.'+state.sleepQuality)||document.querySelectorAll('.qb')[1];if(active){active.classList.add('active',state.sleepQuality);}document.getElementById('sw').className='w c4'+(state.sleepQuality==='bad'?' critical':'');}
 function applyPrefs(){document.documentElement.setAttribute('data-palette',state.palette);document.documentElement.setAttribute('data-theme',state.theme);document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.toggle('active',s.dataset.p===state.palette));}
@@ -2434,52 +2294,9 @@ async function fetchWeather(){
 function weatherLabel(code){const map={0:'Czyste niebo',1:'Przeważnie pogodnie',2:'Częściowe zachmurzenie',3:'Pochmurno',45:'Mgła',48:'Osadzająca mgła',51:'Mżawka słaba',53:'Mżawka umiarkowana',55:'Mżawka gęsta',61:'Deszcz słaby',63:'Deszcz umiarkowany',65:'Deszcz silny',71:'Śnieg słaby',73:'Śnieg umiarkowany',75:'Śnieg silny',80:'Przelotne opady słabe',81:'Przelotne opady umiarkowane',82:'Przelotne opady silne',95:'Burza'};return map[code]||('Kod '+code);} function weatherIcon(code){if([0,1].includes(code)) return '☀️';if([2].includes(code)) return '⛅';if([3,45,48].includes(code)) return '🌥';if([51,53,55,61,63,65,80,81,82].includes(code)) return '🌧';if([71,73,75].includes(code)) return '❄️';if([95].includes(code)) return '⛈';return '•';}
 function renderWeather(){const w=state.weather;if(!w||!w.current) return;document.getElementById('weather-temp').textContent=Math.round(w.current.temperature_2m)+'°';document.getElementById('weather-code').textContent=weatherLabel(w.current.weather_code);document.getElementById('weather-feels').textContent='Odczuwalnie '+Math.round(w.current.apparent_temperature)+'°';document.getElementById('weather-wind').textContent='Wiatr '+Math.round(w.current.wind_speed_10m)+' km/h';document.getElementById('weather-humidity').textContent='Wilgotność '+Math.round(w.current.relative_humidity_2m)+'%';const t=new Date();document.getElementById('weather-updated').textContent='Aktualizacja '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');const wrap=document.getElementById('forecast-wrap');wrap.innerHTML='';const days=['ND','PN','WT','ŚR','CZW','PT','SB'];w.daily.time.forEach((d,i)=>{const el=document.createElement('div');el.className='wfd';const day=new Date(d);el.innerHTML=`<span class="wfdl">${days[day.getDay()]}</span><span style="font-size:.875rem;">${weatherIcon(w.daily.weather_code[i])}</span><span class="wfdt mono">${Math.round(w.daily.temperature_2m_max[i])}° / ${Math.round(w.daily.temperature_2m_min[i])}°</span>`;wrap.appendChild(el);});}
 function fmtTime(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
-let timerInterval=null; let timerDriftCorrection=0; function syncTimerUI(){const t=state.timer;document.getElementById('timer-screen').textContent=fmtTime(t.remaining);document.getElementById('timer-mode').textContent=fmtTime(t.remaining);document.getElementById('timer-session').textContent='sesja '+t.session;document.getElementById('timer-preset-label').textContent=t.presets[t.presetIndex].label;document.getElementById('timer-state').textContent=t.running?'w toku':'gotowy';document.getElementById('timer-state').className='pill '+(t.running?'a1':'');document.getElementById('timer-fill').style.width=((t.total-t.remaining)/t.total*100)+'%';}
-function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}timerDriftCorrection=0;}
-function startTimer(){
-  if(state.timer.running) return;
-  state.timer.running=true;
-  state.timer.lastTick=Date.now();
-  timerDriftCorrection=0;
-  syncTimerUI();
-  timerInterval=setInterval(()=>{
-    const now=Date.now();
-    const expectedElapsed=now-state.timer.lastTick;
-    const actualElapsed=expectedElapsed+timerDriftCorrection;
-    const delta=Math.floor(actualElapsed/1000);
-    if(delta>0){
-      state.timer.lastTick=now;
-      timerDriftCorrection=actualElapsed-(delta*1000);
-      state.timer.remaining=Math.max(0,state.timer.remaining-delta);
-      syncTimerUI();
-      if(state.timer.remaining<=0){
-        clearTimer();
-        state.timer.running=false;
-        document.getElementById('timer-state').textContent='koniec';
-        document.getElementById('timer-state').className='pill az';
-        a11y.announce('Czas minął');
-      }
-    }
-  }, CONFIG.APP.TIMER_UPDATE_INTERVAL);
-}
-function pauseTimer(){
-  state.timer.running=false;
-  clearTimer();
-  syncTimerUI();
-}
-function resetTimer(){
-  clearTimer();
-  state.timer.running=false;
-  const p=state.timer.presets[state.timer.presetIndex];
-  state.timer.total=p.work*60;
-  state.timer.remaining=state.timer.total;
-  syncTimerUI();
-}
-function cyclePreset(){
-  state.timer.presetIndex=(state.timer.presetIndex+1)%state.timer.presets.length;
-  state.timer.session=1;
-  resetTimer();
-}
+let timerInterval=null; function syncTimerUI(){const t=state.timer;document.getElementById('timer-screen').textContent=fmtTime(t.remaining);document.getElementById('timer-mode').textContent=fmtTime(t.remaining);document.getElementById('timer-session').textContent='sesja '+t.session;document.getElementById('timer-preset-label').textContent=t.presets[t.presetIndex].label;document.getElementById('timer-state').textContent=t.running?'w toku':'gotowy';document.getElementById('timer-state').className='pill '+(t.running?'a1':'');document.getElementById('timer-fill').style.width=((t.total-t.remaining)/t.total*100)+'%';}
+function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
+function startTimer(){if(state.timer.running) return;state.timer.running=true;state.timer.lastTick=Date.now();syncTimerUI();timerInterval=setInterval(()=>{const now=Date.now();const delta=Math.floor((now-state.timer.lastTick)/1000);if(delta>0){state.timer.lastTick=now;state.timer.remaining=Math.max(0,state.timer.remaining-delta);syncTimerUI();if(state.timer.remaining<=0){clearTimer();state.timer.running=false;document.getElementById('timer-state').textContent='koniec';document.getElementById('timer-state').className='pill az';}}},250);} function pauseTimer(){state.timer.running=false;clearTimer();syncTimerUI();} function resetTimer(){clearTimer();state.timer.running=false;const p=state.timer.presets[state.timer.presetIndex];state.timer.total=p.work*60;state.timer.remaining=state.timer.total;syncTimerUI();} function cyclePreset(){state.timer.presetIndex=(state.timer.presetIndex+1)%state.timer.presets.length;state.timer.session=1;resetTimer();}
 function hydrate(){applyPrefs();renderCalendar();renderFeelings();renderNoots();renderHabits();renderTodos();renderStocks();renderRefills();renderNews();renderSleep();document.getElementById('notes').value=state.notes||'';syncTimerUI();if(state.weather) renderWeather();}
 document.getElementById('notes').addEventListener('input',e=>{state.notes=e.target.value;});
 (function init(){
@@ -2488,32 +2305,28 @@ document.getElementById('notes').addEventListener('input',e=>{state.notes=e.targ
   setInterval(fetchWeather, CONFIG.WEATHER_API.REFRESH_INTERVAL);
 })();
 
-// ── PERSISTENCE (localStorage with versioning) ──
+// ── PERSISTENCE (localStorage) ──
 (function(){
   if(!('localStorage' in window)) return;
   try{
-    // palette & theme - use StorageManager
+    // palette & theme
     const root=document.documentElement;
-    const savedP = StorageManager.loadWithVersion('palette', null);
+    const savedP=localStorage.getItem('lifeos_palette');
     if(savedP){root.setAttribute('data-palette',savedP);
       document.querySelectorAll('.pal-swatch').forEach(s=>{s.classList.toggle('active',s.dataset.p===savedP);});}
-    const savedT = StorageManager.loadWithVersion('theme', null);
+    const savedT=localStorage.getItem('lifeos_theme');
     if(savedT){root.setAttribute('data-theme',savedT);}
-    // todos - use StorageManager with version checking
-    const td = StorageManager.loadWithVersion('todos', null);
-    if(td){state.todos = Array.isArray(td) ? td : []; renderTodos();}
-    // feelings - use StorageManager
-    const fs = StorageManager.loadWithVersion('feelings', null);
-    if(fs && Array.isArray(fs)){document.querySelectorAll('.fc').forEach(ch=>{if(fs.includes(ch.textContent)) ch.classList.add('sel');});
-      document.getElementById('fcnt').textContent=fs.length+' '+(fs.length===1?'wybrany':'wybrane');}
-    // timer - use StorageManager with validation
-    const tp = StorageManager.loadWithVersion('timer', null);
-    if(tp){
-      if(typeof tp.presetIndex==='number' && tp.presetIndex>=0 && tp.presetIndex<state.timer.presets.length) state.timer.presetIndex=tp.presetIndex;
-      if(typeof tp.remaining==='number' && tp.remaining>=0) state.timer.remaining=tp.remaining;
-      if(typeof tp.sessions==='number' && tp.sessions>0) state.timer.session=tp.sessions;
-    }
-  }catch(e){console.error('Persistence init failed:', e.message);}
+    // todos
+    const td = localStorage.getItem('lifeos_todos');
+    if(td){try{state.todos = JSON.parse(td);}catch(e){} renderTodos();}
+    // feelings
+    const fs = localStorage.getItem('lifeos_feelings');
+    if(fs){const arr = JSON.parse(fs);document.querySelectorAll('.fc').forEach(ch=>{if(arr.includes(ch.textContent)) ch.classList.add('sel');});
+      document.getElementById('fcnt').textContent=arr.length+' '+(arr.length===1?'wybrany':'wybrane');}
+    // timer - load from localStorage into state.timer
+    const tp = localStorage.getItem('lifeos_timer');
+    if(tp){try{const o=JSON.parse(tp);if(typeof o.presetIndex==='number')state.timer.presetIndex=o.presetIndex;if(typeof o.remaining==='number')state.timer.remaining=o.remaining;if(typeof o.sessions==='number')state.timer.session=o.sessions;}catch(e){}}
+  }catch(e){}
 })();
 
 // ── Open-Meteo WEATHER ──
@@ -2610,7 +2423,6 @@ async function loadQuotes(syms){
 async function renderPortfel(){
   const el=document.getElementById('sl-portfel');
   if(!el) return;
-  // Render skeleton loading state safely
   el.innerHTML=TICKERS.map(()=>`<div class="sr"><div><div class="skeleton skeleton-text" style="width:44px;height:13px;"></div><div class="skeleton skeleton-text" style="width:72px;height:10px;margin-top:4px;"></div></div><div class="skeleton" style="width:70px;height:22px;border-radius:2px;"></div><div class="skeleton skeleton-text" style="width:56px;height:13px;"></div><div class="skeleton skeleton-text" style="width:46px;height:13px;"></div></div>`).join('');
   const data=await loadQuotes(TICKERS.map(t=>t.sym));
   el.innerHTML='';
@@ -2619,29 +2431,7 @@ async function renderPortfel(){
     const up=d?(d.chg??0)>=0:true;
     const row=document.createElement('div');
     row.className='sr';
-    const leftDiv=document.createElement('div');
-    const symDiv=document.createElement('div');
-    symDiv.className='stk mono';
-    symDiv.textContent=sanitize.text(t.sym);
-    const nameDiv=document.createElement('div');
-    nameDiv.className='sn';
-    nameDiv.textContent=sanitize.text(t.name);
-    leftDiv.appendChild(symDiv);
-    leftDiv.appendChild(nameDiv);
-    const sparkSvg=spark(d?.closes,up);
-    const priceSpan=document.createElement('span');
-    priceSpan.className='sp mono';
-    priceSpan.textContent=fmtP(d?.price,t.sym);
-    const changeSpan=document.createElement('span');
-    changeSpan.className='sc '+(up?'up':'dn');
-    changeSpan.textContent=fmtPct(d?.chg);
-    row.appendChild(leftDiv);
-    // Parse and safely insert SVG
-    const tempDiv=document.createElement('div');
-    tempDiv.innerHTML=sparkSvg;
-    row.appendChild(tempDiv.firstChild);
-    row.appendChild(priceSpan);
-    row.appendChild(changeSpan);
+    row.innerHTML=`<div><div class="stk mono">${t.sym}</div><div class="sn">${t.name}</div></div>${spark(d?.closes,up)}<span class="sp mono">${fmtP(d?.price,t.sym)}</span><span class="sc ${up?'up':'dn'}">${fmtPct(d?.chg)}</span>`;
     el.appendChild(row);
   });
   const upd=document.getElementById('s-updated');
@@ -2661,30 +2451,7 @@ async function renderMakro(){
     const up=d?(d.chg??0)>=0:true;
     const row=document.createElement('div');
     row.className='sr';
-    const leftDiv=document.createElement('div');
-    const nameDiv=document.createElement('div');
-    nameDiv.className='stk mono';
-    nameDiv.style.fontSize='clamp(.65rem,.6rem + .2vw,.8rem)';
-    nameDiv.textContent=sanitize.text(t.name);
-    const symDiv=document.createElement('div');
-    symDiv.className='sn';
-    symDiv.textContent=sanitize.text(t.sym);
-    leftDiv.appendChild(nameDiv);
-    leftDiv.appendChild(symDiv);
-    const sparkSvg=spark(d?.closes,up,56,20);
-    const priceSpan=document.createElement('span');
-    priceSpan.className='sp mono';
-    priceSpan.textContent=fmtP(d?.price,t.sym);
-    const changeSpan=document.createElement('span');
-    changeSpan.className='sc '+(up?'up':'dn');
-    changeSpan.textContent=fmtPct(d?.chg);
-    row.appendChild(leftDiv);
-    // Parse and safely insert SVG
-    const tempDiv=document.createElement('div');
-    tempDiv.innerHTML=sparkSvg;
-    row.appendChild(tempDiv.firstChild);
-    row.appendChild(priceSpan);
-    row.appendChild(changeSpan);
+    row.innerHTML=`<div><div class="stk mono" style="font-size:clamp(.65rem,.6rem + .2vw,.8rem);">${t.name}</div><div class="sn">${t.sym}</div></div>${spark(d?.closes,up,56,20)}<span class="sp mono">${fmtP(d?.price,t.sym)}</span><span class="sc ${up?'up':'dn'}">${fmtPct(d?.chg)}</span>`;
     el.appendChild(row);
   });
 }
@@ -2783,46 +2550,11 @@ function buildPayoff(S,K,prem,type){
   const kx=tx(K).toFixed(1);
   const sx=tx(S).toFixed(1);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  // Build SVG elements safely without innerHTML
-  svg.innerHTML='';
-  const zeroLine=document.createElementNS('http://www.w3.org/2000/svg','line');
-  zeroLine.setAttribute('x1','0');
-  zeroLine.setAttribute('y1',zy);
-  zeroLine.setAttribute('x2',String(W));
-  zeroLine.setAttribute('y2',zy);
-  zeroLine.setAttribute('stroke','var(--bor)');
-  zeroLine.setAttribute('stroke-width','1');
-  svg.appendChild(zeroLine);
-  
-  const strikeLine=document.createElementNS('http://www.w3.org/2000/svg','line');
-  strikeLine.setAttribute('x1',kx);
-  strikeLine.setAttribute('y1','0');
-  strikeLine.setAttribute('x2',kx);
-  strikeLine.setAttribute('y2',String(H));
-  strikeLine.setAttribute('stroke','var(--txf)');
-  strikeLine.setAttribute('stroke-width','1');
-  strikeLine.setAttribute('stroke-dasharray','3,3');
-  svg.appendChild(strikeLine);
-  
-  const spotLine=document.createElementNS('http://www.w3.org/2000/svg','line');
-  spotLine.setAttribute('x1',sx);
-  spotLine.setAttribute('y1','0');
-  spotLine.setAttribute('x2',sx);
-  spotLine.setAttribute('y2',String(H));
-  spotLine.setAttribute('stroke','var(--a1)');
-  spotLine.setAttribute('stroke-width','1');
-  spotLine.setAttribute('stroke-dasharray','2,4');
-  spotLine.setAttribute('opacity','.7');
-  svg.appendChild(spotLine);
-  
-  const payoffLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-  payoffLine.setAttribute('points',polypts);
-  payoffLine.setAttribute('fill','none');
-  payoffLine.setAttribute('stroke','var(--a1)');
-  payoffLine.setAttribute('stroke-width','1.5');
-  payoffLine.setAttribute('stroke-linecap','round');
-  payoffLine.setAttribute('stroke-linejoin','round');
-  svg.appendChild(payoffLine);
+  svg.innerHTML=`
+    <line x1="0" y1="${zy}" x2="${W}" y2="${zy}" stroke="var(--bor)" stroke-width="1"/>
+    <line x1="${kx}" y1="0" x2="${kx}" y2="${H}" stroke="var(--txf)" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="${sx}" y1="0" x2="${sx}" y2="${H}" stroke="var(--a1)" stroke-width="1" stroke-dasharray="2,4" opacity=".7"/>
+    <polyline points="${polypts}" fill="none" stroke="var(--a1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
 }
 
 // ── INIT stocks ──
@@ -2852,20 +2584,10 @@ function mBadge(id,cls,text){const el=document.getElementById(id);if(!el)return;
 
 // ── eGFR CKD-EPI 2021 ──
 function mCalcEGFR(){
-  const scrInput=document.getElementById('egfr-scr').value;
-  const ageInput=document.getElementById('egfr-age').value;
+  const scr=+document.getElementById('egfr-scr').value;
+  const age=+document.getElementById('egfr-age').value;
   const sex=document.getElementById('egfr-sex').value;
-  
-  // Validate inputs with clinical safety ranges
-  const scrResult=medicalValidation.clinicalRange.scr(scrInput);
-  const ageResult=medicalValidation.clinicalRange.age(ageInput);
-  
-  if(!scrResult.valid){mSet('egfr-val','--');mBadge('egfr-stage','crit','BŁĄD');mSet('egfr-interp',scrResult.error);return;}
-  if(!ageResult.valid){mSet('egfr-val','--');mBadge('egfr-stage','crit','BŁĄD');mSet('egfr-interp',ageResult.error);return;}
-  
-  const scr=scrResult.value;
-  const age=ageResult.value;
-  
+  if(!scr||!age) return;
   const kappa=sex==='F'?0.7:0.9,alpha=sex==='F'?-0.241:-0.302,femFactor=sex==='F'?1.012:1;
   const r=scr/kappa;
   const gfr=142*Math.pow(Math.min(r,1),alpha)*Math.pow(Math.max(r,1),-1.200)*Math.pow(0.9938,age)*femFactor;
@@ -2883,24 +2605,11 @@ function mCalcEGFR(){
 
 // ── Cockcroft-Gault ──
 function mCalcCG(){
-  const scrInput=document.getElementById('cg-scr').value;
-  const ageInput=document.getElementById('cg-age').value;
-  const wtInput=document.getElementById('cg-wt').value;
+  const scr=+document.getElementById('cg-scr').value;
+  const age=+document.getElementById('cg-age').value;
+  const wt=+document.getElementById('cg-wt').value;
   const sex=document.getElementById('cg-sex').value;
-  
-  // Validate inputs with clinical safety ranges
-  const scrResult=medicalValidation.clinicalRange.scr(scrInput);
-  const ageResult=medicalValidation.clinicalRange.age(ageInput);
-  const wtResult=medicalValidation.clinicalRange.weight(wtInput);
-  
-  if(!scrResult.valid){mSet('cg-val','--');mBadge('cg-stage','crit','BŁĄD');mSet('cg-interp',scrResult.error);return;}
-  if(!ageResult.valid){mSet('cg-val','--');mBadge('cg-stage','crit','BŁĄD');mSet('cg-interp',ageResult.error);return;}
-  if(!wtResult.valid){mSet('cg-val','--');mBadge('cg-stage','crit','BŁĄD');mSet('cg-interp',wtResult.error);return;}
-  
-  const scr=scrResult.value;
-  const age=ageResult.value;
-  const wt=wtResult.value;
-  
+  if(!scr||!age||!wt) return;
   const crcl=((140-age)*wt/(72*scr))*(sex==='F'?0.85:1);
   const c=Math.round(crcl);
   mSet('cg-val',c);
@@ -2994,29 +2703,19 @@ function mCalcCentor(){
   if(age==='-1'||age==='-1b') s--;
   mSet('cen-val',s);
   let cls,lev,interp;
-  if(s<=0){cls='ok';lev='NISKIE';interp='<10% GAS. Nie leczyć antybiotykiem.';}
+  if(s<=0){cls='ok';lev='NISKIE';interp='&lt;10% GAS. Nie leczyć antybiotykiem.';}
   else if(s<=1){cls='ok';lev='NISKIE';interp='~10% GAS. Obserwacja bez antybiotyku.';}
   else if(s===2){cls='warn';lev='POŚREDNIE';interp='~17–35% GAS. Rozważyć wymazanie gardła.';}
-  else if(s===3){cls='warn';lev='UMIARKOWANE';interp='~35–56% GAS. Penicylina V lub amoksy.';}
+  else if(s===3){cls='warn';lev='UMIARKOWANE';interp='~35–56% GAS. Penicy lina V lub amoksy.';}
   else{cls='crit';lev='WYSOKIE';interp='~52–65% GAS. Antybiotyk empirycznie.';}
-  mBadge('cen-lev',cls,lev);const i=document.getElementById('cen-interp');if(i)i.textContent=interp;
+  mBadge('cen-lev',cls,lev);const i=document.getElementById('cen-interp');if(i)i.innerHTML=interp;
 }
 
 // ── BMI + BSA ──
 function mCalcBMI(){
-  const wtInput=document.getElementById('bmi-wt').value;
-  const htInput=document.getElementById('bmi-ht').value;
-  
-  // Validate inputs with clinical safety ranges
-  const wtResult=medicalValidation.clinicalRange.weight(wtInput);
-  const htResult=medicalValidation.clinicalRange.height(htInput);
-  
-  if(!wtResult.valid){mSet('bmi-val','--');mSet('bsa-val','--');mBadge('bmi-lev','crit','BŁĄD');mSet('bmi-interp',wtResult.error);return;}
-  if(!htResult.valid){mSet('bmi-val','--');mSet('bsa-val','--');mBadge('bmi-lev','crit','BŁĄD');mSet('bmi-interp',htResult.error);return;}
-  
-  const wt=wtResult.value;
-  const ht=htResult.value;
-  
+  const wt=+document.getElementById('bmi-wt').value;
+  const ht=+document.getElementById('bmi-ht').value;
+  if(!wt||!ht) return;
   const h=ht/100,bmi=wt/(h*h),bsa=Math.sqrt((wt*ht)/3600);
   mSet('bmi-val',bmi.toFixed(1));mSet('bsa-val',bsa.toFixed(2));
   let cls,lev,interp;
@@ -3034,23 +2733,14 @@ function mCalcCP(){
   const s=['cp-bil','cp-alb','cp-inr','cp-asc','cp-enc'].reduce((a,id)=>a+ +document.getElementById(id).value,0);
   mSet('cp-val',s);
   let cls,lev,interp;
-  if(s<=6){cls='ok';lev='Klasa A';interp='Śmiertelność <5% / rok. Dobra rezerwa.';}
+  if(s<=6){cls='ok';lev='Klasa A';interp='Śmiertelność &lt;5% / rok. Dobra rezerwa.';}
   else if(s<=9){cls='warn';lev='Klasa B';interp='Śmiertelność 20–30% / rok. Umiarkowana.';}
-  else{cls='crit';lev='Klasa C';interp='Śmiertelność >80% / rok. Zła rezerwa.';}
+  else{cls='crit';lev='Klasa C';interp='Śmiertelność &gt;80% / rok. Zła rezerwa.';}
   mBadge('cp-cls',cls,lev);mSet('cp-interp',interp);
 }
 
 // ── Init ──
 mCalcEGFR();mCalcCG();mCalcGCS();mCalcAPGAR();mCalcBMI();mCalcCP();mCalcCHADS();mCalcCURB();mCalcWells();mCalcCentor();
-
-// Cleanup on page unload - clear all debounced timers to prevent memory leaks
-window.addEventListener('beforeunload', () => {
-  StorageManager.clearAllTimers();
-  if(timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-});
 
 </script>
 </body>
