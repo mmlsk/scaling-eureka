@@ -1981,6 +1981,14 @@ const sanitize = {
     div.textContent = str;
     return div.innerHTML;
   },
+  text: (str) => {
+    if (typeof str !== 'string') return '';
+    return str.trim().slice(0, 500);
+  },
+  attribute: (str) => {
+    if (typeof str !== 'string') return '';
+    return str.replace(/[^a-zA-Z0-9\-_:\s]/g, '').slice(0, 100);
+  },
   trim: (str) => {
     if (typeof str !== 'string') return '';
     return str.trim().slice(0, CONFIG.APP.MAX_TODO_LENGTH);
@@ -1992,6 +2000,37 @@ const sanitize = {
   note: (str) => {
     if (typeof str !== 'string') return '';
     return str.trim().slice(0, CONFIG.APP.MAX_NOTE_LENGTH);
+  },
+  medicalInput: (val, min, max, fieldName) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) throw new Error(`${fieldName} musi być liczbą`);
+    if (num < min || num > max) throw new Error(`${fieldName} poza zakresem klinicznym (${min}-${max})`);
+    return num;
+  }
+};
+
+// Safe DOM manipulation utilities
+const safeDOM = {
+  setHTML: (element, htmlString) => {
+    if (!element) return;
+    element.innerHTML = sanitize.html(htmlString);
+  },
+  setText: (element, text) => {
+    if (!element) return;
+    element.textContent = String(text ?? '');
+  },
+  clear: (element) => {
+    if (!element) return;
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  },
+  replaceChildren: (element, ...children) => {
+    if (!element) return;
+    safeDOM.clear(element);
+    children.forEach(child => {
+      if (child) element.appendChild(child);
+    });
   }
 };
 
@@ -2213,16 +2252,59 @@ function saveTimer(){try{localStorage.setItem('lifeos_timer',JSON.stringify({pre
 
 function setPalette(el){
   savePalette();document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.remove('active'));el.classList.add('active');state.palette=el.dataset.p;document.documentElement.setAttribute('data-palette',state.palette);}
-(function(){const btn=document.querySelector('[data-theme-toggle]'),r=document.documentElement;btn&&btn.addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';r.setAttribute('data-theme',state.theme);btn.innerHTML=state.theme==='dark'?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';});})();
+(function(){
+  const btn=document.querySelector('[data-theme-toggle]');
+  const r=document.documentElement;
+  if(!btn) return;
+  
+  function setThemeIcon(theme){
+    safeDOM.clear(btn);
+    const ns='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(ns,'svg');
+    svg.setAttribute('width','15');
+    svg.setAttribute('height','15');
+    svg.setAttribute('viewBox','0 0 24 24');
+    svg.setAttribute('fill','none');
+    svg.setAttribute('stroke','currentColor');
+    svg.setAttribute('stroke-width','2');
+    
+    if(theme==='dark'){
+      // Moon icon
+      const path=document.createElementNS(ns,'path');
+      path.setAttribute('d','M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z');
+      svg.appendChild(path);
+    }else{
+      // Sun icon
+      const circle=document.createElementNS(ns,'circle');
+      circle.setAttribute('cx','12');
+      circle.setAttribute('cy','12');
+      circle.setAttribute('r','5');
+      svg.appendChild(circle);
+      const rays=document.createElementNS(ns,'path');
+      rays.setAttribute('d','M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42');
+      svg.appendChild(rays);
+    }
+    btn.appendChild(svg);
+  }
+  
+  btn.addEventListener('click',()=>{
+    state.theme=state.theme==='dark'?'light':'dark';
+    r.setAttribute('data-theme',state.theme);
+    setThemeIcon(state.theme);
+  });
+  
+  // Initialize icon on load
+  setThemeIcon(state.theme);
+})();
 function tick(){const n=new Date();const h=s=>String(s).padStart(2,'0');document.getElementById('ltime').textContent=`${h(n.getHours())}:${h(n.getMinutes())}:${h(n.getSeconds())}`;const ny=new Date(n.getTime()+n.getTimezoneOffset()*60000-4*3600000);document.getElementById('ntime').textContent=`${h(ny.getHours())}:${h(ny.getMinutes())}:${h(ny.getSeconds())}`;const wd=ny.getDay(),hh=ny.getHours(),mm=ny.getMinutes();const open=wd>=1&&wd<=5&&(hh>9||(hh===9&&mm>=30))&&hh<16;document.getElementById('mdot').className='mkt-dot '+(open?'open':'closed');document.getElementById('mlabel').textContent=open?'OTWARTY':'ZAMKNIĘTY';document.getElementById('mlabel').style.color=open?'var(--nom)':'var(--txm)';const days=['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];const months=['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie','Wrz','Paź','Lis','Gru'];document.getElementById('cdate').textContent=`${days[n.getDay()]}, ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;} setInterval(tick,1000);tick();
-function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');g.innerHTML='';['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evts=[4,9,15,20,23,26];let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){e.className='cd'+(day===n.getDate()?' today':'')+(evts.includes(day)?' evt':'');e.textContent=day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
-function renderFeelings(){const wrap=document.getElementById('feel-wrap');wrap.innerHTML='';state.feelingOptions.forEach(name=>{const btn=document.createElement('button');btn.className='fc'+(state.feelings.includes(name)?' sel':'');btn.textContent=name;btn.setAttribute('aria-pressed', state.feelings.includes(name) ? 'true' : 'false');btn.addEventListener('click', ()=>togF(name));wrap.appendChild(btn);});document.getElementById('fcnt').textContent=state.feelings.length+' '+(state.feelings.length===1?'wybrany':'wybrane');}
+function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');safeDOM.clear(g);['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evts=[4,9,15,20,23,26];let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){e.className='cd'+(day===n.getDate()?' today':'')+(evts.includes(day)?' evt':'');e.textContent=day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
+function renderFeelings(){const wrap=document.getElementById('feel-wrap');safeDOM.clear(wrap);state.feelingOptions.forEach(name=>{const btn=document.createElement('button');btn.className='fc'+(state.feelings.includes(name)?' sel':'');btn.textContent=name;btn.setAttribute('aria-pressed', state.feelings.includes(name) ? 'true' : 'false');btn.addEventListener('click', ()=>togF(name));wrap.appendChild(btn);});document.getElementById('fcnt').textContent=state.feelings.length+' '+(state.feelings.length===1?'wybrany':'wybrane');}
 function togF(name){if(state.feelings.includes(name)) state.feelings=state.feelings.filter(x=>x!==name); else state.feelings.push(name); renderFeelings();}
-function renderNoots(){const c=document.getElementById('noot-list');c.innerHTML='';state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';const statusDiv=document.createElement('div');statusDiv.className='nd '+sanitize.attribute(n.status);const nameSpan=document.createElement('span');nameSpan.className='nn';nameSpan.textContent=n.name;const doseSpan=document.createElement('span');doseSpan.className='ndose';doseSpan.textContent=n.dose;d.appendChild(statusDiv);d.appendChild(nameSpan);d.appendChild(doseSpan);c.appendChild(d);});}
-function renderHabits(){const c=document.getElementById('hlist');c.innerHTML='';state.habits.forEach((h,idx)=>{const r=document.createElement('div');r.className='hr';const nm=document.createElement('span');nm.className='hn';nm.textContent=h.n;const dd=document.createElement('div');dd.className='hd';h.d.forEach((v,i)=>{const d=document.createElement('div');d.className='dot'+(v?' done':'')+(i===h.d.length-1?' cur':'');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-pressed',v?'true':'false');d.addEventListener('click',()=>{state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();});d.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();}});dd.appendChild(d);});const st=document.createElement('span');st.className='hstr mono';st.textContent=h.s+'d';r.append(nm,dd,st);c.appendChild(r);});}
+function renderNoots(){const c=document.getElementById('noot-list');safeDOM.clear(c);state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';const statusDiv=document.createElement('div');statusDiv.className='nd '+sanitize.attribute(n.status);const nameSpan=document.createElement('span');nameSpan.className='nn';nameSpan.textContent=n.name;const doseSpan=document.createElement('span');doseSpan.className='ndose';doseSpan.textContent=n.dose;d.appendChild(statusDiv);d.appendChild(nameSpan);d.appendChild(doseSpan);c.appendChild(d);});}
+function renderHabits(){const c=document.getElementById('hlist');safeDOM.clear(c);state.habits.forEach((h,idx)=>{const r=document.createElement('div');r.className='hr';const nm=document.createElement('span');nm.className='hn';nm.textContent=h.n;const dd=document.createElement('div');dd.className='hd';h.d.forEach((v,i)=>{const d=document.createElement('div');d.className='dot'+(v?' done':'')+(i===h.d.length-1?' cur':'');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-pressed',v?'true':'false');d.addEventListener('click',()=>{state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();});d.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();}});dd.appendChild(d);});const st=document.createElement('span');st.className='hstr mono';st.textContent=h.s+'d';r.append(nm,dd,st);c.appendChild(r);});}
 function renderTodos(){
   const c=document.getElementById('tlist');
-  c.innerHTML='';
+  safeDOM.clear(c);
   state.todos.forEach((t,i)=>{
     const r=document.createElement('div');
     r.className='ti';
@@ -2273,9 +2355,76 @@ document.getElementById('tinp').addEventListener('keydown',e=>{
   if(e.key==='Enter')addTodo();
 });
 </div><div class="sn">${s.n}</div></div><svg width="52" height="22" viewBox="0 0 60 24" fill="none"><path d="${s.up?up:dn}" stroke="${s.up?'var(--nom)':'var(--az)'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sp mono">$${s.p}</span><span class="sc ${s.up?'up':'dn'}">${s.c}</span>`;c.appendChild(r);});}
-function renderRefills(){const c=document.getElementById('refill-list');c.innerHTML='';state.refills.forEach(r=>{const d=document.createElement('div');d.className='ri'+(r.critical?' crit':'');d.innerHTML=`<span class="rn">${r.name}</span><div class="rbw"><div class="rb" style="width:${r.pct}%;background:${r.color}"></div></div><span class="rd ${r.critical?'crit':''} mono">${r.days}</span>`;c.appendChild(d);});}
+function renderRefills(){
+  const c=document.getElementById('refill-list');
+  if(!c) return;
+  const frag=document.createDocumentFragment();
+  state.refills.forEach(r=>{
+    const d=document.createElement('div');
+    d.className='ri'+(r.critical?' crit':'');
+    const nameSpan=document.createElement('span');
+    nameSpan.className='rn';
+    nameSpan.textContent=r.name;
+    const barWrap=document.createElement('div');
+    barWrap.className='rbw';
+    const bar=document.createElement('div');
+    bar.className='rb';
+    bar.style.width=r.pct+'%';
+    bar.style.background=r.color;
+    barWrap.appendChild(bar);
+    const daysSpan=document.createElement('span');
+    daysSpan.className='rd'+(r.critical?' crit':'')+' mono';
+    daysSpan.textContent=r.days;
+    d.appendChild(nameSpan);
+    d.appendChild(barWrap);
+    d.appendChild(daysSpan);
+    frag.appendChild(d);
+  });
+  safeDOM.clear(c);
+  c.appendChild(frag);
+}
 const NEWS=[{t:'08:41',h:'Fed utrzymuje stopy — rynki reagują spokojnie',s:'Reuters',c:'fin'},{t:'08:22',h:'WHO: Nowe wytyczne leczenia opornej gruźlicy płuc',s:'WHO',c:'med'},{t:'07:55',h:'GPW: WIG20 otworzył się wzrostem 0.4%',s:'Parkiet',c:'fin'},{t:'07:33',h:'Trump ogłasza nowe cła na elektronikę z Azji',s:'Bloomberg',c:'pol'},{t:'07:14',h:'Meta zapowiada AI do analizy obrazów MRI',s:'TechCrunch',c:'tch'},{t:'06:58',h:'NBP: Inflacja w Polsce spada do 3.2% r/r',s:'NBP',c:'fin'},{t:'06:40',h:'Niedobór snu zwiększa ryzyko cukrzycy T2 o 27%',s:'NEJM',c:'med'},{t:'06:21',h:'NVIDIA Blackwell Ultra — +60% wydajność AI',s:'The Verge',c:'tch'},{t:'05:58',h:'Sejm: Reforma ochrony zdrowia przełożona na wrzesień',s:'PAP',c:'pol'},{t:'05:33',h:'Ropa WTI spada poniżej $78 — obawy o popyt',s:'Bloomberg',c:'fin'}];
-function renderNews(){const panes={all:[],fin:[],med:[],pol:[],tch:[]};NEWS.forEach(n=>{const h=`<div class="nit"><span class="ntm mono">${n.t}</span><div><div class="nh">${n.h}</div><div class="ns">${n.s}</div></div></div>`;panes.all.push(h);panes[n.c].push(h);});Object.entries(panes).forEach(([k,items])=>{document.getElementById('np-'+k).innerHTML=items.join('');});} function switchN(tab,key){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.np').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById('np-'+key).classList.add('active');}
+function renderNews(){
+  const panes={all:[],fin:[],med:[],pol:[],tch:[]};
+  NEWS.forEach(n=>{
+    const item=document.createElement('div');
+    item.className='nit';
+    const timeSpan=document.createElement('span');
+    timeSpan.className='ntm mono';
+    timeSpan.textContent=n.t;
+    const contentDiv=document.createElement('div');
+    const headline=document.createElement('div');
+    headline.className='nh';
+    headline.textContent=n.h;
+    const source=document.createElement('div');
+    source.className='ns';
+    source.textContent=n.s;
+    contentDiv.appendChild(headline);
+    contentDiv.appendChild(source);
+    item.appendChild(timeSpan);
+    item.appendChild(contentDiv);
+    panes.all.push(item);
+    if(!panes[n.c]) panes[n.c]=[];
+    panes[n.c].push(item);
+  });
+  Object.entries(panes).forEach(([k,items])=>{
+    const container=document.getElementById('np-'+k);
+    if(container){
+      safeDOM.clear(container);
+      const frag=document.createDocumentFragment();
+      items.forEach(item=>frag.appendChild(item.cloneNode(true)));
+      container.appendChild(frag);
+    }
+  });
+}
+
+function switchN(tab,key){
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.np').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  const target=document.getElementById('np-'+key);
+  if(target) target.classList.add('active');
+}
 function setQ(el,q){document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active','bad','med','good'));el.classList.add('active',q);state.sleepQuality=q;document.getElementById('sw').className='w c4'+(q==='bad'?' critical':'');}
 function renderSleep(){document.getElementById('sleep-start').textContent=state.sleep.start;document.getElementById('sleep-stop').textContent=state.sleep.stop;document.getElementById('sleep-total').textContent=state.sleep.total;document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active','bad','med','good'));const active=document.querySelector('.qb.'+state.sleepQuality)||document.querySelectorAll('.qb')[1];if(active){active.classList.add('active',state.sleepQuality);}document.getElementById('sw').className='w c4'+(state.sleepQuality==='bad'?' critical':'');}
 function applyPrefs(){document.documentElement.setAttribute('data-palette',state.palette);document.documentElement.setAttribute('data-theme',state.theme);document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.toggle('active',s.dataset.p===state.palette));}
@@ -2294,7 +2443,7 @@ async function fetchWeather(){
   }
 }
 function weatherLabel(code){const map={0:'Czyste niebo',1:'Przeważnie pogodnie',2:'Częściowe zachmurzenie',3:'Pochmurno',45:'Mgła',48:'Osadzająca mgła',51:'Mżawka słaba',53:'Mżawka umiarkowana',55:'Mżawka gęsta',61:'Deszcz słaby',63:'Deszcz umiarkowany',65:'Deszcz silny',71:'Śnieg słaby',73:'Śnieg umiarkowany',75:'Śnieg silny',80:'Przelotne opady słabe',81:'Przelotne opady umiarkowane',82:'Przelotne opady silne',95:'Burza'};return map[code]||('Kod '+code);} function weatherIcon(code){if([0,1].includes(code)) return '☀️';if([2].includes(code)) return '⛅';if([3,45,48].includes(code)) return '🌥';if([51,53,55,61,63,65,80,81,82].includes(code)) return '🌧';if([71,73,75].includes(code)) return '❄️';if([95].includes(code)) return '⛈';return '•';}
-function renderWeather(){const w=state.weather;if(!w||!w.current) return;document.getElementById('weather-temp').textContent=Math.round(w.current.temperature_2m)+'°';document.getElementById('weather-code').textContent=weatherLabel(w.current.weather_code);document.getElementById('weather-feels').textContent='Odczuwalnie '+Math.round(w.current.apparent_temperature)+'°';document.getElementById('weather-wind').textContent='Wiatr '+Math.round(w.current.wind_speed_10m)+' km/h';document.getElementById('weather-humidity').textContent='Wilgotność '+Math.round(w.current.relative_humidity_2m)+'%';const t=new Date();document.getElementById('weather-updated').textContent='Aktualizacja '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');const wrap=document.getElementById('forecast-wrap');wrap.innerHTML='';const days=['ND','PN','WT','ŚR','CZW','PT','SB'];w.daily.time.forEach((d,i)=>{const el=document.createElement('div');el.className='wfd';const daySpan=document.createElement('span');daySpan.className='wfdl';daySpan.textContent=days[new Date(d).getDay()];const iconSpan=document.createElement('span');iconSpan.style.fontSize='.875rem';iconSpan.textContent=weatherIcon(w.daily.weather_code[i]);const tempSpan=document.createElement('span');tempSpan.className='wfdt mono';tempSpan.textContent=Math.round(w.daily.temperature_2m_max[i])+'° / '+Math.round(w.daily.temperature_2m_min[i])+'°';el.appendChild(daySpan);el.appendChild(iconSpan);el.appendChild(tempSpan);wrap.appendChild(el);});}
+function renderWeather(){const w=state.weather;if(!w||!w.current) return;document.getElementById('weather-temp').textContent=Math.round(w.current.temperature_2m)+'°';document.getElementById('weather-code').textContent=weatherLabel(w.current.weather_code);document.getElementById('weather-feels').textContent='Odczuwalnie '+Math.round(w.current.apparent_temperature)+'°';document.getElementById('weather-wind').textContent='Wiatr '+Math.round(w.current.wind_speed_10m)+' km/h';document.getElementById('weather-humidity').textContent='Wilgotność '+Math.round(w.current.relative_humidity_2m)+'%';const t=new Date();document.getElementById('weather-updated').textContent='Aktualizacja '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');const wrap=document.getElementById('forecast-wrap');safeDOM.clear(wrap);const days=['ND','PN','WT','ŚR','CZW','PT','SB'];w.daily.time.forEach((d,i)=>{const el=document.createElement('div');el.className='wfd';const daySpan=document.createElement('span');daySpan.className='wfdl';daySpan.textContent=days[new Date(d).getDay()];const iconSpan=document.createElement('span');iconSpan.style.fontSize='.875rem';iconSpan.textContent=weatherIcon(w.daily.weather_code[i]);const tempSpan=document.createElement('span');tempSpan.className='wfdt mono';tempSpan.textContent=Math.round(w.daily.temperature_2m_max[i])+'° / '+Math.round(w.daily.temperature_2m_min[i])+'°';el.appendChild(daySpan);el.appendChild(iconSpan);el.appendChild(tempSpan);wrap.appendChild(el);});}
 function fmtTime(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
 let timerInterval=null; function syncTimerUI(){const t=state.timer;document.getElementById('timer-screen').textContent=fmtTime(t.remaining);document.getElementById('timer-mode').textContent=fmtTime(t.remaining);document.getElementById('timer-session').textContent='sesja '+t.session;document.getElementById('timer-preset-label').textContent=t.presets[t.presetIndex].label;document.getElementById('timer-state').textContent=t.running?'w toku':'gotowy';document.getElementById('timer-state').className='pill '+(t.running?'a1':'');document.getElementById('timer-fill').style.width=((t.total-t.remaining)/t.total*100)+'%';}
 function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
@@ -2397,11 +2546,37 @@ function fmtVol(v){if(!v||isNaN(v))return '--';if(v>=1e9)return(v/1e9).toFixed(1
 // ── SVG Sparkline ──
 function spark(closes,up,W=70,H=24){
   const f=(closes||[]).filter(p=>p!=null&&!isNaN(p));
-  if(f.length<2)return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="var(--bor)" stroke-width="1"/></svg>`;
+  if(f.length<2){
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('width',String(W));
+    svg.setAttribute('height',String(H));
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1','0');
+    line.setAttribute('y1',String(H/2));
+    line.setAttribute('x2',String(W));
+    line.setAttribute('y2',String(H/2));
+    line.setAttribute('stroke','var(--bor)');
+    line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    return svg;
+  }
   const mn=Math.min(...f),mx=Math.max(...f),rng=mx-mn||1;
   const pts=f.map((p,i)=>`${((i/(f.length-1))*W).toFixed(1)},${(H-2-((p-mn)/rng)*(H-4)).toFixed(1)}`).join(' ');
   const col=up?'var(--nom)':'var(--az)';
-  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none"><polyline points="${pts}" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width',String(W));
+  svg.setAttribute('height',String(H));
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.setAttribute('fill','none');
+  const poly=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  poly.setAttribute('points',pts);
+  poly.setAttribute('stroke',col);
+  poly.setAttribute('stroke-width','1.5');
+  poly.setAttribute('stroke-linecap','round');
+  poly.setAttribute('stroke-linejoin','round');
+  svg.appendChild(poly);
+  return svg;
 }
 
 // ── Load quotes for array of symbols ──
@@ -2425,17 +2600,79 @@ async function loadQuotes(syms){
 async function renderPortfel(){
   const el=document.getElementById('sl-portfel');
   if(!el) return;
-  el.innerHTML=TICKERS.map(()=>`<div class="sr"><div><div class="skeleton skeleton-text" style="width:44px;height:13px;"></div><div class="skeleton skeleton-text" style="width:72px;height:10px;margin-top:4px;"></div></div><div class="skeleton" style="width:70px;height:22px;border-radius:2px;"></div><div class="skeleton skeleton-text" style="width:56px;height:13px;"></div><div class="skeleton skeleton-text" style="width:46px;height:13px;"></div></div>`).join('');
+  
+  // Render skeletons using DOM methods
+  safeDOM.clear(el);
+  const fragSkel=document.createDocumentFragment();
+  TICKERS.forEach(()=>{
+    const skel=document.createElement('div');
+    skel.className='sr';
+    const leftDiv=document.createElement('div');
+    const skel1=document.createElement('div');
+    skel1.className='skeleton skeleton-text';
+    skel1.style.width='44px';
+    skel1.style.height='13px';
+    const skel2=document.createElement('div');
+    skel2.className='skeleton skeleton-text';
+    skel2.style.width='72px';
+    skel2.style.height='10px';
+    skel2.style.marginTop='4px';
+    leftDiv.appendChild(skel1);
+    leftDiv.appendChild(skel2);
+    const skel3=document.createElement('div');
+    skel3.className='skeleton';
+    skel3.style.width='70px';
+    skel3.style.height='22px';
+    skel3.style.borderRadius='2px';
+    const skel4=document.createElement('div');
+    skel4.className='skeleton skeleton-text';
+    skel4.style.width='56px';
+    skel4.style.height='13px';
+    const skel5=document.createElement('div');
+    skel5.className='skeleton skeleton-text';
+    skel5.style.width='46px';
+    skel5.style.height='13px';
+    skel.appendChild(leftDiv);
+    skel.appendChild(skel3);
+    skel.appendChild(skel4);
+    skel.appendChild(skel5);
+    fragSkel.appendChild(skel);
+  });
+  el.appendChild(fragSkel);
+  
   const data=await loadQuotes(TICKERS.map(t=>t.sym));
-  el.innerHTML='';
+  safeDOM.clear(el);
+  const frag=document.createDocumentFragment();
   TICKERS.forEach(t=>{
     const d=data[t.sym];
     const up=d?(d.chg??0)>=0:true;
     const row=document.createElement('div');
     row.className='sr';
-    row.innerHTML=`<div><div class="stk mono">${t.sym}</div><div class="sn">${t.name}</div></div>${spark(d?.closes,up)}<span class="sp mono">${fmtP(d?.price,t.sym)}</span><span class="sc ${up?'up':'dn'}">${fmtPct(d?.chg)}</span>`;
-    el.appendChild(row);
+    const leftDiv=document.createElement('div');
+    const symDiv=document.createElement('div');
+    symDiv.className='stk mono';
+    symDiv.textContent=t.sym;
+    const nameDiv=document.createElement('div');
+    nameDiv.className='sn';
+    nameDiv.textContent=t.name;
+    leftDiv.appendChild(symDiv);
+    leftDiv.appendChild(nameDiv);
+    const svgElement=spark(d?.closes,up);
+    const svgContainer=document.createElement('span');
+    svgContainer.appendChild(svgElement);
+    const priceSpan=document.createElement('span');
+    priceSpan.className='sp mono';
+    priceSpan.textContent=fmtP(d?.price,t.sym);
+    const chgSpan=document.createElement('span');
+    chgSpan.className='sc '+(up?'up':'dn');
+    chgSpan.textContent=fmtPct(d?.chg);
+    row.appendChild(leftDiv);
+    row.appendChild(svgContainer.firstChild);
+    row.appendChild(priceSpan);
+    row.appendChild(chgSpan);
+    frag.appendChild(row);
   });
+  el.appendChild(frag);
   const upd=document.getElementById('s-updated');
   if(upd) upd.textContent=new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   updateMktStatus();
@@ -2445,17 +2682,50 @@ async function renderPortfel(){
 async function renderMakro(){
   const el=document.getElementById('sl-makro');
   if(!el) return;
-  el.innerHTML=`<div style="padding:.75rem;color:var(--txm);font-size:clamp(.6rem,.58rem + .12vw,.72rem);">Ładowanie danych makro…</div>`;
+  
+  // Loading message using DOM
+  safeDOM.clear(el);
+  const loadingDiv=document.createElement('div');
+  loadingDiv.style.padding='.75rem';
+  loadingDiv.style.color='var(--txm)';
+  loadingDiv.style.fontSize='clamp(.6rem,.58rem + .12vw,.72rem)';
+  loadingDiv.textContent='Ładowanie danych makro…';
+  el.appendChild(loadingDiv);
+  
   const data=await loadQuotes(MACRO_LIST.map(t=>t.sym));
-  el.innerHTML='';
+  safeDOM.clear(el);
+  const frag=document.createDocumentFragment();
   MACRO_LIST.forEach(t=>{
     const d=data[t.sym];
     const up=d?(d.chg??0)>=0:true;
     const row=document.createElement('div');
     row.className='sr';
-    row.innerHTML=`<div><div class="stk mono" style="font-size:clamp(.65rem,.6rem + .2vw,.8rem);">${t.name}</div><div class="sn">${t.sym}</div></div>${spark(d?.closes,up,56,20)}<span class="sp mono">${fmtP(d?.price,t.sym)}</span><span class="sc ${up?'up':'dn'}">${fmtPct(d?.chg)}</span>`;
-    el.appendChild(row);
+    const leftDiv=document.createElement('div');
+    const symDiv=document.createElement('div');
+    symDiv.className='stk mono';
+    symDiv.style.fontSize='clamp(.65rem,.6rem + .2vw,.8rem)';
+    symDiv.textContent=t.name;
+    const nameDiv=document.createElement('div');
+    nameDiv.className='sn';
+    nameDiv.textContent=t.sym;
+    leftDiv.appendChild(symDiv);
+    leftDiv.appendChild(nameDiv);
+    const svgElement=spark(d?.closes,up,56,20);
+    const svgContainer=document.createElement('span');
+    svgContainer.appendChild(svgElement);
+    const priceSpan=document.createElement('span');
+    priceSpan.className='sp mono';
+    priceSpan.textContent=fmtP(d?.price,t.sym);
+    const chgSpan=document.createElement('span');
+    chgSpan.className='sc '+(up?'up':'dn');
+    chgSpan.textContent=fmtPct(d?.chg);
+    row.appendChild(leftDiv);
+    row.appendChild(svgContainer.firstChild);
+    row.appendChild(priceSpan);
+    row.appendChild(chgSpan);
+    frag.appendChild(row);
   });
+  el.appendChild(frag);
 }
 
 // ── Market status ──
@@ -2537,7 +2807,8 @@ function updateBS(){
 }
 
 function buildPayoff(S,K,prem,type){
-  const svg=document.getElementById('bs-payoff');if(!svg) return;
+  const svg=document.getElementById('bs-payoff');
+  if(!svg) return;
   const W=220,H=70,n=60,span=K*0.45;
   const pts=Array.from({length:n+1},(_,i)=>{
     const price=K-span+(i/n)*span*2;
@@ -2547,16 +2818,58 @@ function buildPayoff(S,K,prem,type){
   const mn=Math.min(...pts.map(p=>p.y)),mx=Math.max(...pts.map(p=>p.y)),rng=mx-mn||1;
   const tx=x=>((x-(K-span))/(span*2))*W;
   const ty=y=>H-((y-mn)/rng)*H;
-  const polypts=pts.map(p=>`${tx(p.x).toFixed(1)},${ty(p.y).toFixed(1)}`).join(' ');
   const zy=ty(0).toFixed(1);
   const kx=tx(K).toFixed(1);
   const sx=tx(S).toFixed(1);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  svg.innerHTML=`
-    <line x1="0" y1="${zy}" x2="${W}" y2="${zy}" stroke="var(--bor)" stroke-width="1"/>
-    <line x1="${kx}" y1="0" x2="${kx}" y2="${H}" stroke="var(--txf)" stroke-width="1" stroke-dasharray="3,3"/>
-    <line x1="${sx}" y1="0" x2="${sx}" y2="${H}" stroke="var(--a1)" stroke-width="1" stroke-dasharray="2,4" opacity=".7"/>
-    <polyline points="${polypts}" fill="none" stroke="var(--a1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  safeDOM.clear(svg);
+  
+  // Create SVG elements using createElementNS
+  const ns='http://www.w3.org/2000/svg';
+  
+  // Zero line
+  const zeroLine=document.createElementNS(ns,'line');
+  zeroLine.setAttribute('x1','0');
+  zeroLine.setAttribute('y1',zy);
+  zeroLine.setAttribute('x2',String(W));
+  zeroLine.setAttribute('y2',zy);
+  zeroLine.setAttribute('stroke','var(--bor)');
+  zeroLine.setAttribute('stroke-width','1');
+  svg.appendChild(zeroLine);
+  
+  // Strike price line
+  const strikeLine=document.createElementNS(ns,'line');
+  strikeLine.setAttribute('x1',kx);
+  strikeLine.setAttribute('y1','0');
+  strikeLine.setAttribute('x2',kx);
+  strikeLine.setAttribute('y2',String(H));
+  strikeLine.setAttribute('stroke','var(--txf)');
+  strikeLine.setAttribute('stroke-width','1');
+  strikeLine.setAttribute('stroke-dasharray','3,3');
+  svg.appendChild(strikeLine);
+  
+  // Spot price line
+  const spotLine=document.createElementNS(ns,'line');
+  spotLine.setAttribute('x1',sx);
+  spotLine.setAttribute('y1','0');
+  spotLine.setAttribute('x2',sx);
+  spotLine.setAttribute('y2',String(H));
+  spotLine.setAttribute('stroke','var(--a1)');
+  spotLine.setAttribute('stroke-width','1');
+  spotLine.setAttribute('stroke-dasharray','2,4');
+  spotLine.setAttribute('opacity','.7');
+  svg.appendChild(spotLine);
+  
+  // Payoff polyline
+  const polypts=pts.map(p=>`${tx(p.x).toFixed(1)},${ty(p.y).toFixed(1)}`).join(' ');
+  const payoffLine=document.createElementNS(ns,'polyline');
+  payoffLine.setAttribute('points',polypts);
+  payoffLine.setAttribute('fill','none');
+  payoffLine.setAttribute('stroke','var(--a1)');
+  payoffLine.setAttribute('stroke-width','1.5');
+  payoffLine.setAttribute('stroke-linecap','round');
+  payoffLine.setAttribute('stroke-linejoin','round');
+  svg.appendChild(payoffLine);
 }
 
 // ── INIT stocks ──
@@ -2710,7 +3023,13 @@ function mCalcCentor(){
   else if(s===2){cls='warn';lev='POŚREDNIE';interp='~17–35% GAS. Rozważyć wymazanie gardła.';}
   else if(s===3){cls='warn';lev='UMIARKOWANE';interp='~35–56% GAS. Penicy lina V lub amoksy.';}
   else{cls='crit';lev='WYSOKIE';interp='~52–65% GAS. Antybiotyk empirycznie.';}
-  mBadge('cen-lev',cls,lev);const i=document.getElementById('cen-interp');if(i)i.innerHTML=interp;
+  mBadge('cen-lev',cls,lev);
+  const i=document.getElementById('cen-interp');
+  if(i){
+    // Decode HTML entities safely and set as textContent
+    const decoded=interp.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    i.textContent=decoded;
+  }
 }
 
 // ── BMI + BSA ──
