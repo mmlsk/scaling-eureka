@@ -1932,6 +1932,11 @@ a {
       </div>
     </div></div>
   </div>
+    <!-- Plugin Container Section -->
+    <div id="plugin-section" class="widget" style="display:none;" aria-label="Plugin widgets">
+      <h2 class="wttl">Rozszerzenia</h2>
+      <div id="plugins-container" class="plugins-grid"></div>
+    </div>
 
 </main>
 </div>
@@ -1972,6 +1977,23 @@ const CONFIG = {
     TIMER_UPDATE_INTERVAL: 250,
     DEFAULT_PALETTE: 'reaktor',
     DEFAULT_THEME: 'dark'
+  },
+  // Plugin System Configuration
+  PLUGIN: {
+    ENABLED: true,
+    AUTO_LOAD: true,
+    DEBUG_MODE: false,
+    MAX_PLUGINS: 50,
+    TIMEOUT: 10000,
+    RETRY_ATTEMPTS: 3,
+    RETRY_DELAY: 1000,
+    SANDBOX_ENABLED: true,
+    ALLOWED_ORIGINS: [
+      'https://api.open-meteo.com',
+      'https://query1.finance.yahoo.com',
+      'https://corsproxy.io',
+      'https://api.allorigins.win'
+    ]
   }
 };
 
@@ -2127,6 +2149,384 @@ const a11y = {
     }
   }
 };
+
+// ═══════════════════════════════════════════════════
+// PLUGIN ARCHITECTURE MODULE
+// ═══════════════════════════════════════════════════
+const PluginSystem = (function() {
+  'use strict';
+  
+  const plugins = new Map();
+  const pluginRegistry = new Map();
+  const hooks = {
+    beforeInit: [],
+    afterInit: [],
+    beforeRender: [],
+    afterRender: [],
+    onDataUpdate: [],
+    onError: []
+  };
+  
+  // Plugin base class for standardization
+  class BasePlugin {
+    constructor(config) {
+      this.id = config.id;
+      this.name = config.name;
+      this.version = config.version || '1.0.0';
+      this.author = config.author || 'Unknown';
+      this.description = config.description || '';
+      this.config = config.config || {};
+      this.state = { initialized: false, active: false, error: null };
+      this.api = null;
+    }
+    
+    async init(api) {
+      this.api = api;
+      this.state.initialized = true;
+      this.state.active = true;
+      if (CONFIG.PLUGIN.DEBUG_MODE) {
+        console.log(`[Plugin] ${this.name} v${this.version} initialized`);
+      }
+    }
+    
+    async destroy() {
+      this.state.active = false;
+      this.state.initialized = false;
+      if (CONFIG.PLUGIN.DEBUG_MODE) {
+        console.log(`[Plugin] ${this.name} destroyed`);
+      }
+    }
+    
+    getConfig(key, defaultValue = null) {
+      return this.config[key] !== undefined ? this.config[key] : defaultValue;
+    }
+    
+    setConfig(key, value) {
+      this.config[key] = value;
+      this.saveConfig();
+    }
+    
+    saveConfig() {
+      try {
+        const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${this.id}`;
+        localStorage.setItem(storageKey, JSON.stringify(this.config));
+      } catch (e) {
+        console.error(`[Plugin] ${this.name} config save failed:`, e);
+      }
+    }
+    
+    loadConfig() {
+      try {
+        const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${this.id}`;
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
+          this.config = { ...this.config, ...JSON.parse(stored) };
+        }
+      } catch (e) {
+        console.error(`[Plugin] ${this.name} config load failed:`, e);
+      }
+    }
+    
+    render(container) {
+      throw new Error('Plugin must implement render() method');
+    }
+    
+    update(data) {
+      // Optional: Override to handle data updates
+    }
+  }
+  
+  // Plugin API exposed to plugins
+  const createPluginAPI = () => ({
+    // State access (read-only)
+    getState: () => ({ ...state }),
+    
+    // Safe state updates
+    updateState: (updater) => {
+      if (typeof updater === 'function') {
+        const newState = updater({ ...state });
+        Object.assign(state, newState);
+        StorageManager.saveWithDebounce('state', state);
+        PluginSystem.triggerHook('onDataUpdate', { state: newState });
+      } else if (typeof updater === 'object') {
+        Object.assign(state, updater);
+        StorageManager.saveWithDebounce('state', updater);
+        PluginSystem.triggerHook('onDataUpdate', { state: updater });
+      }
+    },
+    
+    // DOM utilities
+    createElement: (tag, attributes = {}, children = []) => {
+      const el = document.createElement(tag);
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (key === 'className') el.className = value;
+        else if (key === 'textContent') el.textContent = value;
+        else if (key === 'innerHTML') el.innerHTML = sanitize.html(value);
+        else if (key.startsWith('on') && typeof value === 'function') el.addEventListener(key.slice(2).toLowerCase(), value);
+        else el.setAttribute(key, value);
+      });
+      children.forEach(child => {
+        if (typeof child === 'string') el.appendChild(document.createTextNode(child));
+        else if (child instanceof Node) el.appendChild(child);
+      });
+      return el;
+    },
+    
+    safeSetHTML: (element, html) => {
+      safeDOM.setHTML(element, html);
+    },
+    
+    // Storage with plugin namespace
+    storage: {
+      get: (key) => {
+        try {
+          const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${key}`;
+          const item = localStorage.getItem(storageKey);
+          return item ? JSON.parse(item) : null;
+        } catch (e) {
+          console.error('[Plugin API] Storage get failed:', e);
+          return null;
+        }
+      },
+      set: (key, value) => {
+        try {
+          const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${key}`;
+          localStorage.setItem(storageKey, JSON.stringify(value));
+          return true;
+        } catch (e) {
+          console.error('[Plugin API] Storage set failed:', e);
+          return false;
+        }
+      },
+      remove: (key) => {
+        try {
+          const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${key}`;
+          localStorage.removeItem(storageKey);
+          return true;
+        } catch (e) {
+          console.error('[Plugin API] Storage remove failed:', e);
+          return false;
+        }
+      }
+    },
+    
+    // Network with security checks
+    fetch: async (url, options = {}) => {
+      const urlObj = new URL(url, window.location.origin);
+      if (!CONFIG.PLUGIN.ALLOWED_ORIGINS.includes(urlObj.origin) && 
+          !CONFIG.PLUGIN.ALLOWED_ORIGINS.some(o => url.startsWith(o))) {
+        throw new Error(`[Plugin API] Blocked request to unauthorized origin: ${urlObj.origin}`);
+      }
+      return safeFetch(url, options, null);
+    },
+    
+    // Utility functions
+    debounce: (fn, delay) => debounce(fn, delay),
+    throttle: (fn, limit) => throttle(fn, limit),
+    
+    // Logging with plugin context
+    log: (...args) => {
+      if (CONFIG.PLUGIN.DEBUG_MODE) {
+        console.log('[Plugin]', ...args);
+      }
+    },
+    warn: (...args) => console.warn('[Plugin]', ...args),
+    error: (...args) => console.error('[Plugin]', ...args)
+  });
+  
+  // Register a plugin class/template
+  function register(pluginClass) {
+    if (!pluginClass || !pluginClass.prototype || !(pluginClass.prototype instanceof BasePlugin)) {
+      throw new Error('Plugin must extend BasePlugin');
+    }
+    const prototype = pluginClass.prototype;
+    const pluginId = prototype.id || pluginClass.name;
+    if (!pluginId) {
+      throw new Error('Plugin must have an id');
+    }
+    if (plugins.size >= CONFIG.PLUGIN.MAX_PLUGINS) {
+      throw new Error(`Maximum plugin limit (${CONFIG.PLUGIN.MAX_PLUGINS}) reached`);
+    }
+    pluginRegistry.set(pluginId, pluginClass);
+    if (CONFIG.PLUGIN.DEBUG_MODE) {
+      console.log(`[PluginSystem] Registered plugin: ${pluginId}`);
+    }
+    return true;
+  }
+  
+  // Load and instantiate a plugin
+  async function load(pluginId, userConfig = {}) {
+    const PluginClass = pluginRegistry.get(pluginId);
+    if (!PluginClass) {
+      throw new Error(`Plugin "${pluginId}" not registered`);
+    }
+    if (plugins.has(pluginId)) {
+      if (CONFIG.PLUGIN.DEBUG_MODE) {
+        console.log(`[PluginSystem] Plugin "${pluginId}" already loaded`);
+      }
+      return plugins.get(pluginId);
+    }
+    
+    const plugin = new PluginClass({ ...PluginClass.prototype, config: userConfig });
+    plugin.loadConfig();
+    
+    try {
+      const api = createPluginAPI();
+      await Promise.race([
+        plugin.init(api),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Plugin initialization timeout')), CONFIG.PLUGIN.TIMEOUT)
+        )
+      ]);
+      
+      plugins.set(pluginId, plugin);
+      triggerHook('afterInit', { plugin });
+      
+      if (CONFIG.PLUGIN.DEBUG_MODE) {
+        console.log(`[PluginSystem] Loaded plugin: ${pluginId} v${plugin.version}`);
+      }
+      
+      return plugin;
+    } catch (error) {
+      plugin.state.error = error.message;
+      plugin.state.active = false;
+      triggerHook('onError', { plugin, error });
+      console.error(`[PluginSystem] Failed to load plugin "${pluginId}":`, error);
+      throw error;
+    }
+  }
+  
+  // Unload a plugin
+  async function unload(pluginId) {
+    const plugin = plugins.get(pluginId);
+    if (!plugin) return false;
+    
+    try {
+      await plugin.destroy();
+      plugins.delete(pluginId);
+      triggerHook('afterRender', { plugin, action: 'unload' });
+      if (CONFIG.PLUGIN.DEBUG_MODE) {
+        console.log(`[PluginSystem] Unloaded plugin: ${pluginId}`);
+      }
+      return true;
+    } catch (error) {
+      console.error(`[PluginSystem] Failed to unload plugin "${pluginId}":`, error);
+      return false;
+    }
+  }
+  
+  // Get a loaded plugin instance
+  function get(pluginId) {
+    return plugins.get(pluginId) || null;
+  }
+  
+  // Get all loaded plugins
+  function getAll() {
+    return Array.from(plugins.values());
+  }
+  
+  // Check if plugin is loaded
+  function isLoaded(pluginId) {
+    return plugins.has(pluginId);
+  }
+  
+  // Register a hook
+  function on(hookName, callback) {
+    if (!hooks[hookName]) {
+      throw new Error(`Unknown hook: ${hookName}. Available: ${Object.keys(hooks).join(', ')}`);
+    }
+    hooks[hookName].push(callback);
+    return () => {
+      const index = hooks[hookName].indexOf(callback);
+      if (index > -1) hooks[hookName].splice(index, 1);
+    };
+  }
+  
+  // Trigger hooks
+  function triggerHook(hookName, data) {
+    if (!hooks[hookName]) return;
+    hooks[hookName].forEach(callback => {
+      try {
+        callback(data);
+      } catch (error) {
+        console.error(`[PluginSystem] Hook "${hookName}" error:`, error);
+      }
+    });
+  }
+  
+  // Auto-load plugins from registry
+  async function autoLoad() {
+    if (!CONFIG.PLUGIN.AUTO_LOAD) return;
+    
+    const loadPromises = [];
+    pluginRegistry.forEach((PluginClass, pluginId) => {
+      try {
+        loadPromises.push(load(pluginId).catch(err => {
+          console.warn(`[PluginSystem] Auto-load failed for ${pluginId}:`, err.message);
+        }));
+      } catch (e) {
+        console.warn(`[PluginSystem] Auto-load error for ${pluginId}:`, e);
+      }
+    });
+    
+    await Promise.allSettled(loadPromises);
+  }
+  
+  // Render all active plugins to their containers
+  function renderAll() {
+    triggerHook('beforeRender', {});
+    
+    plugins.forEach((plugin, pluginId) => {
+      if (!plugin.state.active) return;
+      
+      const container = document.getElementById(`plugin-${pluginId}`);
+      if (container) {
+        try {
+          safeDOM.clear(container);
+          const frag = document.createDocumentFragment();
+          plugin.render(frag);
+          container.appendChild(frag);
+        } catch (error) {
+          console.error(`[PluginSystem] Render failed for ${pluginId}:`, error);
+          plugin.state.error = error.message;
+          triggerHook('onError', { plugin, error });
+        }
+      }
+    });
+    
+    triggerHook('afterRender', {});
+  }
+  
+  // Update plugins with new data
+  function updateAll(data) {
+    plugins.forEach((plugin) => {
+      if (!plugin.state.active) return;
+      try {
+        plugin.update(data);
+      } catch (error) {
+        console.error(`[PluginSystem] Update failed for ${plugin.id}:`, error);
+      }
+    });
+  }
+  
+  // Export public API
+  return {
+    BasePlugin,
+    register,
+    load,
+    unload,
+    get,
+    getAll,
+    isLoaded,
+    on,
+    triggerHook,
+    autoLoad,
+    renderAll,
+    updateAll,
+    createPluginAPI,
+    size: () => plugins.size
+  };
+})();
 
 // ── EVENT DELEGATION ─────────────────────────────────────
 document.addEventListener('click', function(e) {
@@ -2597,7 +2997,30 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-function hydrate(){applyPrefs();renderCalendar();renderFeelings();renderNoots();renderHabits();renderTodos();renderStocks();renderRefills();renderNews();renderSleep();document.getElementById('notes').value=state.notes||'';syncTimerUI();if(state.weather) renderWeather();}
+function hydrate(){
+  applyPrefs();
+  renderCalendar();
+  renderFeelings();
+  renderNoots();
+  renderHabits();
+  renderTodos();
+  renderStocks();
+  renderRefills();
+  renderNews();
+  renderSleep();
+  document.getElementById('notes').value = state.notes || '';
+  syncTimerUI();
+  if(state.weather) renderWeather();
+  
+  // Initialize and render plugins after core hydration
+  if (CONFIG.PLUGIN.ENABLED) {
+    PluginSystem.autoLoad().then(() => {
+      PluginSystem.renderAll();
+    }).catch(err => {
+      console.error('[PluginSystem] Auto-load failed during hydration:', err);
+    });
+  }
+}
 document.getElementById('notes').addEventListener('input',e=>{state.notes=e.target.value;});
 (function init(){
   hydrate();
@@ -3253,6 +3676,189 @@ function mCalcCP(){
 // ── Init ──
 mCalcEGFR();mCalcCG();mCalcGCS();mCalcAPGAR();mCalcBMI();mCalcCP();mCalcCHADS();mCalcCURB();mCalcWells();mCalcCentor();
 
+
+// ═══════════════════════════════════════════════════
+// EXAMPLE PLUGINS FOR LIFE OS
+// ═══════════════════════════════════════════════════
+
+// Example 1: Crypto Price Tracker Plugin
+class CryptoPricePlugin extends PluginSystem.BasePlugin {
+  constructor(config) {
+    super({
+      id: "crypto-prices",
+      name: "Kryptowaluty",
+      version: "1.0.0",
+      author: "LIFE OS",
+      description: "Śledzenie cen kryptowalut",
+      config: { symbols: ["BTC-USD", "ETH-USD"], refreshInterval: 60000, ...config }
+    });
+  }
+  async init(api) {
+    await super.init(api);
+    this.api = api;
+    this.fetchPrices();
+    this.intervalId = setInterval(() => this.fetchPrices(), this.config.refreshInterval);
+  }
+  async destroy() {
+    if (this.intervalId) clearInterval(this.intervalId);
+    await super.destroy();
+  }
+  async fetchPrices() {
+    try {
+      const prices = [];
+      for (const symbol of this.config.symbols) {
+        const data = await this.api.fetch("https://query1.finance.yahoo.com/v8/finance/chart/" + symbol);
+        if (data && data.chart && data.chart.result && data.chart.result[0]) {
+          const meta = data.chart.result[0].meta;
+          prices.push({ symbol: meta.symbol, price: meta.regularMarketPrice, change: meta.chartPreviousClose ? ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100).toFixed(2) : 0 });
+        }
+      }
+      this.lastPrices = prices;
+      this.renderContainer();
+    } catch (error) {
+      this.api.error("Failed to fetch crypto prices:", error);
+    }
+  }
+  render(container) {
+    this.container = container;
+    this.renderContainer();
+  }
+  renderContainer() {
+    if (!this.container || !this.lastPrices) return;
+    safeDOM.clear(this.container);
+    const frag = document.createDocumentFragment();
+    this.lastPrices.forEach(coin => {
+      const card = this.api.createElement("div", { className: "plugin-card crypto-card" });
+      const symbol = this.api.createElement("div", { className: "coin-symbol mono", textContent: coin.symbol });
+      const price = this.api.createElement("div", { className: "coin-price", textContent: "$" + coin.price.toFixed(2) });
+      const change = this.api.createElement("div", { className: "coin-change " + (parseFloat(coin.change) >= 0 ? "positive" : "negative"), textContent: (parseFloat(coin.change) >= 0 ? "+" : "") + coin.change + "%" });
+      card.appendChild(symbol);
+      card.appendChild(price);
+      card.appendChild(change);
+      frag.appendChild(card);
+    });
+    this.container.appendChild(frag);
+  }
+}
+
+// Example 2: Quote of the Day Plugin
+class QuotePlugin extends PluginSystem.BasePlugin {
+  constructor(config) {
+    super({ id: "daily-quote", name: "Cytat Dnia", version: "1.0.0", author: "LIFE OS", description: "Inspirujące cytaty na każdy dzień", config: { category: "inspire", ...config } });
+  }
+  async init(api) {
+    await super.init(api);
+    this.api = api;
+    this.fetchQuote();
+  }
+  async fetchQuote() {
+    try {
+      const data = await this.api.fetch("https://type.fit/api/quotes");
+      if (data && Array.isArray(data)) {
+        const randomQuote = data[Math.floor(Math.random() * data.length)];
+        this.currentQuote = { text: randomQuote.text, author: randomQuote.author || "Nieznany" };
+        this.renderContainer();
+      }
+    } catch (error) {
+      const fallbackQuotes = [
+        { text: "Największa chwała nie polega na tym, by nigdy nie upaść, ale by podnieść się za każdym razem.", author: "Konfucjusz" },
+        { text: "Życie jest jak jazda na rowerze. Żeby utrzymać równowagę, musisz być w ciągłym ruchu.", author: "Albert Einstein" },
+        { text: "Przyszłość zależy od tego, co robisz dzisiaj.", author: "Mahatma Gandhi" }
+      ];
+      this.currentQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+      this.renderContainer();
+    }
+  }
+  render(container) {
+    this.container = container;
+    this.renderContainer();
+  }
+  renderContainer() {
+    if (!this.container || !this.currentQuote) return;
+    safeDOM.clear(this.container);
+    const quoteCard = this.api.createElement("div", { className: "plugin-card quote-card" });
+    const quoteText = this.api.createElement("blockquote", { className: "quote-text", textContent: """ + this.currentQuote.text + """ });
+    const quoteAuthor = this.api.createElement("cite", { className: "quote-author", textContent: "— " + this.currentQuote.author });
+    quoteCard.appendChild(quoteText);
+    quoteCard.appendChild(quoteAuthor);
+    this.container.appendChild(quoteCard);
+  }
+}
+
+// Example 3: Pomodoro Statistics Plugin
+class PomodoroStatsPlugin extends PluginSystem.BasePlugin {
+  constructor(config) {
+    super({ id: "pomodoro-stats", name: "Statystyki Pomodoro", version: "1.0.0", author: "LIFE OS", description: "Śledzenie sesji focus time", config: { targetSessions: 8, ...config } });
+  }
+  async init(api) {
+    await super.init(api);
+    this.api = api;
+    this.unsubscribe = PluginSystem.on("onDataUpdate", (data) => {
+      if (data.state && data.state.timer) { this.updateStats(data.state.timer); }
+    });
+    this.loadStats();
+    this.renderContainer();
+  }
+  async destroy() {
+    if (this.unsubscribe) this.unsubscribe();
+    await super.destroy();
+  }
+  loadStats() {
+    const saved = this.api.storage.get("pomodoroStats");
+    this.stats = saved || { totalSessions: 0, todaySessions: 0, lastDate: new Date().toDateString(), streak: 0 };
+    if (this.stats.lastDate !== new Date().toDateString()) {
+      this.stats.todaySessions = 0;
+      this.stats.lastDate = new Date().toDateString();
+    }
+  }
+  saveStats() {
+    this.api.storage.set("pomodoroStats", this.stats);
+  }
+  updateStats(timerState) {
+    if (timerState.session > (this.lastSessionCount || 0)) {
+      this.stats.totalSessions++;
+      this.stats.todaySessions++;
+      this.saveStats();
+      this.renderContainer();
+    }
+    this.lastSessionCount = timerState.session;
+  }
+  render(container) {
+    this.container = container;
+    this.renderContainer();
+  }
+  renderContainer() {
+    if (!this.container) return;
+    safeDOM.clear(this.container);
+    const statsCard = this.api.createElement("div", { className: "plugin-card stats-card" });
+    const title = this.api.createElement("h3", { className: "stats-title", textContent: "🍅 Postęp Pomodoro" });
+    const progress = Math.min((this.stats.todaySessions / this.config.targetSessions) * 100, 100);
+    const progressBar = this.api.createElement("div", { className: "progress-bar" });
+    const progressFill = this.api.createElement("div", { className: "progress-fill", style: "width: " + progress + "%" });
+    const stats = this.api.createElement("div", { className: "stats-grid" });
+    const today = this.api.createElement("div", { className: "stat-item" });
+    today.innerHTML = "<span class="stat-label">Dzisiaj:</span><span class="stat-value">" + this.stats.todaySessions + "/" + this.config.targetSessions + "</span>";
+    const total = this.api.createElement("div", { className: "stat-item" });
+    total.innerHTML = "<span class="stat-label">Łącznie:</span><span class="stat-value">" + this.stats.totalSessions + "</span>";
+    progressBar.appendChild(progressFill);
+    stats.appendChild(today);
+    stats.appendChild(total);
+    statsCard.appendChild(title);
+    statsCard.appendChild(progressBar);
+    statsCard.appendChild(stats);
+    this.container.appendChild(statsCard);
+  }
+}
+
+// Register example plugins
+try {
+  PluginSystem.register(CryptoPricePlugin);
+  PluginSystem.register(QuotePlugin);
+  PluginSystem.register(PomodoroStatsPlugin);
+  console.log("[PluginSystem] Example plugins registered successfully");
+} catch (error) {
+  console.error("[PluginSystem] Failed to register example plugins:", error);
+}
 </script>
 </body>
 </html>
