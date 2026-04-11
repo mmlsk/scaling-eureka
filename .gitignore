@@ -1,116 +1,46 @@
 ```
-# Dependencies
-node_modules/
-
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
-# Editors
-.vscode/
-.idea/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Build artifacts
-dist/
-build/
-target/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
+# Dependencies
+node_modules/
 .venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/modules/
-*.sublime-workspace
-.pytest_cache/
+venv/
+__pycache__/
 .mypy_cache/
-.hypothesis/
+.pytest_cache/
+.julia/
+zig*/
+target/
+.gradle/
 
-# Compiled and binary files
+# Compiled/Build artifacts
+*.pyc
+*.class
 *.o
-*.obj
 *.exe
 *.dll
 *.so
 *.a
+*.obj
 *.out
-*.class
-
-# System files
-.DS_Store
-Thumbs.db
-.directory
-ehthumbs.db
-.Spotlight-V100
-.Trashes
-Icon?
-VolumeIcon.icns
-
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
-
-# Coverage
+dist/
+build/
 coverage/
 htmlcov/
-
-# Gradle
-.gradle/
-build/
-
-# Temporary files
+*.log
 *.tmp
-*~
-*.bak
+*.swp
+
+# Editors/IDE
+.vscode/
+.idea/
 *.swp
 *.swo
 
-# OS generated files
+# System
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 ```
