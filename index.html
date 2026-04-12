@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0a09">
 <meta name="description" content="Personal Life OS - Todo, Weather, Finance, Health Tracker">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win https://finnhub.io https://api.stlouisfed.org https://api.eia.gov; img-src 'self' data:;">
 <title>LIFE OS</title>
 <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkxJRkUgT1MiLAogICJzaG9ydF9uYW1lIjogIkxpZmVPUyIsCiAgImRlc2NyaXB0aW9uIjogIlBlcnNvbmFsIExpZmUgT1MgLSBUb2RvLCBXZWF0aGVyLCBGaW5hbmNlLCBIZWFsdGggVHJhY2tlciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwYTA5IiwKICAidGhlbWVfY29sb3IiOiAiIzBiMGEwOSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbXQp9">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2277,8 +2277,10 @@ const CONFIG = {
       'https://corsproxy.io',
       'https://api.allorigins.win',
       'https://finnhub.io',
+      'https://api.stlouisfed.org',
       'https://fred.stlouisfed.org',
-      'https://www.eia.gov'
+      'https://www.eia.gov',
+      'https://api.eia.gov'
     ]
   },
   // Market News API Configuration
@@ -3178,7 +3180,7 @@ function addTodo(){
 document.getElementById('tinp').addEventListener('keydown',e=>{
   if(e.key==='Enter')addTodo();
 });
-</div><div class="sn">${s.n}</div></div><svg width="52" height="22" viewBox="0 0 60 24" fill="none"><path d="${s.up?up:dn}" stroke="${s.up?'var(--nom)':'var(--az)'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sp mono">$${s.p}</span><span class="sc ${s.up?'up':'dn'}">${s.c}</span>`;c.appendChild(r);});}
+
 function renderRefills(){
   const c=document.getElementById('refill-list');
   if(!c) return;
@@ -3294,27 +3296,27 @@ document.addEventListener('visibilitychange', () => {
 
 function hydrate(){
   applyPrefs();
-  renderCalendar();
-  renderFeelings();
-  renderNoots();
-  renderHabits();
-  renderTodos();
-  renderStocks();
-  renderRefills();
-  renderNews();
-  renderSleep();
+  const safeRender = (name) => {
+    try {
+      const fn = window[name];
+      if (typeof fn === 'function') fn();
+    } catch (err) {
+      console.warn(`[hydrate] Skipped render ${name}:`, err);
+    }
+  };
+
+  safeRender('renderCalendar');
+  safeRender('renderFeelings');
+  safeRender('renderNoots');
+  safeRender('renderHabits');
+  safeRender('renderTodos');
+  safeRender('renderStocks');
+  safeRender('renderRefills');
+  safeRender('renderNews');
+  safeRender('renderSleep');
   document.getElementById('notes').value = state.notes || '';
   syncTimerUI();
-  if(state.weather) renderWeather();
-  
-  // Initialize and render plugins after core hydration
-  if (CONFIG.PLUGIN.ENABLED) {
-    PluginSystem.autoLoad().then(() => {
-      PluginSystem.renderAll();
-    }).catch(err => {
-      console.error('[PluginSystem] Auto-load failed during hydration:', err);
-    });
-  }
+  if (state.weather) safeRender('renderWeather');
 }
 document.getElementById('notes').addEventListener('input',e=>{state.notes=e.target.value;});
 (function init(){
@@ -4072,7 +4074,7 @@ class QuotePlugin extends PluginSystem.BasePlugin {
     if (!this.container || !this.currentQuote) return;
     safeDOM.clear(this.container);
     const quoteCard = this.api.createElement("div", { className: "plugin-card quote-card" });
-    const quoteText = this.api.createElement("blockquote", { className: "quote-text", textContent: """ + this.currentQuote.text + """ });
+    const quoteText = this.api.createElement("blockquote", { className: "quote-text", textContent: this.currentQuote.text });
     const quoteAuthor = this.api.createElement("cite", { className: "quote-author", textContent: "— " + this.currentQuote.author });
     quoteCard.appendChild(quoteText);
     quoteCard.appendChild(quoteAuthor);
@@ -4132,9 +4134,9 @@ class PomodoroStatsPlugin extends PluginSystem.BasePlugin {
     const progressFill = this.api.createElement("div", { className: "progress-fill", style: "width: " + progress + "%" });
     const stats = this.api.createElement("div", { className: "stats-grid" });
     const today = this.api.createElement("div", { className: "stat-item" });
-    today.innerHTML = "<span class="stat-label">Dzisiaj:</span><span class="stat-value">" + this.stats.todaySessions + "/" + this.config.targetSessions + "</span>";
+    today.innerHTML = '<span class="stat-label">Dzisiaj:</span><span class="stat-value">' + this.stats.todaySessions + '/' + this.config.targetSessions + '</span>';
     const total = this.api.createElement("div", { className: "stat-item" });
-    total.innerHTML = "<span class="stat-label">Łącznie:</span><span class="stat-value">" + this.stats.totalSessions + "</span>";
+    total.innerHTML = '<span class="stat-label">Łącznie:</span><span class="stat-value">' + this.stats.totalSessions + '</span>';
     progressBar.appendChild(progressFill);
     stats.appendChild(today);
     stats.appendChild(total);
@@ -4540,6 +4542,14 @@ try {
   console.log('[PluginSystem] All plugins registered successfully');
 } catch (error) {
   console.error('[PluginSystem] Failed to register plugins:', error);
+}
+
+if (CONFIG.PLUGIN.ENABLED && typeof PluginSystem !== 'undefined') {
+  PluginSystem.autoLoad().then(() => {
+    PluginSystem.renderAll();
+  }).catch(err => {
+    console.error('[PluginSystem] Auto-load failed after plugin registration:', err);
+  });
 }
 </script>
 </body>
