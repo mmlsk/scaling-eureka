@@ -1,4 +1,5 @@
-const CACHE_NAME = 'lifeos-v1';
+const CACHE_VERSION = 2;
+const CACHE_NAME = `lifeos-v${CACHE_VERSION}`;
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -23,9 +24,25 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch: cache-first for static, stale-while-revalidate for weather API
+// Fetch: cache-first for static, stale-while-revalidate for weather, cache-first for fonts
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
+
+  // Cache-first for Google Fonts (CSS and woff2 files don't change)
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match(event.request).then(cached => {
+          if (cached) return cached;
+          return fetch(event.request).then(response => {
+            if (response.ok) cache.put(event.request, response.clone());
+            return response;
+          });
+        })
+      )
+    );
+    return;
+  }
 
   // Stale-while-revalidate for weather API
   if (url.hostname === 'api.open-meteo.com') {
@@ -64,3 +81,16 @@ self.addEventListener('fetch', event => {
   // Network-first for everything else
   event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 });
+
+// Background sync for offline state persistence
+self.addEventListener('sync', event => {
+  if (event.tag === 'sync-state') {
+    event.waitUntil(syncState());
+  }
+});
+
+async function syncState() {
+  // Re-trigger localStorage save from client
+  const clients = await self.clients.matchAll();
+  clients.forEach(client => client.postMessage({ type: 'sync-state' }));
+}

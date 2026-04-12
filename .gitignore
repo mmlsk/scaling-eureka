@@ -51,6 +51,13 @@ logs/
 *.backup
 *~
 
+# Claude/MCP
+.claude/
+.mcp.json
+
+# VS Code workspace
+*.code-workspace
+
 # IDE temp files
 .editorconfig
 .eslintignore
