@@ -3388,9 +3388,9 @@ let __sCd=60,__sInt=null;
 async function fetchYahoo(sym,range='5d',interval='1d'){
   const base=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=${interval}&range=${range}`;
   const proxies=[
-    base,
     `https://corsproxy.io/?url=${encodeURIComponent(base)}`,
     `https://api.allorigins.win/raw?url=${encodeURIComponent(base)}`,
+    base,
   ];
   for(const url of proxies){
     try{
@@ -4004,7 +4004,7 @@ class CryptoPricePlugin extends PluginSystem.BasePlugin {
     try {
       const prices = [];
       for (const symbol of this.config.symbols) {
-        const data = await this.api.fetch("https://query1.finance.yahoo.com/v8/finance/chart/" + symbol);
+        const data = await fetchYahoo(symbol);
         if (data && data.chart && data.chart.result && data.chart.result[0]) {
           const meta = data.chart.result[0].meta;
           prices.push({ symbol: meta.symbol, price: meta.regularMarketPrice, change: meta.chartPreviousClose ? ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100).toFixed(2) : 0 });
