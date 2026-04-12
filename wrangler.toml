@@ -1,0 +1,15 @@
+name = "lifeos-proxy"
+main = "proxy-worker.js"
+compatibility_date = "2024-09-25"
+
+# Deploy instructions:
+# 1. Install wrangler: npm install -g wrangler
+# 2. Login: wrangler login
+# 3. Create KV namespace: wrangler kv:namespace create RATE_LIMIT_KV
+# 4. Copy the namespace ID from output and paste below
+# 5. Deploy: wrangler deploy
+# 6. Update CSP connect-src in index.html with your worker URL
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "<YOUR_KV_NAMESPACE_ID>"

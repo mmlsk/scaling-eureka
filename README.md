@@ -1,86 +1,142 @@
-# LIFE OS - Life Dashboard Application
+# LIFE OS Dashboard
 
-A responsive, single-page life management dashboard with dark/light themes, real-time weather data, timer functionality, habit tracking, and more.
+Personal medical/productivity dashboard — a single-page application for health tracking, clinical calculators, habit monitoring, financial data, and daily planning.
 
 ## Features
 
-- **Dashboard Overview**: Calendar, weather, timers, sleep tracking, habits, todos, and news
-- **Multiple Themes**: 6 color palettes with dark/light variants (Reaktor, Strefa, Zimna Wojna, Niebieski, Nocny Pościg, Biała Noc)
-- **Local Storage**: Persistent data saved in browser
-- **Real-time Data**: Weather updates from Open-Meteo API
-- **No Dependencies**: Pure HTML/CSS/JavaScript
+### Medical Calculators (22+)
+**Kidney**: eGFR (CKD-EPI 2021), CrCl (Cockcroft-Gault)
+**Cardiology**: CHA2DS2-VASc, QTc (Bazett/Fridericia/Framingham)
+**Neurology**: GCS (Glasgow Coma Scale)
+**Pulmonary**: CURB-65, Wells DVT, Wells PE, PERC Rule
+**Pediatrics**: APGAR, Centor/McIsaac
+**ICU/OIOM**: SOFA, qSOFA, NEWS2, Henderson-Hasselbalch (ABG), Dosing Calculator (mg/kg, mcg/kg/min)
+**Other**: BMI/BSA, Child-Pugh, MAP, Anion Gap, Corrected Calcium, MELD-Na
+
+All calculators include:
+- Real-time calculation with validated input ranges
+- Color-coded risk badges (ok/warn/crit)
+- Reference ranges and clinical interpretation
+- Source citations (journal references)
+- Algorithm versioning
+
+### Habits & Analytics
+- 14-day habit tracker with streaks
+- Personal analytics dashboard (trend chart, heatmap, correlations)
+- Nootropics/supplement tracking with status
+
+### Productivity
+- Pomodoro focus timer (25/5, 50/10, 90/15 presets)
+- Interactive calendar with event modal
+- To-do list with priority levels (H/M/L)
+- Project progress tracking
+- Notes section
+
+### Financial
+- Stock portfolio tracker (Yahoo Finance via CORS proxy)
+- Macro indicators (S&P 500, Nasdaq, VIX, Gold, WTI, EUR/USD, USD/PLN)
+- Black-Scholes options calculator with payoff chart
+- Market news feed
+
+### Other
+- Real-time weather (Open-Meteo API)
+- 6 color palettes with dark/light themes
+- Sleep quality tracking
+- Supplement refill reminders
+- Service Worker for offline support
+
+## Architecture
+
+```
+index.html          — SPA shell (~2500 lines, all HTML + CSS)
+app.js              — Application logic (~2500 lines, minified style)
+sw.js               — Service Worker (cache-first static, SWR weather)
+proxy-worker.js     — Cloudflare Worker CORS proxy
+wrangler.toml       — Cloudflare Worker deployment config
+tests/calc-tests.js — Medical calculator regression tests
+```
+
+## Tech Stack
+
+- **Vanilla JS** — no frameworks, no build step
+- **CSS Custom Properties** — theming via `--az`, `--c2`, `--tx`, etc.
+- **localStorage** — persistence via StorageManager with debounced saves and versioning
+- **Service Worker API** — offline support, font caching
+- **Cloudflare Workers** — CORS proxy with KV-backed rate limiting
+- **Inline SVG** — sparklines, charts, analytics visualizations
 
 ## Deployment
 
-### Quick Deploy (Static File Server)
+### GitHub Pages
+1. Push to GitHub
+2. Enable Pages in Settings (source: main branch)
+3. Access at `https://<user>.github.io/<repo>/`
 
-This is a single `.html` file with all CSS and JavaScript embedded. Simply serve the file from any HTTP server.
-
-#### Apache
-```bash
-cp "Tabasco .html" /var/www/html/index.html
-```
-
-Ensure `.htaccess` is in place for proper headers and HTTPS redirects.
-
-#### Nginx
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    root /var/www/html;
-    
-    location / {
-        try_files $uri $uri/ =404;
-    }
-    
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header Referrer-Policy "no-referrer-when-downgrade" always;
-    add_header Content-Security-Policy "default-src 'self' 'unsafe-inline'; connect-src 'self' api.open-meteo.com api.fontshare.com fonts.googleapis.com;" always;
-}
-```
-
-#### Docker
+### Docker
 ```bash
 docker build -t life-os .
 docker run -p 80:80 life-os
 ```
 
-### Hosting Services
-
-#### Vercel / Netlify
-1. Push this repository to GitHub
-2. Connect and deploy - no build step needed
-3. Set this file as the index
-
-#### GitHub Pages
+### Cloudflare Worker (CORS Proxy)
 ```bash
-git add "Tabasco .html"
-git mv "Tabasco .html" index.html
-git commit -m "Rename for GitHub Pages"
-git push
+# 1. Install wrangler
+npm install -g wrangler
+
+# 2. Login
+wrangler login
+
+# 3. Create KV namespace for rate limiting
+wrangler kv:namespace create RATE_LIMIT_KV
+# Copy the namespace ID from the output
+
+# 4. Update wrangler.toml with your KV namespace ID
+# Replace <YOUR_KV_NAMESPACE_ID> in wrangler.toml
+
+# 5. Deploy
+wrangler deploy
+
+# 6. Update CSP connect-src in index.html with your worker URL
 ```
 
-Enable GitHub Pages in repository settings.
+### Local Development
+```bash
+python -m http.server 8080
+# or
+npx http-server -p 8080
+```
 
 ## Configuration
 
-### Timezone
-Edit the timezone in the weather fetch URL (line with `53.4285&longitude=14.5528`):
-```javascript
-// Current: Szczecin, Poland coordinates
-// Change to your location
+### Location / Timezone
+Edit `CONFIG.WEATHER_API` in `app.js`:
+```js
+LATITUDE: 53.4285,   // Your latitude
+LONGITUDE: 14.5528,  // Your longitude
+TIMEZONE: 'Europe/Berlin'
 ```
 
-### External APIs
-The application uses:
-- **Weather**: Open-Meteo (https://open-meteo.com/) - Free, no API key required
-- **Fonts**: Fontshare & Google Fonts - CDN hosted
+### Theme
+```html
+<html data-theme="dark" data-palette="reaktor">
+```
+Palettes: `reaktor`, `strefa`, `zimna`, `niebieski`, `nocny`, `biala`
 
-Both services should be accessible from your deployment environment.
+### API Keys
+Market news APIs are configured in `CONFIG.MARKET_NEWS`:
+- Finnhub (stock news)
+- FRED (economic data)
+- EIA (energy data)
+
+## Testing
+
+Run medical calculator regression tests:
+```bash
+# Node.js
+node tests/calc-tests.js
+
+# Browser: paste contents of tests/calc-tests.js into console
+```
 
 ## Browser Support
 
@@ -89,91 +145,6 @@ Both services should be accessible from your deployment environment.
 - Safari 14+
 - Mobile browsers (iOS Safari 14+, Chrome Android)
 
-Uses modern CSS (CSS Grid, CSS Variables) - no IE11 support.
-
-## Performance
-
-- Single file: ~200KB (with all CSS/JS embedded)
-- No build process required
-- Loads in <1s on 4G connections
-- All data stored locally (no external database)
-
-## Development
-
-### Local Testing
-```bash
-python -m http.server 8000
-# or
-npx http-server
-```
-
-Then visit `http://localhost:8000/Tabasco%20.html`
-
-### Customization
-
-#### Rename the File
-```bash
-mv "Tabasco .html" "LifeOS.html"
-```
-
-#### Change Default Theme
-Edit line 1:
-```html
-<html lang="pl" data-theme="dark" data-palette="reaktor">
-```
-
-Options: `data-theme="dark"` or `data-theme="light"`
-Palettes: `reaktor`, `strefa`, `zimna`, `niebieski`, `nocny`, `biala`
-
-#### Add Analytics
-Before `</body>`, add:
-```html
-<script async src="https://cdn.example.com/analytics.js"></script>
-```
-
-## Security Considerations
-
-✅ XSS Protection: All dynamic content uses `textContent` (not `innerHTML` where possible)
-✅ CORS Safe: No external API calls requiring credentials
-✅ HTTPS Ready: All external resources use HTTPS
-✅ No Server Storage: All data is client-side only (localStorage)
-
-**Recommendations for Production:**
-- Use HTTPS/TLS everywhere
-- Implement security headers (.htaccess / nginx config included)
-- Consider adding Content-Security-Policy header
-- Validate localStorage data before use
-
-## Troubleshooting
-
-### Weather not updating
-- Check browser console (F12)
-- Verify Open-Meteo API is accessible
-- Check CORS policy in browser Network tab
-
-### Data not persisting
-- Check localStorage is enabled in browser
-- Clear localStorage if corrupted: `localStorage.clear()` in console
-- Check "Storage" or "Application" tab in DevTools
-
-### Fonts not loading
-- CDN URLs: Fontshare and Google Fonts
-- Check network requests in browser DevTools
-- Fallback fonts are system fonts (Courier New, monospace)
-
-## Browser Storage
-
-The app uses localStorage with ~1-5MB limit depending on browser:
-- `lifeos_palette`: Theme and palette selection
-- `lifeos_theme`: Dark/light mode
-- `lifeos_todos`: Todo list data
-- `lifeos_feelings`: Selected feelings
-- `lifeos_timer`: Timer state
-
 ## License
 
 Open source - free to use and modify
-
-## Support
-
-For issues or feature requests, check console for errors (F12 → Console)

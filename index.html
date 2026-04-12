@@ -1580,6 +1580,49 @@ a {
   margin-left:auto;
   font-family:'IBM Plex Mono',monospace;
 }
+.calc-src {
+  display:block;
+  padding:.25rem .75rem;
+  font-size:clamp(.48rem,.46rem + .08vw,.56rem);
+  color:var(--txf);
+  border-top:1px solid var(--div);
+}
+.calc-warn-note {
+  font-size:clamp(.52rem,.5rem + .08vw,.62rem);
+  color:var(--a1);
+  font-weight:500;
+  margin-top:2px;
+}
+.calc-crit-note {
+  font-size:clamp(.52rem,.5rem + .08vw,.62rem);
+  color:var(--az);
+  font-weight:700;
+  margin-top:2px;
+}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px)}
+.modal-card{background:var(--sur2);border:1px solid var(--div);border-radius:5px;padding:1.5rem;width:min(90vw,400px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.modal-close{background:none;border:none;color:var(--tx);font-size:1.5rem;cursor:pointer}
+.modal-body{display:flex;flex-direction:column;gap:.5rem}
+.modal-footer{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
+.btn-pri{background:var(--a1);color:var(--txi);border:none;padding:.5rem 1.25rem;border-radius:3px;cursor:pointer;font-weight:500;font-size:clamp(.6rem,.58rem + .12vw,.72rem)}
+.btn-sec{background:var(--soff);color:var(--tx);border:1px solid var(--bor);padding:.5rem 1.25rem;border-radius:3px;cursor:pointer;font-size:clamp(.6rem,.58rem + .12vw,.72rem)}
+.analytics-section{padding:.75rem}
+.analytics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.75rem}
+.analytics-card{background:var(--sur2);border:1px solid var(--bor);border-radius:5px;padding:.75rem}
+.analytics-card .wh{margin-bottom:.5rem}
+.heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,14px);gap:2px}
+.heatmap-cell{width:12px;height:12px;border-radius:2px;background:var(--soff)}
+.heatmap-cell.l1{background:rgba(69,110,50,.2)}
+.heatmap-cell.l2{background:rgba(69,110,50,.4)}
+.heatmap-cell.l3{background:rgba(69,110,50,.6)}
+.heatmap-cell.l4{background:rgba(69,110,50,.85)}
+.corr-row{display:flex;align-items:center;gap:.5rem;padding:.25rem 0;border-bottom:1px solid var(--div)}
+.corr-label{font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);flex:1}
+.corr-val{font-family:'IBM Plex Mono',monospace;font-size:clamp(.65rem,.6rem + .15vw,.75rem);font-weight:500}
+.trend-up{color:var(--nom)}
+.trend-down{color:var(--az)}
+.trend-neutral{color:var(--txm)}
 
 /* ═══════════════════════════════════════════════════
    MARKET NEWS WIDGET STYLES
@@ -1921,7 +1964,7 @@ a {
 
   <div class="zone"><span class="L">B — Tempus</span><div class="zone-line"></div></div>
   <div class="w c3">
-    <div class="wh"><span class="L">Kalendarz</span><span class="L mono" id="calhdr">Kwiecień 2026</span><button class="pill a1" style="margin-left:auto;cursor:pointer;font-size:.65rem;padding:2px 8px;" data-action="addCalendarEvent()">+</button></div>
+    <div class="wh"><span class="L">Kalendarz</span><span class="L mono" id="calhdr">Kwiecień 2026</span><button class="pill a1" style="margin-left:auto;cursor:pointer;font-size:.65rem;padding:2px 8px;" data-action="openCalModal()">+</button></div>
     <div class="wb"><div class="cgrid" id="calgrid"></div></div>
   </div>
   <div class="w c5">
@@ -2054,6 +2097,7 @@ a {
       <button class="ntab" data-action="switchMed(this,'pulm')">🫁 Oddechowy</button>
       <button class="ntab" data-action="switchMed(this,'ped')">👶 Pediatria</button>
       <button class="ntab" data-action="switchMed(this,'inne')">⚖️ Inne</button>
+      <button class="ntab" data-action="switchMed(this,'oiom')">🏥 OIOM</button>
     </div>
 
     <div id="mp-nerki" class="mp active"><div class="calc-row">
@@ -2067,6 +2111,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="egfr-val">--</span><span class="calc-unit">mL/min/1.73m²</span><span class="calc-badge info" id="egfr-stage">--</span><span class="calc-interp" id="egfr-interp"></span></div>
         </div>
+        <span class="calc-src">Inker LA et al, NEJM 2021 | CKD-EPI 2021</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">CrCl</span><span class="L" style="color:var(--txm)">Cockcroft-Gault</span></div>
@@ -2079,6 +2124,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cg-val">--</span><span class="calc-unit">mL/min</span><span class="calc-badge info" id="cg-stage">--</span><span class="calc-interp" id="cg-interp"></span></div>
         </div>
+        <span class="calc-src">Cockcroft DW, Gault MH. Nephron, 1976</span>
       </div>
     </div></div>
 
@@ -2098,6 +2144,18 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="chads-val">0</span><span class="calc-unit">/ 9 pkt</span><span class="calc-badge info" id="chads-risk">NISKIE</span><span class="calc-interp" id="chads-interp">0% rocz. ryzyko udaru</span></div>
         </div>
+        <span class="calc-src">Lip GY et al, Chest 2010 | ESC Guidelines</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">QTc</span><span class="L" style="color:var(--txm)">Skorygowany QT</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">QT</span><input class="cinp" id="qtc-qt" type="number" value="400" step="1" min="200" max="700" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">ms</span></div>
+            <div class="crow"><span class="clbl">HR</span><input class="cinp" id="qtc-hr" type="number" value="70" step="1" min="30" max="200" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">/min</span></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="qtc-val">--</span><span class="calc-unit">ms (Bazett)</span><span class="calc-badge info" id="qtc-lev">--</span><span class="calc-interp" id="qtc-interp"></span></div>
+        </div>
+        <span class="calc-src">Bazett 1920, Fridericia 1920, Framingham | MDCalc</span>
       </div>
     </div></div>
 
@@ -2112,6 +2170,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="gcs-val">15</span><span class="calc-unit" id="gcs-sub">E4V5M6</span><span class="calc-badge ok" id="gcs-sev">--</span><span class="calc-interp" id="gcs-interp"></span></div>
         </div>
+        <span class="calc-src">Teasdale G, Jennett B. Lancet, 1974</span>
       </div>
     </div></div>
 
@@ -2128,6 +2187,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="curb-val">0</span><span class="calc-unit">/ 5 pkt</span><span class="calc-badge ok" id="curb-lev">--</span><span class="calc-interp" id="curb-interp"></span></div>
         </div>
+        <span class="calc-src">Lim WS et al, Thorax 2003 | BTS Guidelines</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">Wells DVT</span><span class="L" style="color:var(--txm)">Zakrzepica żył głębokich</span></div>
@@ -2145,6 +2205,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="wells-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge ok" id="wells-lev">--</span><span class="calc-interp" id="wells-interp"></span></div>
         </div>
+        <span class="calc-src">Wells PS et al, NEJM 2003 | MDCalc</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">Wells PE</span><span class="L" style="color:var(--txm)">Zatorowość płucna</span></div>
@@ -2160,6 +2221,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="wellspe-val">0</span><span class="calc-unit">/ 7 pkt</span><span class="calc-badge ok" id="wellspe-lev">--</span><span class="calc-interp" id="wellspe-interp"></span></div>
         </div>
+        <span class="calc-src">Wells PS et al, Thromb Haemost 2000</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">PERC Rule</span><span class="L" style="color:var(--txm)">Wykluczenie PE — niskie ryzyko</span></div>
@@ -2176,6 +2238,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="perc-val">0/8</span><span class="calc-unit">kryteria</span><span class="calc-badge warn" id="perc-lev">--</span><span class="calc-interp" id="perc-interp"></span></div>
         </div>
+        <span class="calc-src">Kline JA et al, J Thromb Haemost 2004</span>
       </div>
     </div></div>
 
@@ -2192,6 +2255,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="apgar-val">10</span><span class="calc-unit">/ 10 pkt</span><span class="calc-badge ok" id="apgar-lev">--</span><span class="calc-interp" id="apgar-interp"></span></div>
         </div>
+        <span class="calc-src">Apgar V, Anesth Analg 1953</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">Centor / McIsaac</span><span class="L" style="color:var(--txm)">Paciorkowcowe zapalenie gardła</span></div>
@@ -2208,6 +2272,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cen-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge info" id="cen-lev">--</span><span class="calc-interp" id="cen-interp"></span></div>
         </div>
+        <span class="calc-src">Centor RM, Med Decis Making 1981 | McIsaac WJ, CMAJ 1998</span>
       </div>
     </div></div>
 
@@ -2230,6 +2295,7 @@ a {
             </div>
           </div>
         </div>
+        <span class="calc-src">WHO BMI Classification | Mosteller RD, NEJM 1987</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">Child-Pugh</span><span class="L" style="color:var(--txm)">Rezerwa wątroby — marskość</span></div>
@@ -2243,6 +2309,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cp-val">5</span><span class="calc-unit">/ 15 pkt</span><span class="calc-badge ok" id="cp-cls">Klasa A</span><span class="calc-interp" id="cp-interp">śmiertelność &lt;5% / rok</span></div>
         </div>
+        <span class="calc-src">Pugh RN et al, Br J Surg 1973</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">MAP</span><span class="L" style="color:var(--txm)">Średnie ciśnienie tętnicze</span></div>
@@ -2253,6 +2320,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="map-val">--</span><span class="calc-unit">mmHg</span><span class="calc-badge ok" id="map-lev">--</span><span class="calc-interp" id="map-interp"></span></div>
         </div>
+        <span class="calc-src">MAP = DBP + (SBP−DBP)/3 | Surviving Sepsis 2021</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">Anion Gap</span><span class="L" style="color:var(--txm)">Luka anionowa</span></div>
@@ -2264,6 +2332,7 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="ag-val">--</span><span class="calc-unit">mEq/L</span><span class="calc-badge ok" id="ag-lev">--</span><span class="calc-interp" id="ag-interp"></span></div>
         </div>
+        <span class="calc-src">AG = Na − Cl − HCO₃ | Norma: 8–12 mEq/L</span>
       </div>
       <div class="calc-card">
         <div class="calc-ch"><span class="L">Wapń skorygowany</span><span class="L" style="color:var(--txm)">Corrected Calcium</span></div>
@@ -2274,9 +2343,122 @@ a {
           </div>
           <div class="calc-res-col"><span class="calc-score" id="ca-val">--</span><span class="calc-unit">mg/dL</span><span class="calc-badge ok" id="ca-lev">--</span><span class="calc-interp" id="ca-interp"></span></div>
         </div>
+        <span class="calc-src">Ca_corr = Ca + 0.8×(4.0−Alb) | Norma: 8.5–10.5 mg/dL</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">MELD-Na</span><span class="L" style="color:var(--txm)">Schyłkowa choroba wątroby</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Bilirubina</span><input class="cinp" id="meld-bil" type="number" value="1.0" step="0.1" min="0.1" max="40" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">INR</span><input class="cinp" id="meld-inr" type="number" value="1.0" step="0.01" min="0.5" max="10" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">Kreatynina</span><input class="cinp" id="meld-cr" type="number" value="1.0" step="0.1" min="0.1" max="15" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Na⁺</span><input class="cinp" id="meld-na" type="number" value="137" step="1" min="100" max="160" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="meld-dial" data-action-change="true"><span class="cchk-lbl">Dializa ≥2x/tyg w ost. 7 dni</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="meld-val">--</span><span class="calc-unit">pkt</span><span class="calc-badge info" id="meld-lev">--</span><span class="calc-interp" id="meld-interp"></span></div>
+        </div>
+        <span class="calc-src">OPTN/UNOS 2016 | Kamath PS et al, Hepatology 2001</span>
+      </div>
+    </div></div>
+
+    <div id="mp-oiom" class="mp"><div class="calc-row">
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">SOFA</span><span class="L" style="color:var(--txm)">Sequential Organ Failure Assessment</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 128px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <div class="crow"><span class="clbl" style="min-width:68px">PaO₂/FiO₂</span><select class="csel" id="sofa-resp" style="flex:1" data-action-change="true"><option value="0">≥400 (0)</option><option value="1">&lt;400 (1)</option><option value="2">&lt;300 (2)</option><option value="3">&lt;200 wentyl. (3)</option><option value="4">&lt;100 wentyl. (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Płytki ×10³</span><select class="csel" id="sofa-plt" style="flex:1" data-action-change="true"><option value="0">≥150 (0)</option><option value="1">&lt;150 (1)</option><option value="2">&lt;100 (2)</option><option value="3">&lt;50 (3)</option><option value="4">&lt;20 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Bilirubina</span><select class="csel" id="sofa-bil" style="flex:1" data-action-change="true"><option value="0">&lt;1.2 (0)</option><option value="1">1.2–1.9 (1)</option><option value="2">2.0–5.9 (2)</option><option value="3">6.0–11.9 (3)</option><option value="4">&gt;12.0 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Hipotensja</span><select class="csel" id="sofa-cv" style="flex:1" data-action-change="true"><option value="0">Brak (0)</option><option value="1">MAP&lt;70 (1)</option><option value="2">Dopa≤5/Dobu (2)</option><option value="3">Dopa&gt;5/Epi≤0.1 (3)</option><option value="4">Dopa&gt;15/Epi&gt;0.1 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">GCS</span><select class="csel" id="sofa-gcs" style="flex:1" data-action-change="true"><option value="0">15 (0)</option><option value="1">13–14 (1)</option><option value="2">10–12 (2)</option><option value="3">6–9 (3)</option><option value="4">&lt;6 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Kreatynina</span><select class="csel" id="sofa-cr" style="flex:1" data-action-change="true"><option value="0">&lt;1.2 (0)</option><option value="1">1.2–1.9 (1)</option><option value="2">2.0–3.4 (2)</option><option value="3">3.5–4.9 (3)</option><option value="4">&gt;5.0 (4)</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="sofa-val">0</span><span class="calc-unit">/ 24 pkt</span><span class="calc-badge ok" id="sofa-lev">--</span><span class="calc-interp" id="sofa-interp"></span></div>
+        </div>
+        <span class="calc-src">Vincent JL et al, Intensive Care Med 1996 | Sepsis-3</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">qSOFA</span><span class="L" style="color:var(--txm)">Quick SOFA — Sepsis-3</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="qsofa-gcs" data-action-change="true"><span class="cchk-lbl">Zaburzenia świadomości (GCS &lt; 15)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="qsofa-rr" data-action-change="true"><span class="cchk-lbl">Częstość oddechów ≥ 22/min</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="qsofa-sbp" data-action-change="true"><span class="cchk-lbl">Ciśnienie skurczowe ≤ 100 mmHg</span><span class="cchk-pts">+1</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="qsofa-val">0</span><span class="calc-unit">/ 3 pkt</span><span class="calc-badge ok" id="qsofa-lev">--</span><span class="calc-interp" id="qsofa-interp"></span></div>
+        </div>
+        <span class="calc-src">Seymour CW et al, JAMA 2016 | Sepsis-3</span>
+      </div>
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">NEWS2</span><span class="L" style="color:var(--txm)">National Early Warning Score 2</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 128px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <div class="crow"><span class="clbl" style="min-width:52px">Oddech</span><select class="csel" id="news-rr" style="flex:1" data-action-change="true"><option value="3">≤8 (3)</option><option value="1">9–11 (1)</option><option value="0" selected>12–20 (0)</option><option value="2">21–24 (2)</option><option value="3b">≥25 (3)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">SpO₂</span><select class="csel" id="news-spo2" style="flex:1" data-action-change="true"><option value="3">≤91% (3)</option><option value="2">92–93% (2)</option><option value="1">94–95% (1)</option><option value="0" selected>≥96% (0)</option></select></div>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="news-copd" data-action-change="true"><span class="cchk-lbl">SpO₂ Scale 2 (COPD)</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="news-o2" data-action-change="true"><span class="cchk-lbl">Na tlenoterapii (+2)</span></label>
+            <div class="crow"><span class="clbl" style="min-width:52px">Temp.</span><select class="csel" id="news-temp" style="flex:1" data-action-change="true"><option value="3">≤35.0 (3)</option><option value="1">35.1–36.0 (1)</option><option value="0" selected>36.1–38.0 (0)</option><option value="1b">38.1–39.0 (1)</option><option value="2">≥39.1 (2)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">SBP</span><select class="csel" id="news-sbp" style="flex:1" data-action-change="true"><option value="3">≤90 (3)</option><option value="2">91–100 (2)</option><option value="1">101–110 (1)</option><option value="0" selected>111–219 (0)</option><option value="3b">≥220 (3)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">HR</span><select class="csel" id="news-hr" style="flex:1" data-action-change="true"><option value="3">≤40 (3)</option><option value="1">41–50 (1)</option><option value="0" selected>51–90 (0)</option><option value="1b">91–110 (1)</option><option value="2">111–130 (2)</option><option value="3b">≥131 (3)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">ACVPU</span><select class="csel" id="news-avpu" style="flex:1" data-action-change="true"><option value="0">Alert (0)</option><option value="3">Confusion (3)</option><option value="3b">Voice (3)</option><option value="3c">Pain (3)</option><option value="3d">Unresponsive (3)</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="news-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge ok" id="news-lev">--</span><span class="calc-interp" id="news-interp"></span></div>
+        </div>
+        <span class="calc-src">Royal College of Physicians, 2017</span>
+      </div>
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">Henderson-Hasselbalch</span><span class="L" style="color:var(--txm)">Gazometria i równowaga kwasowo-zasadowa</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 180px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <div class="crow"><span class="clbl">pH</span><input class="cinp" id="hh-ph" type="number" value="7.40" step="0.01" min="6.8" max="7.8" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">PaCO₂</span><input class="cinp" id="hh-pco2" type="number" value="40" step="1" min="10" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mmHg</span></div>
+            <div class="crow"><span class="clbl">HCO₃⁻</span><input class="cinp" id="hh-hco3" type="number" value="24" step="0.1" min="5" max="50" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">PaO₂</span><input class="cinp" id="hh-pao2" type="number" value="95" step="1" min="20" max="600" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mmHg</span></div>
+            <div class="crow"><span class="clbl">FiO₂</span><input class="cinp" id="hh-fio2" type="number" value="21" step="1" min="21" max="100" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">%</span></div>
+            <div class="crow"><span class="clbl">Na⁺</span><input class="cinp" id="hh-na" type="number" value="140" step="1" min="100" max="170" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">Cl⁻</span><input class="cinp" id="hh-cl" type="number" value="104" step="1" min="70" max="130" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">Albuminy</span><input class="cinp" id="hh-alb" type="number" value="4.0" step="0.1" min="1" max="6" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">g/dL</span></div>
+          </div>
+          <div class="calc-res-col" style="min-width:160px;max-width:180px;font-size:clamp(.55rem,.52rem + .1vw,.65rem);text-align:left;align-items:flex-start;gap:.15rem"><span class="calc-interp" id="hh-interp" style="max-width:170px;text-align:left;white-space:pre-line"></span></div>
+        </div>
+        <span class="calc-src">Henderson 1908, Hasselbalch 1917 | Winter's formula</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Dawkowanie</span><span class="L" style="color:var(--txm)">mg/kg, mcg/kg/min</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="dose-wt" type="number" value="70" step="0.5" min="1" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">mg/kg</span><input class="cinp" id="dose-mgkg" type="number" value="" step="0.01" min="0" max="1000" placeholder="—" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">mcg/kg/min</span><input class="cinp" id="dose-mcgkgmin" type="number" value="" step="0.01" min="0" max="1000" placeholder="—" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">Stężenie</span><input class="cinp" id="dose-conc" type="number" value="" step="0.01" min="0" max="10000" placeholder="mg/mL" data-action-input="true"></div>
+          </div>
+          <div class="calc-res-col" style="min-width:130px"><span class="calc-interp" id="dose-interp" style="max-width:120px;text-align:left;white-space:pre-line"></span></div>
+        </div>
       </div>
     </div></div>
   </div>
+
+    <div class="zone"><span class="L">E — Analytics</span><div class="zone-line"></div></div>
+    <div class="w c12" id="analytics-widget">
+      <div class="wh"><span class="L">Personal Analytics</span><span class="L a1">Trendy i korelacje</span></div>
+      <div class="analytics-section">
+        <div class="analytics-row">
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Trend nawyków (14d)</span></div>
+            <div id="analytics-trend-chart" style="width:100%;height:80px"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Heatmapa nawyków</span></div>
+            <div id="analytics-heatmap" style="width:100%"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Korelacje</span></div>
+            <div id="analytics-correlations"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Plugin Container Section -->
     <div id="plugin-section" class="widget" style="display:none;" aria-label="Plugin widgets">
       <h2 class="wttl">Rozszerzenia</h2>
@@ -2284,6 +2466,24 @@ a {
     </div>
 
 </main>
+</div>
+<div id="cal-modal" class="modal-overlay" style="display:none">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <span class="L">Nowe wydarzenie</span>
+      <button class="modal-close" onclick="closeCalModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="crow"><span class="clbl">Tytuł</span><input class="cinp" id="cal-evt-title" type="text" placeholder="Nazwa wydarzenia" style="width:100%;flex:1"></div>
+      <div class="crow"><span class="clbl">Data</span><input class="cinp" id="cal-evt-date" type="date" style="flex:1"></div>
+      <div class="crow"><span class="clbl">Godzina</span><input class="cinp" id="cal-evt-time" type="time" style="flex:1"></div>
+      <div class="crow"><span class="clbl">Opis</span><textarea class="cinp" id="cal-evt-desc" rows="2" placeholder="Opcjonalny opis" style="width:100%;flex:1;resize:vertical"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sec" onclick="closeCalModal()">Anuluj</button>
+      <button class="btn-pri" onclick="saveCalEvent()">Zapisz</button>
+    </div>
+  </div>
 </div>
 <script src="app.js" defer></script>
 </body>

@@ -668,6 +668,10 @@ document.addEventListener('input', function(e) {
     else if (id.startsWith('ag-')) mCalcAG();
     else if (id.startsWith('ca-')) mCalcCa();
     else if (id.startsWith('abcd-age') || id.startsWith('abcd-bp') || id.startsWith('abcd-clin') || id.startsWith('abcd-dur')) mCalcABCD2();
+    else if (id.startsWith('qtc-')) mCalcQTc();
+    else if (id.startsWith('meld-')) mCalcMELD();
+    else if (id.startsWith('hh-')) mCalcHH();
+    else if (id.startsWith('dose-')) mCalcDose();
     else if (id.startsWith('bs-')) updateBS();
   } catch (err) {
     console.error('Error handling input:', id, err);
@@ -693,6 +697,10 @@ document.addEventListener('change', function(e) {
     else if (id.startsWith('centor-')) mCalcCentor();
     else if (id.startsWith('abcd-diab')) mCalcABCD2();
     else if (id.startsWith('nihss-')) mCalcNIHSS();
+    else if (id.startsWith('sofa-')) mCalcSOFA();
+    else if (id.startsWith('qsofa-')) mCalcQSOFA();
+    else if (id.startsWith('news-')) mCalcNEWS();
+    else if (id.startsWith('meld-')) mCalcMELD();
     else if (id === 'bmi-wt' || id === 'bmi-ht') mCalcBMI();
     else if (id === 'map-sys' || id === 'map-dia') mCalcMAP();
     else if (id === 'ag-na' || id === 'ag-cl' || id === 'ag-hco3') mCalcAG();
@@ -901,8 +909,11 @@ function setPalette(el){
 })();
 let midnightResetDone=false;
 function tick(){const n=new Date();const h=s=>String(s).padStart(2,'0');const hours=n.getHours(),minutes=n.getMinutes(),seconds=n.getSeconds();document.getElementById('ltime').textContent=`${h(hours)}:${h(minutes)}:${h(seconds)}`;const ny=new Date(n.getTime()+n.getTimezoneOffset()*60000-4*3600000);document.getElementById('ntime').textContent=`${h(ny.getHours())}:${h(ny.getMinutes())}:${h(ny.getSeconds())}`;const wd=ny.getDay(),hh=ny.getHours(),mm=ny.getMinutes();const open=wd>=1&&wd<=5&&(hh>9||(hh===9&&mm>=30))&&hh<16;document.getElementById('mdot').className='mkt-dot '+(open?'open':'closed');document.getElementById('mlabel').textContent=open?'OTWARTY':'ZAMKNIĘTY';document.getElementById('mlabel').style.color=open?'var(--nom)':'var(--txm)';const days=['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];const months=['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie','Wrz','Paź','Lis','Gru'];document.getElementById('cdate').textContent=`${days[n.getDay()]}, ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;if(hours===0&&minutes===0&&seconds===0&&!midnightResetDone){state.nootropics.forEach(nr=>{if(nr.status==='taken')nr.status='pending';});renderNoots();saveNootropics();state.habits.forEach(hb=>{hb.d.push(0);if(hb.d.length>14)hb.d.shift();let sk=0;for(let j=hb.d.length-1;j>=0;j--){if(hb.d[j])sk++;else break;}hb.s=sk;hb.lastDate=n.toISOString().slice(0,10);});renderHabits();saveHabits();midnightResetDone=true;}if(seconds>0){midnightResetDone=false;}} setInterval(tick,1000);tick();
-function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');safeDOM.clear(g);['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evts=(state.calendarEvents||[]).filter(e=>new Date(e.date).getMonth()===mo).map(e=>new Date(e.date).getDate());let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){e.className='cd'+(day===n.getDate()?' today':'')+(evts.includes(day)?' evt':'');e.textContent=day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
-function addCalendarEvent(){const title=prompt('Tytuł wydarzenia:');if(!title)return;const dateStr=prompt('Data (RRRR-MM-DD):');if(!dateStr)return;const d=new Date(dateStr);if(isNaN(d.getTime())){alert('Nieprawidłowa data.');return;}if(!state.calendarEvents)state.calendarEvents=[];state.calendarEvents.push({title:sanitize.trim(title),date:dateStr});StorageManager.saveWithDebounce('calendarEvents',state.calendarEvents);renderCalendar();}
+function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');safeDOM.clear(g);['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evtMap={};(state.calendarEvents||[]).forEach(ev=>{const d=new Date(ev.date);if(d.getMonth()===mo){const dd=d.getDate();if(!evtMap[dd])evtMap[dd]=[];evtMap[dd].push(ev.title);}});let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){const hasEvt=!!evtMap[day];e.className='cd'+(day===n.getDate()?' today':'')+(hasEvt?' evt':'');e.textContent=day;if(hasEvt)e.title=evtMap[day].join(', ');const dayNum=day;const yr_str=yr;const mo_str=String(mo+1).padStart(2,'0');const dy_str=String(dayNum).padStart(2,'0');e.style.cursor='pointer';e.addEventListener('click',()=>openCalModal(`${yr_str}-${mo_str}-${dy_str}`));day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
+function addCalendarEvent(){openCalModal();}
+function openCalModal(dateStr){document.getElementById('cal-modal').style.display='flex';if(dateStr)document.getElementById('cal-evt-date').value=dateStr;document.getElementById('cal-evt-title').focus();}
+function closeCalModal(){document.getElementById('cal-modal').style.display='none';document.getElementById('cal-evt-title').value='';document.getElementById('cal-evt-date').value='';document.getElementById('cal-evt-time').value='';document.getElementById('cal-evt-desc').value='';}
+function saveCalEvent(){const title=document.getElementById('cal-evt-title').value.trim();const date=document.getElementById('cal-evt-date').value;const time=document.getElementById('cal-evt-time').value;const desc=document.getElementById('cal-evt-desc').value.trim();if(!title||!date){alert('Podaj tytuł i datę.');return;}if(!state.calendarEvents)state.calendarEvents=[];state.calendarEvents.push({title:sanitize.trim(title),date,time:time||null,desc:desc||null});StorageManager.saveWithDebounce('calendarEvents',state.calendarEvents);renderCalendar();closeCalModal();}
 function renderFeelings(){const wrap=document.getElementById('feel-wrap');safeDOM.clear(wrap);state.feelingOptions.forEach(name=>{const btn=document.createElement('button');btn.className='fc'+(state.feelings.includes(name)?' sel':'');btn.textContent=name;btn.setAttribute('aria-pressed', state.feelings.includes(name) ? 'true' : 'false');btn.addEventListener('click', ()=>togF(name));wrap.appendChild(btn);});document.getElementById('fcnt').textContent=state.feelings.length+' '+(state.feelings.length===1?'wybrany':'wybrane');}
 function togF(name){if(state.feelings.includes(name)) state.feelings=state.feelings.filter(x=>x!==name); else state.feelings.push(name); renderFeelings();}
 function renderNoots(){const c=document.getElementById('noot-list');safeDOM.clear(c);state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';const statusDiv=document.createElement('div');statusDiv.className='nd '+sanitize.attribute(n.status);const nameSpan=document.createElement('span');nameSpan.className='nn';nameSpan.textContent=n.name;const doseSpan=document.createElement('span');doseSpan.className='ndose';doseSpan.textContent=n.dose;d.appendChild(statusDiv);d.appendChild(nameSpan);d.appendChild(doseSpan);c.appendChild(d);});}
@@ -1093,6 +1104,7 @@ function hydrate(){
   safeRender('renderRefills');
   safeRender('renderNews');
   safeRender('renderSleep');
+  safeRender('renderAnalytics');
   document.getElementById('notes').value = state.notes || '';
   syncTimerUI();
   if (state.weather) safeRender('renderWeather');
@@ -1826,8 +1838,262 @@ function mCalcCa(){
   mBadge('ca-lev',cls,lev);mSet('ca-interp',interp);
 }
 
+// ── SOFA Score ──
+function mCalcSOFA(){
+  const s=['sofa-resp','sofa-plt','sofa-bil','sofa-cv','sofa-gcs','sofa-cr'].reduce((a,id)=>a+ +document.getElementById(id).value,0);
+  mSet('sofa-val',s);
+  let cls,lev,interp;
+  if(s<=1){cls='ok';lev='NISKIE';interp='Śmiertelność <10%.';}
+  else if(s<=3){cls='ok';lev='NISKIE-ŚR';interp='Śmiertelność 15–20%.';}
+  else if(s<=5){cls='warn';lev='ŚREDNIE';interp='Śmiertelność 25–30%.';}
+  else if(s<=7){cls='warn';lev='WYSOKIE';interp='Śmiertelność ~45%.';}
+  else{cls='crit';lev='KRYTYCZNE';interp='Śmiertelność >50%! Eskalacja leczenia.';}
+  mBadge('sofa-lev',cls,lev);mSet('sofa-interp',interp);
+}
+
+// ── qSOFA ──
+function mCalcQSOFA(){
+  let s=0;
+  ['qsofa-gcs','qsofa-rr','qsofa-sbp'].forEach(id=>{if(document.getElementById(id).checked)s++;});
+  mSet('qsofa-val',s);
+  let cls,lev,interp;
+  if(s<2){cls='ok';lev='NISKIE';interp='Niskie ryzyko sepsy.';}
+  else{cls='crit';lev='WYSOKIE';interp='Wg Sepsis-3: podejrzenie sepsy → sprawdź SOFA.';}
+  mBadge('qsofa-lev',cls,lev);mSet('qsofa-interp',interp);
+}
+
+// ── MELD-Na ──
+function mCalcMELD(){
+  let bil=Math.max(1,+document.getElementById('meld-bil').value);
+  let inr=Math.max(1,+document.getElementById('meld-inr').value);
+  let cr=Math.max(1,+document.getElementById('meld-cr').value);
+  let na=+document.getElementById('meld-na').value;
+  const dial=document.getElementById('meld-dial').checked;
+  if(!bil||!inr||!cr||!na){mSet('meld-val','---');mSet('meld-interp','Brak danych');return;}
+  if(dial)cr=4.0;
+  cr=Math.min(cr,4.0);
+  na=Math.max(125,Math.min(137,na));
+  let meld=10*(0.957*Math.log(cr)+0.378*Math.log(bil)+1.120*Math.log(inr)+0.643);
+  meld=Math.min(40,Math.round(meld));
+  let meldNa=meld+1.32*(137-na)-(0.033*meld*(137-na));
+  meldNa=Math.max(6,Math.min(40,Math.round(meldNa)));
+  mSet('meld-val',meldNa);
+  let cls,lev,interp;
+  if(meldNa<=9){cls='ok';lev='NISKI';interp='Śm. 90d: 1.9%. Niska priorytet transplantacji.';}
+  else if(meldNa<=19){cls='warn';lev='ŚREDNI';interp='Śm. 90d: 6%. Rozważyć kwalifikację.';}
+  else if(meldNa<=29){cls='warn';lev='WYSOKI';interp='Śm. 90d: 19.6%. Priorytet transplantacji.';}
+  else{cls='crit';lev='KRYTYCZNY';interp='Śm. 90d: 52.6%+. Pilna transplantacja.';}
+  mBadge('meld-lev',cls,lev);mSet('meld-interp','MELD='+meld+' | MELD-Na='+meldNa+'. '+interp);
+}
+
+// ── NEWS2 ──
+function mCalcNEWS(){
+  const parseV=v=>{const n=parseInt(v);return isNaN(n)?parseInt(v.replace(/\D/g,'')):n;};
+  let s=0;
+  s+=parseV(document.getElementById('news-rr').value);
+  const copd=document.getElementById('news-copd').checked;
+  const spo2v=document.getElementById('news-spo2').value;
+  if(copd){const m={'3':3,'2':2,'1':0,'0':0};s+=m[spo2v]!==undefined?m[spo2v]:parseV(spo2v);}
+  else{s+=parseV(spo2v);}
+  if(document.getElementById('news-o2').checked)s+=2;
+  s+=parseV(document.getElementById('news-temp').value);
+  s+=parseV(document.getElementById('news-sbp').value);
+  s+=parseV(document.getElementById('news-hr').value);
+  s+=parseV(document.getElementById('news-avpu').value);
+  mSet('news-val',s);
+  const vals=[parseV(document.getElementById('news-rr').value),parseV(spo2v),parseV(document.getElementById('news-temp').value),parseV(document.getElementById('news-sbp').value),parseV(document.getElementById('news-hr').value),parseV(document.getElementById('news-avpu').value)];
+  const has3=vals.some(v=>v>=3);
+  let cls,lev,interp;
+  if(s>=7){cls='crit';lev='WYSOKIE';interp='Pilna eskalacja! Zespół resuscytacyjny.';}
+  else if(s>=5||has3){cls='warn';lev='ŚREDNIE';interp='Pilna ocena — rozważ OIT.';}
+  else{cls='ok';lev='NISKIE';interp='Rutynowa obserwacja.';}
+  mBadge('news-lev',cls,lev);mSet('news-interp',interp);
+}
+
+// ── Henderson-Hasselbalch ──
+function mCalcHH(){
+  const ph=+document.getElementById('hh-ph').value;
+  const pco2=+document.getElementById('hh-pco2').value;
+  const hco3=+document.getElementById('hh-hco3').value;
+  const pao2=+document.getElementById('hh-pao2').value;
+  const fio2=+document.getElementById('hh-fio2').value;
+  const na=+document.getElementById('hh-na').value;
+  const cl=+document.getElementById('hh-cl').value;
+  const alb=+document.getElementById('hh-alb').value;
+  if(!ph||!pco2||!hco3){mSet('hh-interp','Brak danych');return;}
+  const lines=[];
+  const calcPh=6.1+Math.log10(hco3/(0.03*pco2));
+  lines.push('pH obliczone: '+calcPh.toFixed(2));
+  if(pao2&&fio2){
+    const pf=pao2/(fio2/100);
+    lines.push('P/F ratio: '+pf.toFixed(0)+(pf<200?' (ciężki ARDS)':pf<300?' (ARDS)':' (norma)'));
+    const aa=(fio2/100*(760-47))-(pco2/0.8)-pao2;
+    lines.push('A-a gradient: '+aa.toFixed(1)+' mmHg'+(aa>15?' ↑':''));
+  }
+  if(na&&cl){
+    const ag=na-cl-hco3;
+    lines.push('Anion Gap: '+ag.toFixed(1)+(ag>12?' ↑':''));
+    if(alb){const agc=ag+2.5*(4.0-alb);lines.push('AG korygowany: '+agc.toFixed(1));}
+    if(ag>12){const dd=(ag-12)/(24-hco3);lines.push('Delta-delta: '+dd.toFixed(2)+(dd>2?' (zasadowica met.)':dd<1?' (non-AG acidosis+)':''));}
+  }
+  // Interpretacja
+  let disorder='';
+  if(ph<7.35){
+    disorder=hco3<22?'Kwasica metaboliczna':'Kwasica oddechowa';
+    if(hco3<22){const expPco2=1.5*hco3+8;lines.push('Winter: PaCO₂ ocz.='+expPco2.toFixed(0)+'±2'+(pco2<expPco2-2?' +oddech. komp.':pco2>expPco2+2?' +oddech. kwasica':''));}
+  }else if(ph>7.45){
+    disorder=hco3>26?'Zasadowica metaboliczna':'Zasadowica oddechowa';
+  }else{disorder='Norma (7.35–7.45)';}
+  lines.push(disorder);
+  const el=document.getElementById('hh-interp');if(el)el.textContent=lines.join('\n');
+}
+
+// ── Dawkowanie ──
+function mCalcDose(){
+  const wt=+document.getElementById('dose-wt').value;
+  const mgkg=+document.getElementById('dose-mgkg').value;
+  const mcgkgmin=+document.getElementById('dose-mcgkgmin').value;
+  const conc=+document.getElementById('dose-conc').value;
+  if(!wt){mSet('dose-interp','Podaj masę ciała');return;}
+  const lines=[];
+  if(mgkg){const dose=wt*mgkg;lines.push('Dawka: '+dose.toFixed(1)+' mg');}
+  if(mcgkgmin){
+    const mcgMin=wt*mcgkgmin;
+    const mgH=mcgMin*60/1000;
+    lines.push('Wlew: '+mcgMin.toFixed(1)+' mcg/min');
+    lines.push('      '+mgH.toFixed(2)+' mg/h');
+    if(conc){const mlH=mgH/conc;lines.push('Prędkość: '+mlH.toFixed(1)+' mL/h');}
+  }
+  if(!lines.length)lines.push('Podaj dawkę mg/kg lub mcg/kg/min');
+  const el=document.getElementById('dose-interp');if(el)el.textContent=lines.join('\n');
+}
+
+// ── QTc ──
+function mCalcQTc(){
+  const qt=+document.getElementById('qtc-qt').value;
+  const hr=+document.getElementById('qtc-hr').value;
+  if(!qt||!hr){mSet('qtc-val','---');mSet('qtc-interp','Brak danych');return;}
+  const rr=60/hr;
+  const bazett=qt/Math.sqrt(rr);
+  const fridericia=qt/Math.cbrt(rr);
+  const framingham=qt+154*(1-rr);
+  mSet('qtc-val',Math.round(bazett));
+  let cls,lev,interp;
+  if(bazett>500){cls='crit';lev='KRYTYCZNY';interp='QTc>500ms — ryzyko TdP!';}
+  else if(bazett>470){cls='warn';lev='WYDŁUŻONY';interp='QTc wydłużony (>470ms ♀).';}
+  else if(bazett>450){cls='warn';lev='GRANICZNY';interp='QTc graniczny (>450ms ♂).';}
+  else{cls='ok';lev='NORMA';interp='QTc w normie.';}
+  mBadge('qtc-lev',cls,lev);
+  mSet('qtc-interp','Bazett:'+Math.round(bazett)+' Frid:'+Math.round(fridericia)+' Fram:'+Math.round(framingham)+'ms. '+interp);
+}
+
+// ── CALC_VERSIONS ──
+const CALC_VERSIONS={
+  'eGFR':{version:'2021.1',formula:'CKD-EPI 2021'},'CG':{version:'1976.1',formula:'Cockcroft-Gault'},
+  'CHADS':{version:'2010.1',formula:'CHA₂DS₂-VASc'},'GCS':{version:'1974.1',formula:'Teasdale & Jennett'},
+  'CURB-65':{version:'2003.1',formula:'Lim WS et al'},'Wells-DVT':{version:'2003.1',formula:'Wells PS et al'},
+  'APGAR':{version:'1953.1',formula:'Virginia Apgar'},'Centor':{version:'1981.1',formula:'Centor/McIsaac'},
+  'BMI':{version:'1832.1',formula:'Quetelet/Mosteller'},'Child-Pugh':{version:'1973.1',formula:'Pugh RN et al'},
+  'Wells-PE':{version:'2000.1',formula:'Wells PS et al'},'PERC':{version:'2004.1',formula:'Kline JA et al'},
+  'MAP':{version:'std',formula:'MAP = DBP + (SBP-DBP)/3'},'AG':{version:'std',formula:'Na - Cl - HCO₃'},
+  'Ca-corr':{version:'std',formula:'Ca + 0.8×(4-Alb)'},'SOFA':{version:'1996.1',formula:'Vincent JL et al'},
+  'qSOFA':{version:'2016.1',formula:'Seymour CW et al (Sepsis-3)'},'NEWS2':{version:'2017.1',formula:'RCP UK'},
+  'MELD-Na':{version:'2016.1',formula:'OPTN/UNOS'},'Henderson-Hasselbalch':{version:'1917.1',formula:'Henderson-Hasselbalch'},
+  'QTc':{version:'1920.1',formula:'Bazett/Fridericia/Framingham'},'Dose':{version:'std',formula:'mg/kg, mcg/kg/min'}
+};
+
+// ── Analytics rendering ──
+function renderAnalytics(){
+  // Trend chart (last 14 days)
+  const tc=document.getElementById('analytics-trend-chart');
+  if(!tc)return;
+  const habits=state.habits||[];
+  const days=14;
+  const rates=[];
+  for(let i=0;i<days;i++){
+    let done=0,total=0;
+    habits.forEach(h=>{if(h.d&&h.d.length>i){total++;if(h.d[i])done++;}});
+    rates.push(total?done/total:0);
+  }
+  // SVG trend line
+  const W=280,H=70,ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('width','100%');svg.setAttribute('height','80');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','none');
+  // gradient area
+  const defs=document.createElementNS(ns,'defs');
+  const grad=document.createElementNS(ns,'linearGradient');
+  grad.setAttribute('id','trend-grad');grad.setAttribute('x1','0');grad.setAttribute('y1','0');grad.setAttribute('x2','0');grad.setAttribute('y2','1');
+  const s1=document.createElementNS(ns,'stop');s1.setAttribute('offset','0%');s1.setAttribute('stop-color','var(--nom)');s1.setAttribute('stop-opacity','0.3');
+  const s2=document.createElementNS(ns,'stop');s2.setAttribute('offset','100%');s2.setAttribute('stop-color','var(--nom)');s2.setAttribute('stop-opacity','0.02');
+  grad.appendChild(s1);grad.appendChild(s2);defs.appendChild(grad);svg.appendChild(defs);
+  const pts=rates.map((r,i)=>`${((i/(days-1))*W).toFixed(1)},${(H-4-(r*(H-8))).toFixed(1)}`);
+  // Area fill
+  const area=document.createElementNS(ns,'polygon');
+  area.setAttribute('points',`0,${H} ${pts.join(' ')} ${W},${H}`);
+  area.setAttribute('fill','url(#trend-grad)');svg.appendChild(area);
+  // Line
+  const line=document.createElementNS(ns,'polyline');
+  line.setAttribute('points',pts.join(' '));line.setAttribute('fill','none');line.setAttribute('stroke','var(--nom)');line.setAttribute('stroke-width','2');line.setAttribute('stroke-linecap','round');line.setAttribute('stroke-linejoin','round');
+  svg.appendChild(line);
+  // Labels
+  const avg=rates.reduce((a,b)=>a+b,0)/rates.length;
+  const txt=document.createElementNS(ns,'text');txt.setAttribute('x','4');txt.setAttribute('y','12');txt.setAttribute('fill','var(--txm)');txt.setAttribute('font-size','9');txt.textContent='Śr: '+(avg*100).toFixed(0)+'%';
+  svg.appendChild(txt);
+  safeDOM.clear(tc);tc.appendChild(svg);
+
+  // Heatmap
+  const hm=document.getElementById('analytics-heatmap');
+  if(hm){
+    safeDOM.clear(hm);
+    const frag=document.createDocumentFragment();
+    for(let i=0;i<days;i++){
+      let done=0,total=0;
+      habits.forEach(h=>{if(h.d&&h.d.length>i){total++;if(h.d[i])done++;}});
+      const pct=total?(done/total):0;
+      const cell=document.createElement('div');
+      cell.className='heatmap-cell'+(pct>=0.75?' l4':pct>=0.5?' l3':pct>=0.25?' l2':pct>0?' l1':'');
+      cell.title='Dzień '+(i+1)+': '+(pct*100).toFixed(0)+'%';
+      cell.style.display='inline-block';
+      frag.appendChild(cell);
+    }
+    hm.appendChild(frag);
+  }
+
+  // Correlations
+  const corr=document.getElementById('analytics-correlations');
+  if(corr){
+    safeDOM.clear(corr);
+    const frag=document.createDocumentFragment();
+    // Nootropics vs habits
+    const nootTaken=(state.nootropics||[]).filter(n=>n.status==='taken').length;
+    const nootTotal=(state.nootropics||[]).length;
+    const nootPct=nootTotal?(nootTaken/nootTotal*100):0;
+    const todayRate=rates.length?rates[rates.length-1]*100:0;
+    const r1=document.createElement('div');r1.className='corr-row';
+    const l1=document.createElement('span');l1.className='corr-label';l1.textContent='Nootropy vs Nawyki';
+    const v1=document.createElement('span');v1.className='corr-val '+(nootPct>=50&&todayRate>=50?'trend-up':'trend-neutral');
+    v1.textContent=nootPct.toFixed(0)+'% / '+todayRate.toFixed(0)+'%';
+    r1.appendChild(l1);r1.appendChild(v1);frag.appendChild(r1);
+    // Timer sessions vs habits
+    const sessions=state.timer?state.timer.session:0;
+    const r2=document.createElement('div');r2.className='corr-row';
+    const l2=document.createElement('span');l2.className='corr-label';l2.textContent='Pomodoro sesji vs Nawyki';
+    const v2=document.createElement('span');v2.className='corr-val '+(sessions>=2?'trend-up':'trend-neutral');
+    v2.textContent=sessions+' sesji / '+todayRate.toFixed(0)+'%';
+    r2.appendChild(l2);r2.appendChild(v2);frag.appendChild(r2);
+    // Overall streak
+    const maxStreak=habits.reduce((mx,h)=>Math.max(mx,h.s||0),0);
+    const r3=document.createElement('div');r3.className='corr-row';
+    const l3=document.createElement('span');l3.className='corr-label';l3.textContent='Max streak';
+    const v3=document.createElement('span');v3.className='corr-val trend-up';v3.textContent=maxStreak+'d';
+    r3.appendChild(l3);r3.appendChild(v3);frag.appendChild(r3);
+    corr.appendChild(frag);
+  }
+}
+
 // ── Init ──
 mCalcEGFR();mCalcCG();mCalcGCS();mCalcAPGAR();mCalcBMI();mCalcCP();mCalcCHADS();mCalcCURB();mCalcWells();mCalcCentor();
+mCalcSOFA();mCalcQSOFA();mCalcNEWS();mCalcMELD();mCalcHH();mCalcDose();mCalcQTc();
 
 
 // ═══════════════════════════════════════════════════
