@@ -3,13 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b0a09">
-<meta name="description" content="Personal Life OS - Todo, Weather, Finance, Health Tracker">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win; img-src 'self' data:;">
 <title>LIFE OS</title>
-<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkxJRkUgT1MiLAogICJzaG9ydF9uYW1lIjogIkxpZmVPUyIsCiAgImRlc2NyaXB0aW9uIjogIlBlcnNvbmFsIExpZmUgT1MgLSBUb2RvLCBXZWF0aGVyLCBGaW5hbmNlLCBIZWFsdGggVHJhY2tlciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwYTA5IiwKICAidGhlbWVfY29sb3IiOiAiIzBiMGEwOSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbXQp9">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 [data-palette="reaktor"][data-theme="dark"] {
@@ -286,7 +281,7 @@ html {
   text-rendering:optimizeLegibility;
 }
 body {
-  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-family:'Satoshi','Inter',sans-serif;
   font-size:clamp(.75rem,.7rem + .25vw,.875rem);
   color:var(--tx);
   background:var(--bg);
@@ -1580,289 +1575,6 @@ a {
   margin-left:auto;
   font-family:'IBM Plex Mono',monospace;
 }
-
-/* ═══════════════════════════════════════════════════
-   MARKET NEWS WIDGET STYLES
-   ═══════════════════════════════════════════════════ */
-.market-news-card {
-  grid-column: span 2;
-}
-
-.mn-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid var(--accent);
-}
-
-.mn-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--tx);
-  margin: 0;
-}
-
-.mn-tabs {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.mn-tab {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  background: var(--bg3);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: var(--tx);
-  transition: all 0.2s ease;
-}
-
-.mn-tab:hover {
-  background: var(--accent);
-  color: white;
-}
-
-.mn-tab.active {
-  background: var(--accent);
-  color: white;
-  font-weight: 600;
-}
-
-.mn-content {
-  min-height: 200px;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.mn-article {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--bg3);
-}
-
-.mn-article:last-child {
-  border-bottom: none;
-}
-
-.mn-article-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-
-.mn-article-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.mn-article-headline {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-.mn-article-headline a {
-  color: var(--tx);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.mn-article-headline a:hover {
-  color: var(--accent);
-}
-
-.mn-article-summary {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--txm);
-  line-height: 1.5;
-}
-
-.mn-article-meta {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  font-size: 0.75rem;
-  color: var(--txs);
-  flex-wrap: wrap;
-}
-
-.mn-sentiment {
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-  font-size: 0.7rem;
-}
-
-.mn-sentiment-positive {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
-}
-
-.mn-sentiment-negative {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-}
-
-.mn-indicator-card,
-.mn-energy-card {
-  background: var(--bg3);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-  border-left: 3px solid var(--accent);
-}
-
-.mn-indicator-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-}
-
-.mn-indicator-header h4 {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--tx);
-}
-
-.mn-trend {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-}
-
-.trend-up {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
-}
-
-.trend-down {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-}
-
-.mn-indicator-value {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.mn-value-number {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--tx);
-  font-family: 'IBM Plex Mono', monospace;
-}
-
-.mn-value-unit {
-  font-size: 0.8rem;
-  color: var(--txm);
-}
-
-.mn-indicator-date {
-  font-size: 0.75rem;
-  color: var(--txs);
-}
-
-.mn-energy-price {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.5rem;
-}
-
-.mn-energy-value {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--tx);
-  font-family: 'IBM Plex Mono', monospace;
-}
-
-.mn-energy-change {
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.change-positive {
-  color: #22c55e;
-}
-
-.change-negative {
-  color: #ef4444;
-}
-
-.mn-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--bg3);
-}
-
-.mn-update-time {
-  color: var(--txs);
-  font-size: 0.75rem;
-}
-
-.mn-refresh-btn {
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  background: var(--bg3);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: var(--tx);
-  transition: all 0.2s;
-}
-
-.mn-refresh-btn:hover {
-  background: var(--accent);
-  color: white;
-}
-
-.mn-loading {
-  text-align: center;
-  color: var(--txm);
-  padding: 2rem;
-  font-style: italic;
-}
-
-@media (max-width: 768px) {
-  .market-news-card {
-    grid-column: span 1;
-  }
-  
-  .mn-article {
-    flex-direction: column;
-  }
-  
-  .mn-article-image {
-    width: 100%;
-    height: 150px;
-  }
-  
-  .mn-tabs {
-    flex-wrap: wrap;
-  }
-  
-  .mn-tab {
-    flex: 1;
-    text-align: center;
-    min-width: 80px;
-  }
-}
 </style>
 </head>
 <body>
@@ -1986,12 +1698,12 @@ a {
             <span class="L" style="color:var(--a1);">Parametry wejściowe</span>
           </div>
           <div class="bs-form" style="padding:0 .75rem .75rem;">
-            <div class="bs-row"><span class="bs-lbl">S</span><input class="bs-inp" id="bs-s" type="number" value="174" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Spot</span></div>
-            <div class="bs-row"><span class="bs-lbl">K</span><input class="bs-inp" id="bs-k" type="number" value="175" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Strike</span></div>
-            <div class="bs-row"><span class="bs-lbl">T</span><input class="bs-inp" id="bs-t" type="number" value="30" step="1" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Dni (DTE)</span></div>
-            <div class="bs-row"><span class="bs-lbl">IV</span><input class="bs-inp" id="bs-iv" type="number" value="28" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Implied Vol</span></div>
-            <div class="bs-row"><span class="bs-lbl">r</span><input class="bs-inp" id="bs-r" type="number" value="5.25" step="0.05" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Risk-free</span></div>
-            <div class="bs-row"><span class="bs-lbl">Typ</span><select class="bs-sel" id="bs-type" data-action-change="true"><option value="call">Call</option><option value="put">Put</option></select></div>
+            <div class="bs-row"><span class="bs-lbl">S</span><input class="bs-inp" id="bs-s" type="number" value="174" step="0.5" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Spot</span></div>
+            <div class="bs-row"><span class="bs-lbl">K</span><input class="bs-inp" id="bs-k" type="number" value="175" step="0.5" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Strike</span></div>
+            <div class="bs-row"><span class="bs-lbl">T</span><input class="bs-inp" id="bs-t" type="number" value="30" step="1" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Dni (DTE)</span></div>
+            <div class="bs-row"><span class="bs-lbl">IV</span><input class="bs-inp" id="bs-iv" type="number" value="28" step="0.5" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Implied Vol</span></div>
+            <div class="bs-row"><span class="bs-lbl">r</span><input class="bs-inp" id="bs-r" type="number" value="5.25" step="0.05" oninput="updateBS()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Risk-free</span></div>
+            <div class="bs-row"><span class="bs-lbl">Typ</span><select class="bs-sel" id="bs-type" onchange="updateBS()"><option value="call">Call</option><option value="put">Put</option></select></div>
           </div>
           <div style="padding:.25rem .75rem .5rem;border-top:1px solid var(--div);border-bottom:1px solid var(--div);margin-top:.25rem;">
             <span class="L">Diagram wypłaty</span>
@@ -2061,9 +1773,9 @@ a {
         <div class="calc-ch"><span class="L">eGFR</span><span class="L" style="color:var(--txm)">CKD-EPI 2021</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="egfr-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
-            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="egfr-age" type="number" value="30" step="1" min="18" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
-            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="egfr-sex" data-action-change="true"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
+            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="egfr-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" oninput="mCalcEGFR()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="egfr-age" type="number" value="30" step="1" min="18" max="120" oninput="mCalcEGFR()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
+            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="egfr-sex" onchange="mCalcEGFR()"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="egfr-val">--</span><span class="calc-unit">mL/min/1.73m²</span><span class="calc-badge info" id="egfr-stage">--</span><span class="calc-interp" id="egfr-interp"></span></div>
         </div>
@@ -2072,10 +1784,10 @@ a {
         <div class="calc-ch"><span class="L">CrCl</span><span class="L" style="color:var(--txm)">Cockcroft-Gault</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="cg-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
-            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="cg-age" type="number" value="30" step="1" min="18" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
-            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="cg-wt" type="number" value="70" step="0.5" min="20" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
-            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="cg-sex" data-action-change="true"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
+            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="cg-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" oninput="mCalcCG()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="cg-age" type="number" value="30" step="1" min="18" max="120" oninput="mCalcCG()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="cg-wt" type="number" value="70" step="0.5" min="20" max="300" oninput="mCalcCG()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="cg-sex" onchange="mCalcCG()"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cg-val">--</span><span class="calc-unit">mL/min</span><span class="calc-badge info" id="cg-stage">--</span><span class="calc-interp" id="cg-interp"></span></div>
         </div>
@@ -2087,14 +1799,14 @@ a {
         <div class="calc-ch"><span class="L">CHA₂DS₂-VASc</span><span class="L" style="color:var(--txm)">Ryzyko udaru w migotaniu przedsionków</span></div>
         <div class="calc-body" style="grid-template-columns:1fr 128px">
           <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-chf" data-action-change="true"><span class="cchk-lbl">C — Niewydolność serca</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-htn" data-action-change="true"><span class="cchk-lbl">H — Nadciśnienie tętnicze</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age75" data-action-change="true"><span class="cchk-lbl">A₂ — Wiek ≥ 75 lat</span><span class="cchk-pts">+2</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-dm" data-action-change="true"><span class="cchk-lbl">D — Cukrzyca</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-stroke" data-action-change="true"><span class="cchk-lbl">S₂ — Udar / TIA w wywiadzie</span><span class="cchk-pts">+2</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-vasc" data-action-change="true"><span class="cchk-lbl">V — Choroba naczyniowa</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age6574" data-action-change="true"><span class="cchk-lbl">A — Wiek 65–74 lata</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-female" data-action-change="true"><span class="cchk-lbl">Sc — Płeć żeńska</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-chf" onchange="mCalcCHADS()"><span class="cchk-lbl">C — Niewydolność serca</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-htn" onchange="mCalcCHADS()"><span class="cchk-lbl">H — Nadciśnienie tętnicze</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age75" onchange="mCalcCHADS()"><span class="cchk-lbl">A₂ — Wiek ≥ 75 lat</span><span class="cchk-pts">+2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-dm" onchange="mCalcCHADS()"><span class="cchk-lbl">D — Cukrzyca</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-stroke" onchange="mCalcCHADS()"><span class="cchk-lbl">S₂ — Udar / TIA w wywiadzie</span><span class="cchk-pts">+2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-vasc" onchange="mCalcCHADS()"><span class="cchk-lbl">V — Choroba naczyniowa</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age6574" onchange="mCalcCHADS()"><span class="cchk-lbl">A — Wiek 65–74 lata</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-female" onchange="mCalcCHADS()"><span class="cchk-lbl">Sc — Płeć żeńska</span><span class="cchk-pts">+1</span></label>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="chads-val">0</span><span class="calc-unit">/ 9 pkt</span><span class="calc-badge info" id="chads-risk">NISKIE</span><span class="calc-interp" id="chads-interp">0% rocz. ryzyko udaru</span></div>
         </div>
@@ -2106,9 +1818,9 @@ a {
         <div class="calc-ch"><span class="L">GCS</span><span class="L" style="color:var(--txm)">Glasgow Coma Scale</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl" style="min-width:52px">E — Oczy</span><select class="csel" id="gcs-e" style="flex:1" data-action-change="true"><option value="4">4 — Spontanicznie</option><option value="3">3 — Na głos</option><option value="2">2 — Na ból</option><option value="1">1 — Brak</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:52px">V — Mowa</span><select class="csel" id="gcs-v" style="flex:1" data-action-change="true"><option value="5">5 — Zorientowany</option><option value="4">4 — Zagubiony</option><option value="3">3 — Słowa</option><option value="2">2 — Dźwięki</option><option value="1">1 — Brak</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:52px">M — Ruch</span><select class="csel" id="gcs-m" style="flex:1" data-action-change="true"><option value="6">6 — Wykonuje polecenia</option><option value="5">5 — Lokalizuje ból</option><option value="4">4 — Wycofuje kończynę</option><option value="3">3 — Dekortykacja</option><option value="2">2 — Decerebracja</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">E — Oczy</span><select class="csel" id="gcs-e" style="flex:1" onchange="mCalcGCS()"><option value="4">4 — Spontanicznie</option><option value="3">3 — Na głos</option><option value="2">2 — Na ból</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">V — Mowa</span><select class="csel" id="gcs-v" style="flex:1" onchange="mCalcGCS()"><option value="5">5 — Zorientowany</option><option value="4">4 — Zagubiony</option><option value="3">3 — Słowa</option><option value="2">2 — Dźwięki</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">M — Ruch</span><select class="csel" id="gcs-m" style="flex:1" onchange="mCalcGCS()"><option value="6">6 — Wykonuje polecenia</option><option value="5">5 — Lokalizuje ból</option><option value="4">4 — Wycofuje kończynę</option><option value="3">3 — Dekortykacja</option><option value="2">2 — Decerebracja</option><option value="1">1 — Brak</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="gcs-val">15</span><span class="calc-unit" id="gcs-sub">E4V5M6</span><span class="calc-badge ok" id="gcs-sev">--</span><span class="calc-interp" id="gcs-interp"></span></div>
         </div>
@@ -2120,11 +1832,11 @@ a {
         <div class="calc-ch"><span class="L">CURB-65</span><span class="L" style="color:var(--txm)">Pozaszpitalne zapalenie płuc — CAP</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-c" data-action-change="true"><span class="cchk-lbl">Confusion — zaburzenia świadomości</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-u" data-action-change="true"><span class="cchk-lbl">Urea — BUN > 19 mg/dL (mocznik >7 mmol/L)</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-r" data-action-change="true"><span class="cchk-lbl">Respiratory Rate ≥ 30 /min</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-b" data-action-change="true"><span class="cchk-lbl">Blood pressure sys&lt;90 lub dia≤60 mmHg</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-65" data-action-change="true"><span class="cchk-lbl">Age ≥ 65 lat</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-c" onchange="mCalcCURB()"><span class="cchk-lbl">Confusion — zaburzenia świadomości</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-u" onchange="mCalcCURB()"><span class="cchk-lbl">Urea — BUN > 19 mg/dL (mocznik >7 mmol/L)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-r" onchange="mCalcCURB()"><span class="cchk-lbl">Respiratory Rate ≥ 30 /min</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-b" onchange="mCalcCURB()"><span class="cchk-lbl">Blood pressure sys&lt;90 lub dia≤60 mmHg</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-65" onchange="mCalcCURB()"><span class="cchk-lbl">Age ≥ 65 lat</span><span class="cchk-pts">+1</span></label>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="curb-val">0</span><span class="calc-unit">/ 5 pkt</span><span class="calc-badge ok" id="curb-lev">--</span><span class="calc-interp" id="curb-interp"></span></div>
         </div>
@@ -2133,15 +1845,15 @@ a {
         <div class="calc-ch"><span class="L">Wells DVT</span><span class="L" style="color:var(--txm)">Zakrzepica żył głębokich</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-ca" data-action-change="true"><span class="cchk-lbl">Aktywna choroba nowotworowa</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-par" data-action-change="true"><span class="cchk-lbl">Porażenie kończyny / niedawny gips</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-bed" data-action-change="true"><span class="cchk-lbl">Unieruchomienie ≥3d lub op. &lt;12 tyg.</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-sw" data-action-change="true"><span class="cchk-lbl">Cała noga obrzęknięta</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-cf" data-action-change="true"><span class="cchk-lbl">Obrzęk łydki ≥ 3 cm większy</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-pe" data-action-change="true"><span class="cchk-lbl">Pitting edema (objaśniony przez DVT)</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-col" data-action-change="true"><span class="cchk-lbl">Żyły poboczne powierzchowne</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-prev" data-action-change="true"><span class="cchk-lbl">DVT w wywiadzie</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-alt" data-action-change="true"><span class="cchk-lbl">Inna diagnoza równie prawdopodobna</span><span class="cchk-pts">−2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-ca" onchange="mCalcWells()"><span class="cchk-lbl">Aktywna choroba nowotworowa</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-par" onchange="mCalcWells()"><span class="cchk-lbl">Porażenie kończyny / niedawny gips</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-bed" onchange="mCalcWells()"><span class="cchk-lbl">Unieruchomienie ≥3d lub op. &lt;12 tyg.</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-sw" onchange="mCalcWells()"><span class="cchk-lbl">Cała noga obrzęknięta</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-cf" onchange="mCalcWells()"><span class="cchk-lbl">Obrzęk łydki ≥ 3 cm większy</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-pe" onchange="mCalcWells()"><span class="cchk-lbl">Pitting edema (objaśniony przez DVT)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-col" onchange="mCalcWells()"><span class="cchk-lbl">Żyły poboczne powierzchowne</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-prev" onchange="mCalcWells()"><span class="cchk-lbl">DVT w wywiadzie</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-alt" onchange="mCalcWells()"><span class="cchk-lbl">Inna diagnoza równie prawdopodobna</span><span class="cchk-pts">−2</span></label>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="wells-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge ok" id="wells-lev">--</span><span class="calc-interp" id="wells-interp"></span></div>
         </div>
@@ -2153,11 +1865,11 @@ a {
         <div class="calc-ch"><span class="L">APGAR</span><span class="L" style="color:var(--txm)">1 min / 5 min po urodzeniu</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl" style="min-width:68px">Kolor skóry</span><select class="csel" id="ap-app" style="flex:1" data-action-change="true"><option value="0">0 — Sinica centralna</option><option value="1">1 — Sinica obwodowa</option><option value="2" selected>2 — Różowy</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Akcja serca</span><select class="csel" id="ap-pul" style="flex:1" data-action-change="true"><option value="0">0 — Brak tętna</option><option value="1">1 — &lt; 100 /min</option><option value="2" selected>2 — ≥ 100 /min</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Odruchy</span><select class="csel" id="ap-gri" style="flex:1" data-action-change="true"><option value="0">0 — Brak reakcji</option><option value="1">1 — Grymas</option><option value="2" selected>2 — Kaszel / kichanie</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Napięcie</span><select class="csel" id="ap-act" style="flex:1" data-action-change="true"><option value="0">0 — Wiotkość</option><option value="1">1 — Zgięcie kończyn</option><option value="2" selected>2 — Aktywne ruchy</option></select></div>
-            <div class="crow"><span class="clbl" style="min-width:68px">Oddech</span><select class="csel" id="ap-res" style="flex:1" data-action-change="true"><option value="0">0 — Brak</option><option value="1">1 — Nieregularny/płytki</option><option value="2" selected>2 — Regularny / płacz</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Kolor skóry</span><select class="csel" id="ap-app" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Sinica centralna</option><option value="1">1 — Sinica obwodowa</option><option value="2" selected>2 — Różowy</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Akcja serca</span><select class="csel" id="ap-pul" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Brak tętna</option><option value="1">1 — &lt; 100 /min</option><option value="2" selected>2 — ≥ 100 /min</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Odruchy</span><select class="csel" id="ap-gri" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Brak reakcji</option><option value="1">1 — Grymas</option><option value="2" selected>2 — Kaszel / kichanie</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Napięcie</span><select class="csel" id="ap-act" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Wiotkość</option><option value="1">1 — Zgięcie kończyn</option><option value="2" selected>2 — Aktywne ruchy</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Oddech</span><select class="csel" id="ap-res" style="flex:1" onchange="mCalcAPGAR()"><option value="0">0 — Brak</option><option value="1">1 — Nieregularny/płytki</option><option value="2" selected>2 — Regularny / płacz</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="apgar-val">10</span><span class="calc-unit">/ 10 pkt</span><span class="calc-badge ok" id="apgar-lev">--</span><span class="calc-interp" id="apgar-interp"></span></div>
         </div>
@@ -2166,13 +1878,13 @@ a {
         <div class="calc-ch"><span class="L">Centor / McIsaac</span><span class="L" style="color:var(--txm)">Paciorkowcowe zapalenie gardła</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-exud" data-action-change="true"><span class="cchk-lbl">Wysięk na migdałkach</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-node" data-action-change="true"><span class="cchk-lbl">Powiększone węzły szyjne przednie</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-temp" data-action-change="true"><span class="cchk-lbl">Temperatura > 38°C</span><span class="cchk-pts">+1</span></label>
-            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-cough" data-action-change="true"><span class="cchk-lbl">Brak kaszlu</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-exud" onchange="mCalcCentor()"><span class="cchk-lbl">Wysięk na migdałkach</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-node" onchange="mCalcCentor()"><span class="cchk-lbl">Powiększone węzły szyjne przednie</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-temp" onchange="mCalcCentor()"><span class="cchk-lbl">Temperatura > 38°C</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-cough" onchange="mCalcCentor()"><span class="cchk-lbl">Brak kaszlu</span><span class="cchk-pts">+1</span></label>
             <div style="margin-top:.375rem;padding-top:.375rem;border-top:1px solid var(--div)">
               <span class="clbl" style="display:block;margin-bottom:.25rem">Wiek (McIsaac)</span>
-              <select class="csel" id="cen-age" data-action-change="true" style="width:100%"><option value="-1">pod 15 lat (−1)</option><option value="0" selected>15–44 lata (0)</option><option value="-1b">45+ lat (−1)</option></select>
+              <select class="csel" id="cen-age" onchange="mCalcCentor()" style="width:100%"><option value="-1">pod 15 lat (−1)</option><option value="0" selected>15–44 lata (0)</option><option value="-1b">45+ lat (−1)</option></select>
             </div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cen-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge info" id="cen-lev">--</span><span class="calc-interp" id="cen-interp"></span></div>
@@ -2185,8 +1897,8 @@ a {
         <div class="calc-ch"><span class="L">BMI / BSA</span><span class="L" style="color:var(--txm)">Mosteller</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="bmi-wt" type="number" value="70" step="0.5" min="20" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
-            <div class="crow"><span class="clbl">Wzrost</span><input class="cinp" id="bmi-ht" type="number" value="175" step="1" min="100" max="250" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">cm</span></div>
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="bmi-wt" type="number" value="70" step="0.5" min="20" max="300" oninput="mCalcBMI()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">Wzrost</span><input class="cinp" id="bmi-ht" type="number" value="175" step="1" min="100" max="250" oninput="mCalcBMI()"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">cm</span></div>
           </div>
           <div class="calc-res-col">
             <span class="calc-score" id="bmi-val">--</span><span class="calc-unit">kg/m²</span>
@@ -2204,22 +1916,17 @@ a {
         <div class="calc-ch"><span class="L">Child-Pugh</span><span class="L" style="color:var(--txm)">Rezerwa wątroby — marskość</span></div>
         <div class="calc-body">
           <div class="calc-inp-col">
-            <div class="crow"><span class="clbl">Bilirubina</span><select class="csel" id="cp-bil" data-action-change="true"><option value="1">&lt; 34 µmol/L</option><option value="2">34–50 µmol/L</option><option value="3">&gt; 50 µmol/L</option></select></div>
-            <div class="crow"><span class="clbl">Albuminy</span><select class="csel" id="cp-alb" data-action-change="true"><option value="1">&gt; 35 g/L</option><option value="2">28–35 g/L</option><option value="3">&lt; 28 g/L</option></select></div>
-            <div class="crow"><span class="clbl">INR</span><select class="csel" id="cp-inr" data-action-change="true"><option value="1">&lt; 1.7</option><option value="2">1.7–2.3</option><option value="3">&gt; 2.3</option></select></div>
-            <div class="crow"><span class="clbl">Wodobrzusze</span><select class="csel" id="cp-asc" data-action-change="true"><option value="1">Brak</option><option value="2">Łagodne</option><option value="3">Nasilone</option></select></div>
-            <div class="crow"><span class="clbl">Encefalopatia</span><select class="csel" id="cp-enc" data-action-change="true"><option value="1">Brak</option><option value="2">St. I–II</option><option value="3">St. III–IV</option></select></div>
+            <div class="crow"><span class="clbl">Bilirubina</span><select class="csel" id="cp-bil" onchange="mCalcCP()"><option value="1">&lt; 34 µmol/L</option><option value="2">34–50 µmol/L</option><option value="3">&gt; 50 µmol/L</option></select></div>
+            <div class="crow"><span class="clbl">Albuminy</span><select class="csel" id="cp-alb" onchange="mCalcCP()"><option value="1">&gt; 35 g/L</option><option value="2">28–35 g/L</option><option value="3">&lt; 28 g/L</option></select></div>
+            <div class="crow"><span class="clbl">INR</span><select class="csel" id="cp-inr" onchange="mCalcCP()"><option value="1">&lt; 1.7</option><option value="2">1.7–2.3</option><option value="3">&gt; 2.3</option></select></div>
+            <div class="crow"><span class="clbl">Wodobrzusze</span><select class="csel" id="cp-asc" onchange="mCalcCP()"><option value="1">Brak</option><option value="2">Łagodne</option><option value="3">Nasilone</option></select></div>
+            <div class="crow"><span class="clbl">Encefalopatia</span><select class="csel" id="cp-enc" onchange="mCalcCP()"><option value="1">Brak</option><option value="2">St. I–II</option><option value="3">St. III–IV</option></select></div>
           </div>
           <div class="calc-res-col"><span class="calc-score" id="cp-val">5</span><span class="calc-unit">/ 15 pkt</span><span class="calc-badge ok" id="cp-cls">Klasa A</span><span class="calc-interp" id="cp-interp">śmiertelność &lt;5% / rok</span></div>
         </div>
       </div>
     </div></div>
   </div>
-    <!-- Plugin Container Section -->
-    <div id="plugin-section" class="widget" style="display:none;" aria-label="Plugin widgets">
-      <h2 class="wttl">Rozszerzenia</h2>
-      <div id="plugins-container" class="plugins-grid"></div>
-    </div>
 
 </main>
 </div>
@@ -2253,42 +1960,12 @@ const CONFIG = {
   },
   // App settings
   APP: {
-    STORAGE_VERSION: 1,
     STORAGE_PREFIX: 'lifeos_',
     MAX_TODO_LENGTH: 500,
     MAX_NOTE_LENGTH: 5000,
     TIMER_UPDATE_INTERVAL: 250,
     DEFAULT_PALETTE: 'reaktor',
     DEFAULT_THEME: 'dark'
-  },
-  // Plugin System Configuration
-  PLUGIN: {
-    ENABLED: true,
-    AUTO_LOAD: true,
-    DEBUG_MODE: false,
-    MAX_PLUGINS: 50,
-    TIMEOUT: 10000,
-    RETRY_ATTEMPTS: 3,
-    RETRY_DELAY: 1000,
-    SANDBOX_ENABLED: true,
-    ALLOWED_ORIGINS: [
-      'https://api.open-meteo.com',
-      'https://query1.finance.yahoo.com',
-      'https://corsproxy.io',
-      'https://api.allorigins.win',
-      'https://finnhub.io',
-      'https://fred.stlouisfed.org',
-      'https://www.eia.gov'
-    ]
-  },
-  // Market News API Configuration
-  MARKET_NEWS: {
-    FINNHUB_API_KEY: "d7dbke9r01qggoenois0d7dbke9r01qggoenoisg",
-    FRED_API_KEY: "852b3228e1b9ca7a16c17e1144354f3b",
-    EIA_API_KEY: "RLMYQbIgClcwg1Fclj0j86RKwOzZ8FBT6AV4lc6P",
-    REFRESH_INTERVAL: 300000, // 5 minutes
-    MAX_NEWS: 20,
-    ENABLE_SENTIMENT: true
   }
 };
 
@@ -2302,14 +1979,6 @@ const sanitize = {
     div.textContent = str;
     return div.innerHTML;
   },
-  text: (str) => {
-    if (typeof str !== 'string') return '';
-    return str.trim().slice(0, 500);
-  },
-  attribute: (str) => {
-    if (typeof str !== 'string') return '';
-    return str.replace(/[^a-zA-Z0-9\-_:\s]/g, '').slice(0, 100);
-  },
   trim: (str) => {
     if (typeof str !== 'string') return '';
     return str.trim().slice(0, CONFIG.APP.MAX_TODO_LENGTH);
@@ -2321,37 +1990,6 @@ const sanitize = {
   note: (str) => {
     if (typeof str !== 'string') return '';
     return str.trim().slice(0, CONFIG.APP.MAX_NOTE_LENGTH);
-  },
-  medicalInput: (val, min, max, fieldName) => {
-    const num = parseFloat(val);
-    if (isNaN(num)) throw new Error(`${fieldName} musi być liczbą`);
-    if (num < min || num > max) throw new Error(`${fieldName} poza zakresem klinicznym (${min}-${max})`);
-    return num;
-  }
-};
-
-// Safe DOM manipulation utilities
-const safeDOM = {
-  setHTML: (element, htmlString) => {
-    if (!element) return;
-    element.innerHTML = sanitize.html(htmlString);
-  },
-  setText: (element, text) => {
-    if (!element) return;
-    element.textContent = String(text ?? '');
-  },
-  clear: (element) => {
-    if (!element) return;
-    while (element.firstChild) {
-      element.removeChild(element.firstChild);
-    }
-  },
-  replaceChildren: (element, ...children) => {
-    if (!element) return;
-    safeDOM.clear(element);
-    children.forEach(child => {
-      if (child) element.appendChild(child);
-    });
   }
 };
 
@@ -2445,384 +2083,6 @@ const a11y = {
   }
 };
 
-// ═══════════════════════════════════════════════════
-// PLUGIN ARCHITECTURE MODULE
-// ═══════════════════════════════════════════════════
-const PluginSystem = (function() {
-  'use strict';
-  
-  const plugins = new Map();
-  const pluginRegistry = new Map();
-  const hooks = {
-    beforeInit: [],
-    afterInit: [],
-    beforeRender: [],
-    afterRender: [],
-    onDataUpdate: [],
-    onError: []
-  };
-  
-  // Plugin base class for standardization
-  class BasePlugin {
-    constructor(config) {
-      this.id = config.id;
-      this.name = config.name;
-      this.version = config.version || '1.0.0';
-      this.author = config.author || 'Unknown';
-      this.description = config.description || '';
-      this.config = config.config || {};
-      this.state = { initialized: false, active: false, error: null };
-      this.api = null;
-    }
-    
-    async init(api) {
-      this.api = api;
-      this.state.initialized = true;
-      this.state.active = true;
-      if (CONFIG.PLUGIN.DEBUG_MODE) {
-        console.log(`[Plugin] ${this.name} v${this.version} initialized`);
-      }
-    }
-    
-    async destroy() {
-      this.state.active = false;
-      this.state.initialized = false;
-      if (CONFIG.PLUGIN.DEBUG_MODE) {
-        console.log(`[Plugin] ${this.name} destroyed`);
-      }
-    }
-    
-    getConfig(key, defaultValue = null) {
-      return this.config[key] !== undefined ? this.config[key] : defaultValue;
-    }
-    
-    setConfig(key, value) {
-      this.config[key] = value;
-      this.saveConfig();
-    }
-    
-    saveConfig() {
-      try {
-        const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${this.id}`;
-        localStorage.setItem(storageKey, JSON.stringify(this.config));
-      } catch (e) {
-        console.error(`[Plugin] ${this.name} config save failed:`, e);
-      }
-    }
-    
-    loadConfig() {
-      try {
-        const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${this.id}`;
-        const stored = localStorage.getItem(storageKey);
-        if (stored) {
-          this.config = { ...this.config, ...JSON.parse(stored) };
-        }
-      } catch (e) {
-        console.error(`[Plugin] ${this.name} config load failed:`, e);
-      }
-    }
-    
-    render(container) {
-      throw new Error('Plugin must implement render() method');
-    }
-    
-    update(data) {
-      // Optional: Override to handle data updates
-    }
-  }
-  
-  // Plugin API exposed to plugins
-  const createPluginAPI = () => ({
-    // State access (read-only)
-    getState: () => ({ ...state }),
-    
-    // Safe state updates
-    updateState: (updater) => {
-      if (typeof updater === 'function') {
-        const newState = updater({ ...state });
-        Object.assign(state, newState);
-        StorageManager.saveWithDebounce('state', state);
-        PluginSystem.triggerHook('onDataUpdate', { state: newState });
-      } else if (typeof updater === 'object') {
-        Object.assign(state, updater);
-        StorageManager.saveWithDebounce('state', updater);
-        PluginSystem.triggerHook('onDataUpdate', { state: updater });
-      }
-    },
-    
-    // DOM utilities
-    createElement: (tag, attributes = {}, children = []) => {
-      const el = document.createElement(tag);
-      Object.entries(attributes).forEach(([key, value]) => {
-        if (key === 'className') el.className = value;
-        else if (key === 'textContent') el.textContent = value;
-        else if (key === 'innerHTML') el.innerHTML = sanitize.html(value);
-        else if (key.startsWith('on') && typeof value === 'function') el.addEventListener(key.slice(2).toLowerCase(), value);
-        else el.setAttribute(key, value);
-      });
-      children.forEach(child => {
-        if (typeof child === 'string') el.appendChild(document.createTextNode(child));
-        else if (child instanceof Node) el.appendChild(child);
-      });
-      return el;
-    },
-    
-    safeSetHTML: (element, html) => {
-      safeDOM.setHTML(element, html);
-    },
-    
-    // Storage with plugin namespace
-    storage: {
-      get: (key) => {
-        try {
-          const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${key}`;
-          const item = localStorage.getItem(storageKey);
-          return item ? JSON.parse(item) : null;
-        } catch (e) {
-          console.error('[Plugin API] Storage get failed:', e);
-          return null;
-        }
-      },
-      set: (key, value) => {
-        try {
-          const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${key}`;
-          localStorage.setItem(storageKey, JSON.stringify(value));
-          return true;
-        } catch (e) {
-          console.error('[Plugin API] Storage set failed:', e);
-          return false;
-        }
-      },
-      remove: (key) => {
-        try {
-          const storageKey = `${CONFIG.APP.STORAGE_PREFIX}plugin_${key}`;
-          localStorage.removeItem(storageKey);
-          return true;
-        } catch (e) {
-          console.error('[Plugin API] Storage remove failed:', e);
-          return false;
-        }
-      }
-    },
-    
-    // Network with security checks
-    fetch: async (url, options = {}) => {
-      const urlObj = new URL(url, window.location.origin);
-      if (!CONFIG.PLUGIN.ALLOWED_ORIGINS.includes(urlObj.origin) && 
-          !CONFIG.PLUGIN.ALLOWED_ORIGINS.some(o => url.startsWith(o))) {
-        throw new Error(`[Plugin API] Blocked request to unauthorized origin: ${urlObj.origin}`);
-      }
-      return safeFetch(url, options, null);
-    },
-    
-    // Utility functions
-    debounce: (fn, delay) => debounce(fn, delay),
-    throttle: (fn, limit) => throttle(fn, limit),
-    
-    // Logging with plugin context
-    log: (...args) => {
-      if (CONFIG.PLUGIN.DEBUG_MODE) {
-        console.log('[Plugin]', ...args);
-      }
-    },
-    warn: (...args) => console.warn('[Plugin]', ...args),
-    error: (...args) => console.error('[Plugin]', ...args)
-  });
-  
-  // Register a plugin class/template
-  function register(pluginClass) {
-    if (!pluginClass || !pluginClass.prototype || !(pluginClass.prototype instanceof BasePlugin)) {
-      throw new Error('Plugin must extend BasePlugin');
-    }
-    const prototype = pluginClass.prototype;
-    const pluginId = prototype.id || pluginClass.name;
-    if (!pluginId) {
-      throw new Error('Plugin must have an id');
-    }
-    if (plugins.size >= CONFIG.PLUGIN.MAX_PLUGINS) {
-      throw new Error(`Maximum plugin limit (${CONFIG.PLUGIN.MAX_PLUGINS}) reached`);
-    }
-    pluginRegistry.set(pluginId, pluginClass);
-    if (CONFIG.PLUGIN.DEBUG_MODE) {
-      console.log(`[PluginSystem] Registered plugin: ${pluginId}`);
-    }
-    return true;
-  }
-  
-  // Load and instantiate a plugin
-  async function load(pluginId, userConfig = {}) {
-    const PluginClass = pluginRegistry.get(pluginId);
-    if (!PluginClass) {
-      throw new Error(`Plugin "${pluginId}" not registered`);
-    }
-    if (plugins.has(pluginId)) {
-      if (CONFIG.PLUGIN.DEBUG_MODE) {
-        console.log(`[PluginSystem] Plugin "${pluginId}" already loaded`);
-      }
-      return plugins.get(pluginId);
-    }
-    
-    const plugin = new PluginClass({ ...PluginClass.prototype, config: userConfig });
-    plugin.loadConfig();
-    
-    try {
-      const api = createPluginAPI();
-      await Promise.race([
-        plugin.init(api),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Plugin initialization timeout')), CONFIG.PLUGIN.TIMEOUT)
-        )
-      ]);
-      
-      plugins.set(pluginId, plugin);
-      triggerHook('afterInit', { plugin });
-      
-      if (CONFIG.PLUGIN.DEBUG_MODE) {
-        console.log(`[PluginSystem] Loaded plugin: ${pluginId} v${plugin.version}`);
-      }
-      
-      return plugin;
-    } catch (error) {
-      plugin.state.error = error.message;
-      plugin.state.active = false;
-      triggerHook('onError', { plugin, error });
-      console.error(`[PluginSystem] Failed to load plugin "${pluginId}":`, error);
-      throw error;
-    }
-  }
-  
-  // Unload a plugin
-  async function unload(pluginId) {
-    const plugin = plugins.get(pluginId);
-    if (!plugin) return false;
-    
-    try {
-      await plugin.destroy();
-      plugins.delete(pluginId);
-      triggerHook('afterRender', { plugin, action: 'unload' });
-      if (CONFIG.PLUGIN.DEBUG_MODE) {
-        console.log(`[PluginSystem] Unloaded plugin: ${pluginId}`);
-      }
-      return true;
-    } catch (error) {
-      console.error(`[PluginSystem] Failed to unload plugin "${pluginId}":`, error);
-      return false;
-    }
-  }
-  
-  // Get a loaded plugin instance
-  function get(pluginId) {
-    return plugins.get(pluginId) || null;
-  }
-  
-  // Get all loaded plugins
-  function getAll() {
-    return Array.from(plugins.values());
-  }
-  
-  // Check if plugin is loaded
-  function isLoaded(pluginId) {
-    return plugins.has(pluginId);
-  }
-  
-  // Register a hook
-  function on(hookName, callback) {
-    if (!hooks[hookName]) {
-      throw new Error(`Unknown hook: ${hookName}. Available: ${Object.keys(hooks).join(', ')}`);
-    }
-    hooks[hookName].push(callback);
-    return () => {
-      const index = hooks[hookName].indexOf(callback);
-      if (index > -1) hooks[hookName].splice(index, 1);
-    };
-  }
-  
-  // Trigger hooks
-  function triggerHook(hookName, data) {
-    if (!hooks[hookName]) return;
-    hooks[hookName].forEach(callback => {
-      try {
-        callback(data);
-      } catch (error) {
-        console.error(`[PluginSystem] Hook "${hookName}" error:`, error);
-      }
-    });
-  }
-  
-  // Auto-load plugins from registry
-  async function autoLoad() {
-    if (!CONFIG.PLUGIN.AUTO_LOAD) return;
-    
-    const loadPromises = [];
-    pluginRegistry.forEach((PluginClass, pluginId) => {
-      try {
-        loadPromises.push(load(pluginId).catch(err => {
-          console.warn(`[PluginSystem] Auto-load failed for ${pluginId}:`, err.message);
-        }));
-      } catch (e) {
-        console.warn(`[PluginSystem] Auto-load error for ${pluginId}:`, e);
-      }
-    });
-    
-    await Promise.allSettled(loadPromises);
-  }
-  
-  // Render all active plugins to their containers
-  function renderAll() {
-    triggerHook('beforeRender', {});
-    
-    plugins.forEach((plugin, pluginId) => {
-      if (!plugin.state.active) return;
-      
-      const container = document.getElementById(`plugin-${pluginId}`);
-      if (container) {
-        try {
-          safeDOM.clear(container);
-          const frag = document.createDocumentFragment();
-          plugin.render(frag);
-          container.appendChild(frag);
-        } catch (error) {
-          console.error(`[PluginSystem] Render failed for ${pluginId}:`, error);
-          plugin.state.error = error.message;
-          triggerHook('onError', { plugin, error });
-        }
-      }
-    });
-    
-    triggerHook('afterRender', {});
-  }
-  
-  // Update plugins with new data
-  function updateAll(data) {
-    plugins.forEach((plugin) => {
-      if (!plugin.state.active) return;
-      try {
-        plugin.update(data);
-      } catch (error) {
-        console.error(`[PluginSystem] Update failed for ${plugin.id}:`, error);
-      }
-    });
-  }
-  
-  // Export public API
-  return {
-    BasePlugin,
-    register,
-    load,
-    unload,
-    get,
-    getAll,
-    isLoaded,
-    on,
-    triggerHook,
-    autoLoad,
-    renderAll,
-    updateAll,
-    createPluginAPI,
-    size: () => plugins.size
-  };
-})();
-
 // ── EVENT DELEGATION ─────────────────────────────────────
 document.addEventListener('click', function(e) {
   const actionEl = e.target.closest('[data-action]');
@@ -2873,57 +2133,6 @@ document.addEventListener('click', function(e) {
     }
   } catch (err) {
     console.error('Error executing action:', action, err);
-  }
-});
-
-// Input/change event delegation for medical calculators and Black-Scholes
-document.addEventListener('input', function(e) {
-  const inputEl = e.target.closest('[data-action-input="true"]');
-  if (!inputEl) return;
-  
-  try {
-    const id = inputEl.id;
-    
-    // Medical calculator inputs
-    if (id.startsWith('egfr-')) mCalcEGFR();
-    else if (id.startsWith('cg-')) mCalcCG();
-    else if (id.startsWith('bmi-')) mCalcBMI();
-    else if (id.startsWith('map-')) mCalcMAP();
-    else if (id.startsWith('ag-')) mCalcAG();
-    else if (id.startsWith('ca-')) mCalcCa();
-    else if (id.startsWith('abcd-age') || id.startsWith('abcd-bp') || id.startsWith('abcd-clin') || id.startsWith('abcd-dur')) mCalcABCD2();
-    else if (id.startsWith('bs-')) updateBS();
-  } catch (err) {
-    console.error('Error handling input:', id, err);
-  }
-});
-
-document.addEventListener('change', function(e) {
-  const changeEl = e.target.closest('[data-action-change="true"]');
-  if (!changeEl) return;
-  
-  try {
-    const id = changeEl.id;
-    
-    // Medical calculator selects and checkboxes
-    if (id.startsWith('egfr-')) mCalcEGFR();
-    else if (id.startsWith('cg-')) mCalcCG();
-    else if (id.startsWith('ch-')) mCalcCHADS();
-    else if (id.startsWith('gcs-')) mCalcGCS();
-    else if (id.startsWith('curb-')) mCalcCURB();
-    else if (id.startsWith('dvt-')) mCalcWells();
-    else if (id.startsWith('pe-')) mCalcWellsPE();
-    else if (id.startsWith('perc-')) mCalcPERC();
-    else if (id.startsWith('centor-')) mCalcCentor();
-    else if (id.startsWith('abcd-diab')) mCalcABCD2();
-    else if (id.startsWith('nihss-')) mCalcNIHSS();
-    else if (id === 'bmi-wt' || id === 'bmi-ht') mCalcBMI();
-    else if (id === 'map-sys' || id === 'map-dia') mCalcMAP();
-    else if (id === 'ag-na' || id === 'ag-cl' || id === 'ag-hco3') mCalcAG();
-    else if (id === 'ca-total' || id === 'ca-alb') mCalcCa();
-    else if (id.startsWith('bs-')) updateBS();
-  } catch (err) {
-    console.error('Error handling change:', id, err);
   }
 });
 
@@ -2994,141 +2203,24 @@ const DEFAULT_STATE={
 };
 let state=(typeof structuredClone==='function')?structuredClone(DEFAULT_STATE):JSON.parse(JSON.stringify(DEFAULT_STATE));
 function deepMerge(target,source){for(const key in source){if(source[key]&&typeof source[key]==='object'&&!Array.isArray(source[key])){if(!target[key]||typeof target[key]!=='object'||Array.isArray(target[key])) target[key]={};deepMerge(target[key],source[key]);}else{target[key]=source[key];}}return target;}
-// ═══════════════════════════════════════════════════
-// STATE MANAGEMENT WITH DEBOUNCING & VERSIONING
-// ═══════════════════════════════════════════════════
-const StorageManager = {
-  version: CONFIG.APP.STORAGE_VERSION || 1,
-  debounceTimers: {},
-  
-  saveWithDebounce: function(key, data, delay = 500) {
-    const storageKey = CONFIG.APP.STORAGE_PREFIX + key;
-    if (this.debounceTimers[key]) clearTimeout(this.debounceTimers[key]);
-    this.debounceTimers[key] = setTimeout(() => {
-      try {
-        const payload = { version: this.version, timestamp: Date.now(), data: data };
-        localStorage.setItem(storageKey, JSON.stringify(payload));
-      } catch (error) {
-        if (error.name === 'QuotaExceededError') this.handleQuotaExceeded();
-        console.error('[StorageManager] Save failed:', error.message);
-      }
-    }, delay);
-  },
-  
-  loadWithVersion: function(key, defaultValue = null) {
-    const storageKey = CONFIG.APP.STORAGE_PREFIX + key;
-    try {
-      const item = localStorage.getItem(storageKey);
-      if (!item) return defaultValue;
-      const parsed = JSON.parse(item);
-      if (parsed.version && parsed.version !== this.version) {
-        console.warn('[StorageManager] Version mismatch for', key);
-      }
-      return parsed.data !== undefined ? parsed.data : parsed;
-    } catch (error) {
-      console.error('[StorageManager] Load failed:', error.message);
-      return defaultValue;
-    }
-  },
-  
-  handleQuotaExceeded: function() {
-    try {
-      const now = Date.now(), oneWeekAgo = now - 604800000;
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith(CONFIG.APP.STORAGE_PREFIX)) {
-          try {
-            const item = JSON.parse(localStorage.getItem(key));
-            if (item.timestamp && item.timestamp < oneWeekAgo) {
-              localStorage.removeItem(key);
-            }
-          } catch (e) {}
-        }
-      });
-    } catch (error) {
-      console.error('[StorageManager] Cleanup failed:', error.message);
-    }
-  },
-  
-  clearAllDebounceTimers: function() {
-    Object.values(this.debounceTimers).forEach(timer => clearTimeout(timer));
-    this.debounceTimers = {};
-  }
-};
-
-function saveTodos(){ StorageManager.saveWithDebounce('todos', state.todos, 500); }
-function saveFeelings(){ 
-  const arr = [...document.querySelectorAll('.fc.sel')].map(x => x.textContent);
-  StorageManager.saveWithDebounce('feelings', arr, 500);
-}
-function savePalette(){ 
-  StorageManager.saveWithDebounce('palette', document.documentElement.getAttribute('data-palette'), 300);
-}
-function saveTheme(){ 
-  StorageManager.saveWithDebounce('theme', document.documentElement.getAttribute('data-theme'), 300);
-}
-function saveTimer(){ 
-  StorageManager.saveWithDebounce('timer', {
-    presetIndex: state.timer.presetIndex,
-    remaining: state.timer.remaining,
-    sessions: state.timer.session
-  }, 1000);
-}
+function saveTodos(){try{localStorage.setItem('lifeos_todos',JSON.stringify(state.todos));}catch(e){}}
+function saveFeelings(){try{const arr=[...document.querySelectorAll('.fc.sel')].map(x=>x.textContent);localStorage.setItem('lifeos_feelings',JSON.stringify(arr));}catch(e){}}
+function savePalette(){try{localStorage.setItem('lifeos_palette',document.documentElement.getAttribute('data-palette'));}catch(e){}}
+function saveTheme(){try{localStorage.setItem('lifeos_theme',document.documentElement.getAttribute('data-theme'));}catch(e){}}
+function saveTimer(){try{localStorage.setItem('lifeos_timer',JSON.stringify({presetIndex:state.timer.presetIndex,remaining:state.timer.remaining,sessions:state.timer.session}));}catch(e){}}
 
 function setPalette(el){
   savePalette();document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.remove('active'));el.classList.add('active');state.palette=el.dataset.p;document.documentElement.setAttribute('data-palette',state.palette);}
-(function(){
-  const btn=document.querySelector('[data-theme-toggle]');
-  const r=document.documentElement;
-  if(!btn) return;
-  
-  function setThemeIcon(theme){
-    safeDOM.clear(btn);
-    const ns='http://www.w3.org/2000/svg';
-    const svg=document.createElementNS(ns,'svg');
-    svg.setAttribute('width','15');
-    svg.setAttribute('height','15');
-    svg.setAttribute('viewBox','0 0 24 24');
-    svg.setAttribute('fill','none');
-    svg.setAttribute('stroke','currentColor');
-    svg.setAttribute('stroke-width','2');
-    
-    if(theme==='dark'){
-      // Moon icon
-      const path=document.createElementNS(ns,'path');
-      path.setAttribute('d','M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z');
-      svg.appendChild(path);
-    }else{
-      // Sun icon
-      const circle=document.createElementNS(ns,'circle');
-      circle.setAttribute('cx','12');
-      circle.setAttribute('cy','12');
-      circle.setAttribute('r','5');
-      svg.appendChild(circle);
-      const rays=document.createElementNS(ns,'path');
-      rays.setAttribute('d','M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42');
-      svg.appendChild(rays);
-    }
-    btn.appendChild(svg);
-  }
-  
-  btn.addEventListener('click',()=>{
-    state.theme=state.theme==='dark'?'light':'dark';
-    r.setAttribute('data-theme',state.theme);
-    setThemeIcon(state.theme);
-  });
-  
-  // Initialize icon on load
-  setThemeIcon(state.theme);
-})();
+(function(){const btn=document.querySelector('[data-theme-toggle]'),r=document.documentElement;btn&&btn.addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';r.setAttribute('data-theme',state.theme);btn.innerHTML=state.theme==='dark'?'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';});})();
 function tick(){const n=new Date();const h=s=>String(s).padStart(2,'0');document.getElementById('ltime').textContent=`${h(n.getHours())}:${h(n.getMinutes())}:${h(n.getSeconds())}`;const ny=new Date(n.getTime()+n.getTimezoneOffset()*60000-4*3600000);document.getElementById('ntime').textContent=`${h(ny.getHours())}:${h(ny.getMinutes())}:${h(ny.getSeconds())}`;const wd=ny.getDay(),hh=ny.getHours(),mm=ny.getMinutes();const open=wd>=1&&wd<=5&&(hh>9||(hh===9&&mm>=30))&&hh<16;document.getElementById('mdot').className='mkt-dot '+(open?'open':'closed');document.getElementById('mlabel').textContent=open?'OTWARTY':'ZAMKNIĘTY';document.getElementById('mlabel').style.color=open?'var(--nom)':'var(--txm)';const days=['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];const months=['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie','Wrz','Paź','Lis','Gru'];document.getElementById('cdate').textContent=`${days[n.getDay()]}, ${n.getDate()} ${months[n.getMonth()]} ${n.getFullYear()}`;} setInterval(tick,1000);tick();
-function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');safeDOM.clear(g);['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evts=[4,9,15,20,23,26];let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){e.className='cd'+(day===n.getDate()?' today':'')+(evts.includes(day)?' evt':'');e.textContent=day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
-function renderFeelings(){const wrap=document.getElementById('feel-wrap');safeDOM.clear(wrap);state.feelingOptions.forEach(name=>{const btn=document.createElement('button');btn.className='fc'+(state.feelings.includes(name)?' sel':'');btn.textContent=name;btn.setAttribute('aria-pressed', state.feelings.includes(name) ? 'true' : 'false');btn.addEventListener('click', ()=>togF(name));wrap.appendChild(btn);});document.getElementById('fcnt').textContent=state.feelings.length+' '+(state.feelings.length===1?'wybrany':'wybrane');}
+function renderCalendar(){const n=new Date(),yr=n.getFullYear(),mo=n.getMonth();const mns=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];document.getElementById('calhdr').textContent=`${mns[mo]} ${yr}`;const g=document.getElementById('calgrid');g.innerHTML='';['Pn','Wt','Śr','Cz','Pt','So','Nd'].forEach(d=>{const e=document.createElement('div');e.className='cdl';e.textContent=d;g.appendChild(e);});let fd=new Date(yr,mo,1).getDay();fd=fd===0?6:fd-1;const dm=new Date(yr,mo+1,0).getDate(),pm=new Date(yr,mo,0).getDate();const evts=[4,9,15,20,23,26];let day=1,nxt=1;for(let i=0;i<6*7;i++){const e=document.createElement('div');if(i<fd){e.className='cd other';e.textContent=pm-fd+i+1;}else if(day<=dm){e.className='cd'+(day===n.getDate()?' today':'')+(evts.includes(day)?' evt':'');e.textContent=day++;}else{e.className='cd other';e.textContent=nxt++;}g.appendChild(e);if(day>dm&&i>fd+dm-2&&(i+1)%7===0)break;}}
+function renderFeelings(){const wrap=document.getElementById('feel-wrap');wrap.innerHTML='';state.feelingOptions.forEach(name=>{const btn=document.createElement('button');btn.className='fc'+(state.feelings.includes(name)?' sel':'');btn.textContent=name;btn.setAttribute('aria-pressed', state.feelings.includes(name) ? 'true' : 'false');btn.addEventListener('click', ()=>togF(name));wrap.appendChild(btn);});document.getElementById('fcnt').textContent=state.feelings.length+' '+(state.feelings.length===1?'wybrany':'wybrane');}
 function togF(name){if(state.feelings.includes(name)) state.feelings=state.feelings.filter(x=>x!==name); else state.feelings.push(name); renderFeelings();}
-function renderNoots(){const c=document.getElementById('noot-list');safeDOM.clear(c);state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';const statusDiv=document.createElement('div');statusDiv.className='nd '+sanitize.attribute(n.status);const nameSpan=document.createElement('span');nameSpan.className='nn';nameSpan.textContent=n.name;const doseSpan=document.createElement('span');doseSpan.className='ndose';doseSpan.textContent=n.dose;d.appendChild(statusDiv);d.appendChild(nameSpan);d.appendChild(doseSpan);c.appendChild(d);});}
-function renderHabits(){const c=document.getElementById('hlist');safeDOM.clear(c);state.habits.forEach((h,idx)=>{const r=document.createElement('div');r.className='hr';const nm=document.createElement('span');nm.className='hn';nm.textContent=h.n;const dd=document.createElement('div');dd.className='hd';h.d.forEach((v,i)=>{const d=document.createElement('div');d.className='dot'+(v?' done':'')+(i===h.d.length-1?' cur':'');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-pressed',v?'true':'false');d.addEventListener('click',()=>{state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();});d.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();}});dd.appendChild(d);});const st=document.createElement('span');st.className='hstr mono';st.textContent=h.s+'d';r.append(nm,dd,st);c.appendChild(r);});}
+function renderNoots(){const c=document.getElementById('noot-list');c.innerHTML='';state.nootropics.forEach(n=>{const d=document.createElement('div');d.className='ni';d.innerHTML=`<div class="nd ${n.status}"></div><span class="nn">${n.name}</span><span class="ndose">${n.dose}</span>`;c.appendChild(d);});}
+function renderHabits(){const c=document.getElementById('hlist');c.innerHTML='';state.habits.forEach((h,idx)=>{const r=document.createElement('div');r.className='hr';const nm=document.createElement('span');nm.className='hn';nm.textContent=h.n;const dd=document.createElement('div');dd.className='hd';h.d.forEach((v,i)=>{const d=document.createElement('div');d.className='dot'+(v?' done':'')+(i===h.d.length-1?' cur':'');d.setAttribute('role','button');d.setAttribute('tabindex','0');d.setAttribute('aria-pressed',v?'true':'false');d.addEventListener('click',()=>{state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();});d.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' '){state.habits[idx].d[i]=state.habits[idx].d[i]?0:1;renderHabits();}});dd.appendChild(d);});const st=document.createElement('span');st.className='hstr mono';st.textContent=h.s+'d';r.append(nm,dd,st);c.appendChild(r);});}
 function renderTodos(){
   const c=document.getElementById('tlist');
-  safeDOM.clear(c);
+  c.innerHTML='';
   state.todos.forEach((t,i)=>{
     const r=document.createElement('div');
     r.className='ti';
@@ -3179,76 +2271,9 @@ document.getElementById('tinp').addEventListener('keydown',e=>{
   if(e.key==='Enter')addTodo();
 });
 </div><div class="sn">${s.n}</div></div><svg width="52" height="22" viewBox="0 0 60 24" fill="none"><path d="${s.up?up:dn}" stroke="${s.up?'var(--nom)':'var(--az)'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="sp mono">$${s.p}</span><span class="sc ${s.up?'up':'dn'}">${s.c}</span>`;c.appendChild(r);});}
-function renderRefills(){
-  const c=document.getElementById('refill-list');
-  if(!c) return;
-  const frag=document.createDocumentFragment();
-  state.refills.forEach(r=>{
-    const d=document.createElement('div');
-    d.className='ri'+(r.critical?' crit':'');
-    const nameSpan=document.createElement('span');
-    nameSpan.className='rn';
-    nameSpan.textContent=r.name;
-    const barWrap=document.createElement('div');
-    barWrap.className='rbw';
-    const bar=document.createElement('div');
-    bar.className='rb';
-    bar.style.width=r.pct+'%';
-    bar.style.background=r.color;
-    barWrap.appendChild(bar);
-    const daysSpan=document.createElement('span');
-    daysSpan.className='rd'+(r.critical?' crit':'')+' mono';
-    daysSpan.textContent=r.days;
-    d.appendChild(nameSpan);
-    d.appendChild(barWrap);
-    d.appendChild(daysSpan);
-    frag.appendChild(d);
-  });
-  safeDOM.clear(c);
-  c.appendChild(frag);
-}
+function renderRefills(){const c=document.getElementById('refill-list');c.innerHTML='';state.refills.forEach(r=>{const d=document.createElement('div');d.className='ri'+(r.critical?' crit':'');d.innerHTML=`<span class="rn">${r.name}</span><div class="rbw"><div class="rb" style="width:${r.pct}%;background:${r.color}"></div></div><span class="rd ${r.critical?'crit':''} mono">${r.days}</span>`;c.appendChild(d);});}
 const NEWS=[{t:'08:41',h:'Fed utrzymuje stopy — rynki reagują spokojnie',s:'Reuters',c:'fin'},{t:'08:22',h:'WHO: Nowe wytyczne leczenia opornej gruźlicy płuc',s:'WHO',c:'med'},{t:'07:55',h:'GPW: WIG20 otworzył się wzrostem 0.4%',s:'Parkiet',c:'fin'},{t:'07:33',h:'Trump ogłasza nowe cła na elektronikę z Azji',s:'Bloomberg',c:'pol'},{t:'07:14',h:'Meta zapowiada AI do analizy obrazów MRI',s:'TechCrunch',c:'tch'},{t:'06:58',h:'NBP: Inflacja w Polsce spada do 3.2% r/r',s:'NBP',c:'fin'},{t:'06:40',h:'Niedobór snu zwiększa ryzyko cukrzycy T2 o 27%',s:'NEJM',c:'med'},{t:'06:21',h:'NVIDIA Blackwell Ultra — +60% wydajność AI',s:'The Verge',c:'tch'},{t:'05:58',h:'Sejm: Reforma ochrony zdrowia przełożona na wrzesień',s:'PAP',c:'pol'},{t:'05:33',h:'Ropa WTI spada poniżej $78 — obawy o popyt',s:'Bloomberg',c:'fin'}];
-function renderNews(){
-  const panes={all:[],fin:[],med:[],pol:[],tch:[]};
-  NEWS.forEach(n=>{
-    const item=document.createElement('div');
-    item.className='nit';
-    const timeSpan=document.createElement('span');
-    timeSpan.className='ntm mono';
-    timeSpan.textContent=n.t;
-    const contentDiv=document.createElement('div');
-    const headline=document.createElement('div');
-    headline.className='nh';
-    headline.textContent=n.h;
-    const source=document.createElement('div');
-    source.className='ns';
-    source.textContent=n.s;
-    contentDiv.appendChild(headline);
-    contentDiv.appendChild(source);
-    item.appendChild(timeSpan);
-    item.appendChild(contentDiv);
-    panes.all.push(item);
-    if(!panes[n.c]) panes[n.c]=[];
-    panes[n.c].push(item);
-  });
-  Object.entries(panes).forEach(([k,items])=>{
-    const container=document.getElementById('np-'+k);
-    if(container){
-      safeDOM.clear(container);
-      const frag=document.createDocumentFragment();
-      items.forEach(item=>frag.appendChild(item.cloneNode(true)));
-      container.appendChild(frag);
-    }
-  });
-}
-
-function switchN(tab,key){
-  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.np').forEach(p=>p.classList.remove('active'));
-  tab.classList.add('active');
-  const target=document.getElementById('np-'+key);
-  if(target) target.classList.add('active');
-}
+function renderNews(){const panes={all:[],fin:[],med:[],pol:[],tch:[]};NEWS.forEach(n=>{const h=`<div class="nit"><span class="ntm mono">${n.t}</span><div><div class="nh">${n.h}</div><div class="ns">${n.s}</div></div></div>`;panes.all.push(h);panes[n.c].push(h);});Object.entries(panes).forEach(([k,items])=>{document.getElementById('np-'+k).innerHTML=items.join('');});} function switchN(tab,key){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.np').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById('np-'+key).classList.add('active');}
 function setQ(el,q){document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active','bad','med','good'));el.classList.add('active',q);state.sleepQuality=q;document.getElementById('sw').className='w c4'+(q==='bad'?' critical':'');}
 function renderSleep(){document.getElementById('sleep-start').textContent=state.sleep.start;document.getElementById('sleep-stop').textContent=state.sleep.stop;document.getElementById('sleep-total').textContent=state.sleep.total;document.querySelectorAll('.qb').forEach(b=>b.classList.remove('active','bad','med','good'));const active=document.querySelector('.qb.'+state.sleepQuality)||document.querySelectorAll('.qb')[1];if(active){active.classList.add('active',state.sleepQuality);}document.getElementById('sw').className='w c4'+(state.sleepQuality==='bad'?' critical':'');}
 function applyPrefs(){document.documentElement.setAttribute('data-palette',state.palette);document.documentElement.setAttribute('data-theme',state.theme);document.querySelectorAll('.pal-swatch').forEach(s=>s.classList.toggle('active',s.dataset.p===state.palette));}
@@ -3267,80 +2292,41 @@ async function fetchWeather(){
   }
 }
 function weatherLabel(code){const map={0:'Czyste niebo',1:'Przeważnie pogodnie',2:'Częściowe zachmurzenie',3:'Pochmurno',45:'Mgła',48:'Osadzająca mgła',51:'Mżawka słaba',53:'Mżawka umiarkowana',55:'Mżawka gęsta',61:'Deszcz słaby',63:'Deszcz umiarkowany',65:'Deszcz silny',71:'Śnieg słaby',73:'Śnieg umiarkowany',75:'Śnieg silny',80:'Przelotne opady słabe',81:'Przelotne opady umiarkowane',82:'Przelotne opady silne',95:'Burza'};return map[code]||('Kod '+code);} function weatherIcon(code){if([0,1].includes(code)) return '☀️';if([2].includes(code)) return '⛅';if([3,45,48].includes(code)) return '🌥';if([51,53,55,61,63,65,80,81,82].includes(code)) return '🌧';if([71,73,75].includes(code)) return '❄️';if([95].includes(code)) return '⛈';return '•';}
-function renderWeather(){const w=state.weather;if(!w||!w.current) return;document.getElementById('weather-temp').textContent=Math.round(w.current.temperature_2m)+'°';document.getElementById('weather-code').textContent=weatherLabel(w.current.weather_code);document.getElementById('weather-feels').textContent='Odczuwalnie '+Math.round(w.current.apparent_temperature)+'°';document.getElementById('weather-wind').textContent='Wiatr '+Math.round(w.current.wind_speed_10m)+' km/h';document.getElementById('weather-humidity').textContent='Wilgotność '+Math.round(w.current.relative_humidity_2m)+'%';const t=new Date();document.getElementById('weather-updated').textContent='Aktualizacja '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');const wrap=document.getElementById('forecast-wrap');safeDOM.clear(wrap);const days=['ND','PN','WT','ŚR','CZW','PT','SB'];w.daily.time.forEach((d,i)=>{const el=document.createElement('div');el.className='wfd';const daySpan=document.createElement('span');daySpan.className='wfdl';daySpan.textContent=days[new Date(d).getDay()];const iconSpan=document.createElement('span');iconSpan.style.fontSize='.875rem';iconSpan.textContent=weatherIcon(w.daily.weather_code[i]);const tempSpan=document.createElement('span');tempSpan.className='wfdt mono';tempSpan.textContent=Math.round(w.daily.temperature_2m_max[i])+'° / '+Math.round(w.daily.temperature_2m_min[i])+'°';el.appendChild(daySpan);el.appendChild(iconSpan);el.appendChild(tempSpan);wrap.appendChild(el);});}
+function renderWeather(){const w=state.weather;if(!w||!w.current) return;document.getElementById('weather-temp').textContent=Math.round(w.current.temperature_2m)+'°';document.getElementById('weather-code').textContent=weatherLabel(w.current.weather_code);document.getElementById('weather-feels').textContent='Odczuwalnie '+Math.round(w.current.apparent_temperature)+'°';document.getElementById('weather-wind').textContent='Wiatr '+Math.round(w.current.wind_speed_10m)+' km/h';document.getElementById('weather-humidity').textContent='Wilgotność '+Math.round(w.current.relative_humidity_2m)+'%';const t=new Date();document.getElementById('weather-updated').textContent='Aktualizacja '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');const wrap=document.getElementById('forecast-wrap');wrap.innerHTML='';const days=['ND','PN','WT','ŚR','CZW','PT','SB'];w.daily.time.forEach((d,i)=>{const el=document.createElement('div');el.className='wfd';const day=new Date(d);el.innerHTML=`<span class="wfdl">${days[day.getDay()]}</span><span style="font-size:.875rem;">${weatherIcon(w.daily.weather_code[i])}</span><span class="wfdt mono">${Math.round(w.daily.temperature_2m_max[i])}° / ${Math.round(w.daily.temperature_2m_min[i])}°</span>`;wrap.appendChild(el);});}
 function fmtTime(sec){const m=Math.floor(sec/60),s=sec%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
 let timerInterval=null; function syncTimerUI(){const t=state.timer;document.getElementById('timer-screen').textContent=fmtTime(t.remaining);document.getElementById('timer-mode').textContent=fmtTime(t.remaining);document.getElementById('timer-session').textContent='sesja '+t.session;document.getElementById('timer-preset-label').textContent=t.presets[t.presetIndex].label;document.getElementById('timer-state').textContent=t.running?'w toku':'gotowy';document.getElementById('timer-state').className='pill '+(t.running?'a1':'');document.getElementById('timer-fill').style.width=((t.total-t.remaining)/t.total*100)+'%';}
 function clearTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
 function startTimer(){if(state.timer.running) return;state.timer.running=true;state.timer.lastTick=Date.now();syncTimerUI();timerInterval=setInterval(()=>{const now=Date.now();const delta=Math.floor((now-state.timer.lastTick)/1000);if(delta>0){state.timer.lastTick=now;state.timer.remaining=Math.max(0,state.timer.remaining-delta);syncTimerUI();if(state.timer.remaining<=0){clearTimer();state.timer.running=false;document.getElementById('timer-state').textContent='koniec';document.getElementById('timer-state').className='pill az';}}},250);} function pauseTimer(){state.timer.running=false;clearTimer();syncTimerUI();} function resetTimer(){clearTimer();state.timer.running=false;const p=state.timer.presets[state.timer.presetIndex];state.timer.total=p.work*60;state.timer.remaining=state.timer.total;syncTimerUI();} function cyclePreset(){state.timer.presetIndex=(state.timer.presetIndex+1)%state.timer.presets.length;state.timer.session=1;resetTimer();}
-
-// Cleanup all timers on page unload to prevent memory leaks
-window.addEventListener('beforeunload', () => {
-  clearTimer();
-  StorageManager.clearAllDebounceTimers();
-});
-
-// Visibility API - pause timer when tab is hidden to save resources
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden && state.timer.running) {
-    // Timer will naturally drift but we correct on visibility change
-    console.log('[Timer] Tab hidden, timer running in background');
-  } else if (!document.hidden && state.timer.running) {
-    // Recalculate remaining time to correct drift
-    state.timer.lastTick = Date.now();
-    syncTimerUI();
-    console.log('[Timer] Tab visible, timer corrected');
-  }
-});
-
-function hydrate(){
-  applyPrefs();
-  renderCalendar();
-  renderFeelings();
-  renderNoots();
-  renderHabits();
-  renderTodos();
-  renderStocks();
-  renderRefills();
-  renderNews();
-  renderSleep();
-  document.getElementById('notes').value = state.notes || '';
-  syncTimerUI();
-  if(state.weather) renderWeather();
-  
-  // Initialize and render plugins after core hydration
-  if (CONFIG.PLUGIN.ENABLED) {
-    PluginSystem.autoLoad().then(() => {
-      PluginSystem.renderAll();
-    }).catch(err => {
-      console.error('[PluginSystem] Auto-load failed during hydration:', err);
-    });
-  }
-}
+function hydrate(){applyPrefs();renderCalendar();renderFeelings();renderNoots();renderHabits();renderTodos();renderStocks();renderRefills();renderNews();renderSleep();document.getElementById('notes').value=state.notes||'';syncTimerUI();if(state.weather) renderWeather();}
 document.getElementById('notes').addEventListener('input',e=>{state.notes=e.target.value;});
 (function init(){
   hydrate();
   fetchWeather();
-  const weatherInterval = setInterval(fetchWeather, CONFIG.WEATHER_API.REFRESH_INTERVAL);
+  setInterval(fetchWeather, CONFIG.WEATHER_API.REFRESH_INTERVAL);
 })();
 
-// ── PERSISTENCE (localStorage with StorageManager) ──
+// ── PERSISTENCE (localStorage) ──
 (function(){
   if(!('localStorage' in window)) return;
   try{
+    // palette & theme
     const root=document.documentElement;
-    const savedP = StorageManager.loadWithVersion('palette');
+    const savedP=localStorage.getItem('lifeos_palette');
     if(savedP){root.setAttribute('data-palette',savedP);
       document.querySelectorAll('.pal-swatch').forEach(s=>{s.classList.toggle('active',s.dataset.p===savedP);});}
-    const savedT = StorageManager.loadWithVersion('theme');
+    const savedT=localStorage.getItem('lifeos_theme');
     if(savedT){root.setAttribute('data-theme',savedT);}
-    const td = StorageManager.loadWithVersion('todos');
-    if(td){state.todos = td; renderTodos();}
-    const fs = StorageManager.loadWithVersion('feelings');
-    if(fs){document.querySelectorAll('.fc').forEach(ch=>{if(fs.includes(ch.textContent)) ch.classList.add('sel');});
-      document.getElementById('fcnt').textContent=fs.length+' '+(fs.length===1?'wybrany':'wybrane');}
-    const tp = StorageManager.loadWithVersion('timer');
-    if(tp){if(typeof tp.presetIndex==='number')state.timer.presetIndex=tp.presetIndex;if(typeof tp.remaining==='number')state.timer.remaining=tp.remaining;if(typeof tp.sessions==='number')state.timer.session=tp.sessions;}
-  }catch(e){console.error('[Persistence] Load failed:', e.message);}
+    // todos
+    const td = localStorage.getItem('lifeos_todos');
+    if(td){try{state.todos = JSON.parse(td);}catch(e){} renderTodos();}
+    // feelings
+    const fs = localStorage.getItem('lifeos_feelings');
+    if(fs){const arr = JSON.parse(fs);document.querySelectorAll('.fc').forEach(ch=>{if(arr.includes(ch.textContent)) ch.classList.add('sel');});
+      document.getElementById('fcnt').textContent=arr.length+' '+(arr.length===1?'wybrany':'wybrane');}
+    // timer - load from localStorage into state.timer
+    const tp = localStorage.getItem('lifeos_timer');
+    if(tp){try{const o=JSON.parse(tp);if(typeof o.presetIndex==='number')state.timer.presetIndex=o.presetIndex;if(typeof o.remaining==='number')state.timer.remaining=o.remaining;if(typeof o.sessions==='number')state.timer.session=o.sessions;}catch(e){}}
+  }catch(e){}
 })();
 
 // ── Open-Meteo WEATHER ──
@@ -3409,37 +2395,11 @@ function fmtVol(v){if(!v||isNaN(v))return '--';if(v>=1e9)return(v/1e9).toFixed(1
 // ── SVG Sparkline ──
 function spark(closes,up,W=70,H=24){
   const f=(closes||[]).filter(p=>p!=null&&!isNaN(p));
-  if(f.length<2){
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('width',String(W));
-    svg.setAttribute('height',String(H));
-    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1','0');
-    line.setAttribute('y1',String(H/2));
-    line.setAttribute('x2',String(W));
-    line.setAttribute('y2',String(H/2));
-    line.setAttribute('stroke','var(--bor)');
-    line.setAttribute('stroke-width','1');
-    svg.appendChild(line);
-    return svg;
-  }
+  if(f.length<2)return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="var(--bor)" stroke-width="1"/></svg>`;
   const mn=Math.min(...f),mx=Math.max(...f),rng=mx-mn||1;
   const pts=f.map((p,i)=>`${((i/(f.length-1))*W).toFixed(1)},${(H-2-((p-mn)/rng)*(H-4)).toFixed(1)}`).join(' ');
   const col=up?'var(--nom)':'var(--az)';
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('width',String(W));
-  svg.setAttribute('height',String(H));
-  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  svg.setAttribute('fill','none');
-  const poly=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-  poly.setAttribute('points',pts);
-  poly.setAttribute('stroke',col);
-  poly.setAttribute('stroke-width','1.5');
-  poly.setAttribute('stroke-linecap','round');
-  poly.setAttribute('stroke-linejoin','round');
-  svg.appendChild(poly);
-  return svg;
+  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none"><polyline points="${pts}" stroke="${col}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
 // ── Load quotes for array of symbols ──
@@ -3463,79 +2423,17 @@ async function loadQuotes(syms){
 async function renderPortfel(){
   const el=document.getElementById('sl-portfel');
   if(!el) return;
-  
-  // Render skeletons using DOM methods
-  safeDOM.clear(el);
-  const fragSkel=document.createDocumentFragment();
-  TICKERS.forEach(()=>{
-    const skel=document.createElement('div');
-    skel.className='sr';
-    const leftDiv=document.createElement('div');
-    const skel1=document.createElement('div');
-    skel1.className='skeleton skeleton-text';
-    skel1.style.width='44px';
-    skel1.style.height='13px';
-    const skel2=document.createElement('div');
-    skel2.className='skeleton skeleton-text';
-    skel2.style.width='72px';
-    skel2.style.height='10px';
-    skel2.style.marginTop='4px';
-    leftDiv.appendChild(skel1);
-    leftDiv.appendChild(skel2);
-    const skel3=document.createElement('div');
-    skel3.className='skeleton';
-    skel3.style.width='70px';
-    skel3.style.height='22px';
-    skel3.style.borderRadius='2px';
-    const skel4=document.createElement('div');
-    skel4.className='skeleton skeleton-text';
-    skel4.style.width='56px';
-    skel4.style.height='13px';
-    const skel5=document.createElement('div');
-    skel5.className='skeleton skeleton-text';
-    skel5.style.width='46px';
-    skel5.style.height='13px';
-    skel.appendChild(leftDiv);
-    skel.appendChild(skel3);
-    skel.appendChild(skel4);
-    skel.appendChild(skel5);
-    fragSkel.appendChild(skel);
-  });
-  el.appendChild(fragSkel);
-  
+  el.innerHTML=TICKERS.map(()=>`<div class="sr"><div><div class="skeleton skeleton-text" style="width:44px;height:13px;"></div><div class="skeleton skeleton-text" style="width:72px;height:10px;margin-top:4px;"></div></div><div class="skeleton" style="width:70px;height:22px;border-radius:2px;"></div><div class="skeleton skeleton-text" style="width:56px;height:13px;"></div><div class="skeleton skeleton-text" style="width:46px;height:13px;"></div></div>`).join('');
   const data=await loadQuotes(TICKERS.map(t=>t.sym));
-  safeDOM.clear(el);
-  const frag=document.createDocumentFragment();
+  el.innerHTML='';
   TICKERS.forEach(t=>{
     const d=data[t.sym];
     const up=d?(d.chg??0)>=0:true;
     const row=document.createElement('div');
     row.className='sr';
-    const leftDiv=document.createElement('div');
-    const symDiv=document.createElement('div');
-    symDiv.className='stk mono';
-    symDiv.textContent=t.sym;
-    const nameDiv=document.createElement('div');
-    nameDiv.className='sn';
-    nameDiv.textContent=t.name;
-    leftDiv.appendChild(symDiv);
-    leftDiv.appendChild(nameDiv);
-    const svgElement=spark(d?.closes,up);
-    const svgContainer=document.createElement('span');
-    svgContainer.appendChild(svgElement);
-    const priceSpan=document.createElement('span');
-    priceSpan.className='sp mono';
-    priceSpan.textContent=fmtP(d?.price,t.sym);
-    const chgSpan=document.createElement('span');
-    chgSpan.className='sc '+(up?'up':'dn');
-    chgSpan.textContent=fmtPct(d?.chg);
-    row.appendChild(leftDiv);
-    row.appendChild(svgContainer.firstChild);
-    row.appendChild(priceSpan);
-    row.appendChild(chgSpan);
-    frag.appendChild(row);
+    row.innerHTML=`<div><div class="stk mono">${t.sym}</div><div class="sn">${t.name}</div></div>${spark(d?.closes,up)}<span class="sp mono">${fmtP(d?.price,t.sym)}</span><span class="sc ${up?'up':'dn'}">${fmtPct(d?.chg)}</span>`;
+    el.appendChild(row);
   });
-  el.appendChild(frag);
   const upd=document.getElementById('s-updated');
   if(upd) upd.textContent=new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   updateMktStatus();
@@ -3545,50 +2443,17 @@ async function renderPortfel(){
 async function renderMakro(){
   const el=document.getElementById('sl-makro');
   if(!el) return;
-  
-  // Loading message using DOM
-  safeDOM.clear(el);
-  const loadingDiv=document.createElement('div');
-  loadingDiv.style.padding='.75rem';
-  loadingDiv.style.color='var(--txm)';
-  loadingDiv.style.fontSize='clamp(.6rem,.58rem + .12vw,.72rem)';
-  loadingDiv.textContent='Ładowanie danych makro…';
-  el.appendChild(loadingDiv);
-  
+  el.innerHTML=`<div style="padding:.75rem;color:var(--txm);font-size:clamp(.6rem,.58rem + .12vw,.72rem);">Ładowanie danych makro…</div>`;
   const data=await loadQuotes(MACRO_LIST.map(t=>t.sym));
-  safeDOM.clear(el);
-  const frag=document.createDocumentFragment();
+  el.innerHTML='';
   MACRO_LIST.forEach(t=>{
     const d=data[t.sym];
     const up=d?(d.chg??0)>=0:true;
     const row=document.createElement('div');
     row.className='sr';
-    const leftDiv=document.createElement('div');
-    const symDiv=document.createElement('div');
-    symDiv.className='stk mono';
-    symDiv.style.fontSize='clamp(.65rem,.6rem + .2vw,.8rem)';
-    symDiv.textContent=t.name;
-    const nameDiv=document.createElement('div');
-    nameDiv.className='sn';
-    nameDiv.textContent=t.sym;
-    leftDiv.appendChild(symDiv);
-    leftDiv.appendChild(nameDiv);
-    const svgElement=spark(d?.closes,up,56,20);
-    const svgContainer=document.createElement('span');
-    svgContainer.appendChild(svgElement);
-    const priceSpan=document.createElement('span');
-    priceSpan.className='sp mono';
-    priceSpan.textContent=fmtP(d?.price,t.sym);
-    const chgSpan=document.createElement('span');
-    chgSpan.className='sc '+(up?'up':'dn');
-    chgSpan.textContent=fmtPct(d?.chg);
-    row.appendChild(leftDiv);
-    row.appendChild(svgContainer.firstChild);
-    row.appendChild(priceSpan);
-    row.appendChild(chgSpan);
-    frag.appendChild(row);
+    row.innerHTML=`<div><div class="stk mono" style="font-size:clamp(.65rem,.6rem + .2vw,.8rem);">${t.name}</div><div class="sn">${t.sym}</div></div>${spark(d?.closes,up,56,20)}<span class="sp mono">${fmtP(d?.price,t.sym)}</span><span class="sc ${up?'up':'dn'}">${fmtPct(d?.chg)}</span>`;
+    el.appendChild(row);
   });
-  el.appendChild(frag);
 }
 
 // ── Market status ──
@@ -3670,8 +2535,7 @@ function updateBS(){
 }
 
 function buildPayoff(S,K,prem,type){
-  const svg=document.getElementById('bs-payoff');
-  if(!svg) return;
+  const svg=document.getElementById('bs-payoff');if(!svg) return;
   const W=220,H=70,n=60,span=K*0.45;
   const pts=Array.from({length:n+1},(_,i)=>{
     const price=K-span+(i/n)*span*2;
@@ -3681,58 +2545,16 @@ function buildPayoff(S,K,prem,type){
   const mn=Math.min(...pts.map(p=>p.y)),mx=Math.max(...pts.map(p=>p.y)),rng=mx-mn||1;
   const tx=x=>((x-(K-span))/(span*2))*W;
   const ty=y=>H-((y-mn)/rng)*H;
+  const polypts=pts.map(p=>`${tx(p.x).toFixed(1)},${ty(p.y).toFixed(1)}`).join(' ');
   const zy=ty(0).toFixed(1);
   const kx=tx(K).toFixed(1);
   const sx=tx(S).toFixed(1);
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  safeDOM.clear(svg);
-  
-  // Create SVG elements using createElementNS
-  const ns='http://www.w3.org/2000/svg';
-  
-  // Zero line
-  const zeroLine=document.createElementNS(ns,'line');
-  zeroLine.setAttribute('x1','0');
-  zeroLine.setAttribute('y1',zy);
-  zeroLine.setAttribute('x2',String(W));
-  zeroLine.setAttribute('y2',zy);
-  zeroLine.setAttribute('stroke','var(--bor)');
-  zeroLine.setAttribute('stroke-width','1');
-  svg.appendChild(zeroLine);
-  
-  // Strike price line
-  const strikeLine=document.createElementNS(ns,'line');
-  strikeLine.setAttribute('x1',kx);
-  strikeLine.setAttribute('y1','0');
-  strikeLine.setAttribute('x2',kx);
-  strikeLine.setAttribute('y2',String(H));
-  strikeLine.setAttribute('stroke','var(--txf)');
-  strikeLine.setAttribute('stroke-width','1');
-  strikeLine.setAttribute('stroke-dasharray','3,3');
-  svg.appendChild(strikeLine);
-  
-  // Spot price line
-  const spotLine=document.createElementNS(ns,'line');
-  spotLine.setAttribute('x1',sx);
-  spotLine.setAttribute('y1','0');
-  spotLine.setAttribute('x2',sx);
-  spotLine.setAttribute('y2',String(H));
-  spotLine.setAttribute('stroke','var(--a1)');
-  spotLine.setAttribute('stroke-width','1');
-  spotLine.setAttribute('stroke-dasharray','2,4');
-  spotLine.setAttribute('opacity','.7');
-  svg.appendChild(spotLine);
-  
-  // Payoff polyline
-  const polypts=pts.map(p=>`${tx(p.x).toFixed(1)},${ty(p.y).toFixed(1)}`).join(' ');
-  const payoffLine=document.createElementNS(ns,'polyline');
-  payoffLine.setAttribute('points',polypts);
-  payoffLine.setAttribute('fill','none');
-  payoffLine.setAttribute('stroke','var(--a1)');
-  payoffLine.setAttribute('stroke-width','1.5');
-  payoffLine.setAttribute('stroke-linecap','round');
-  payoffLine.setAttribute('stroke-linejoin','round');
-  svg.appendChild(payoffLine);
+  svg.innerHTML=`
+    <line x1="0" y1="${zy}" x2="${W}" y2="${zy}" stroke="var(--bor)" stroke-width="1"/>
+    <line x1="${kx}" y1="0" x2="${kx}" y2="${H}" stroke="var(--txf)" stroke-width="1" stroke-dasharray="3,3"/>
+    <line x1="${sx}" y1="0" x2="${sx}" y2="${H}" stroke="var(--a1)" stroke-width="1" stroke-dasharray="2,4" opacity=".7"/>
+    <polyline points="${polypts}" fill="none" stroke="var(--a1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
 }
 
 // ── INIT stocks ──
@@ -3760,46 +2582,12 @@ function switchMed(btn,key){
 function mSet(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
 function mBadge(id,cls,text){const el=document.getElementById(id);if(!el)return;el.className='calc-badge '+cls;el.textContent=text;}
 
-// ── Medical Validation Utilities ──
-const medicalValidation = {
-  creatinine: (val) => val >= 0.1 && val <= 20,
-  age: (val) => val >= 0 && val <= 120,
-  weight: (val) => val >= 1 && val <= 300,
-  height: (val) => val >= 50 && val <= 250,
-  temperature: (val) => val >= 35 && val <= 42,
-  heartRate: (val) => val >= 30 && val <= 220,
-  systolicBP: (val) => val >= 70 && val <= 250,
-  diastolicBP: (val) => val >= 40 && val <= 150,
-  validate: function(field, value) {
-    if (!this[field]) return true;
-    return this[field](value);
-  },
-  getError: function(field, value) {
-    const ranges = {
-      creatinine: '0.1–20 mg/dL',
-      age: '0–120 lat',
-      weight: '1–300 kg',
-      height: '50–250 cm',
-      temperature: '35–42°C',
-      heartRate: '30–220 bpm',
-      systolicBP: '70–250 mmHg',
-      diastolicBP: '40–150 mmHg'
-    };
-    return `BŁĄD: ${field} poza zakresem (${ranges[field] || 'niedozwolony'})`;
-  }
-};
-
 // ── eGFR CKD-EPI 2021 ──
 function mCalcEGFR(){
   const scr=+document.getElementById('egfr-scr').value;
   const age=+document.getElementById('egfr-age').value;
   const sex=document.getElementById('egfr-sex').value;
-  
-  // Validate inputs
-  if(!scr||!age) { mSet('egfr-val','---'); mSet('egfr-interp','Brak danych'); return; }
-  if(!medicalValidation.creatinine(scr)) { mSet('egfr-val','BŁĄD'); mSet('egfr-interp', medicalValidation.getError('creatinine', scr)); return; }
-  if(!medicalValidation.age(age)) { mSet('egfr-val','BŁĄD'); mSet('egfr-interp', medicalValidation.getError('age', age)); return; }
-  
+  if(!scr||!age) return;
   const kappa=sex==='F'?0.7:0.9,alpha=sex==='F'?-0.241:-0.302,femFactor=sex==='F'?1.012:1;
   const r=scr/kappa;
   const gfr=142*Math.pow(Math.min(r,1),alpha)*Math.pow(Math.max(r,1),-1.200)*Math.pow(0.9938,age)*femFactor;
@@ -3821,13 +2609,7 @@ function mCalcCG(){
   const age=+document.getElementById('cg-age').value;
   const wt=+document.getElementById('cg-wt').value;
   const sex=document.getElementById('cg-sex').value;
-  
-  // Validate inputs
-  if(!scr||!age||!wt) { mSet('cg-val','---'); mSet('cg-interp','Brak danych'); return; }
-  if(!medicalValidation.creatinine(scr)) { mSet('cg-val','BŁĄD'); mSet('cg-interp', medicalValidation.getError('creatinine', scr)); return; }
-  if(!medicalValidation.age(age)) { mSet('cg-val','BŁĄD'); mSet('cg-interp', medicalValidation.getError('age', age)); return; }
-  if(!medicalValidation.weight(wt)) { mSet('cg-val','BŁĄD'); mSet('cg-interp', medicalValidation.getError('weight', wt)); return; }
-  
+  if(!scr||!age||!wt) return;
   const crcl=((140-age)*wt/(72*scr))*(sex==='F'?0.85:1);
   const c=Math.round(crcl);
   mSet('cg-val',c);
@@ -3926,29 +2708,18 @@ function mCalcCentor(){
   else if(s===2){cls='warn';lev='POŚREDNIE';interp='~17–35% GAS. Rozważyć wymazanie gardła.';}
   else if(s===3){cls='warn';lev='UMIARKOWANE';interp='~35–56% GAS. Penicy lina V lub amoksy.';}
   else{cls='crit';lev='WYSOKIE';interp='~52–65% GAS. Antybiotyk empirycznie.';}
-  mBadge('cen-lev',cls,lev);
-  const i=document.getElementById('cen-interp');
-  if(i){
-    // Decode HTML entities safely and set as textContent
-    const decoded=interp.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
-    i.textContent=decoded;
-  }
+  mBadge('cen-lev',cls,lev);const i=document.getElementById('cen-interp');if(i)i.innerHTML=interp;
 }
 
 // ── BMI + BSA ──
 function mCalcBMI(){
   const wt=+document.getElementById('bmi-wt').value;
   const ht=+document.getElementById('bmi-ht').value;
-  
-  // Validate inputs
-  if(!wt||!ht) { mSet('bmi-val','---'); mSet('bsa-val','---'); mSet('bmi-interp','Brak danych'); return; }
-  if(!medicalValidation.weight(wt)) { mSet('bmi-val','BŁĄD'); mSet('bsa-val','BŁĄD'); mSet('bmi-interp', medicalValidation.getError('weight', wt)); return; }
-  if(!medicalValidation.height(ht)) { mSet('bmi-val','BŁĄD'); mSet('bsa-val','BŁĄD'); mSet('bmi-interp', medicalValidation.getError('height', ht)); return; }
-  
+  if(!wt||!ht) return;
   const h=ht/100,bmi=wt/(h*h),bsa=Math.sqrt((wt*ht)/3600);
   mSet('bmi-val',bmi.toFixed(1));mSet('bsa-val',bsa.toFixed(2));
   let cls,lev,interp;
-  if(bmi<18.5){cls='warn';lev='Niedowaga';interp='BMI<18.5';}
+  if(bmi<18.5){cls='warn';lev='Niedowaga';interp='BMI&lt;18.5';}
   else if(bmi<25){cls='ok';lev='Norma';interp='18.5–24.9';}
   else if(bmi<30){cls='warn';lev='Nadwaga';interp='25–29.9';}
   else if(bmi<35){cls='crit';lev='Otyłość I';interp='30–34.9';}
@@ -3962,600 +2733,15 @@ function mCalcCP(){
   const s=['cp-bil','cp-alb','cp-inr','cp-asc','cp-enc'].reduce((a,id)=>a+ +document.getElementById(id).value,0);
   mSet('cp-val',s);
   let cls,lev,interp;
-  if(s<=6){cls='ok';lev='Klasa A';interp='Śmiertelność <5% / rok. Dobra rezerwa.';}
+  if(s<=6){cls='ok';lev='Klasa A';interp='Śmiertelność &lt;5% / rok. Dobra rezerwa.';}
   else if(s<=9){cls='warn';lev='Klasa B';interp='Śmiertelność 20–30% / rok. Umiarkowana.';}
-  else{cls='crit';lev='Klasa C';interp='Śmiertelność >80% / rok. Zła rezerwa.';}
+  else{cls='crit';lev='Klasa C';interp='Śmiertelność &gt;80% / rok. Zła rezerwa.';}
   mBadge('cp-cls',cls,lev);mSet('cp-interp',interp);
 }
 
 // ── Init ──
 mCalcEGFR();mCalcCG();mCalcGCS();mCalcAPGAR();mCalcBMI();mCalcCP();mCalcCHADS();mCalcCURB();mCalcWells();mCalcCentor();
 
-
-// ═══════════════════════════════════════════════════
-// EXAMPLE PLUGINS FOR LIFE OS
-// ═══════════════════════════════════════════════════
-
-// Example 1: Crypto Price Tracker Plugin
-class CryptoPricePlugin extends PluginSystem.BasePlugin {
-  constructor(config) {
-    super({
-      id: "crypto-prices",
-      name: "Kryptowaluty",
-      version: "1.0.0",
-      author: "LIFE OS",
-      description: "Śledzenie cen kryptowalut",
-      config: { symbols: ["BTC-USD", "ETH-USD"], refreshInterval: 60000, ...config }
-    });
-  }
-  async init(api) {
-    await super.init(api);
-    this.api = api;
-    this.fetchPrices();
-    this.intervalId = setInterval(() => this.fetchPrices(), this.config.refreshInterval);
-  }
-  async destroy() {
-    if (this.intervalId) clearInterval(this.intervalId);
-    await super.destroy();
-  }
-  async fetchPrices() {
-    try {
-      const prices = [];
-      for (const symbol of this.config.symbols) {
-        const data = await this.api.fetch("https://query1.finance.yahoo.com/v8/finance/chart/" + symbol);
-        if (data && data.chart && data.chart.result && data.chart.result[0]) {
-          const meta = data.chart.result[0].meta;
-          prices.push({ symbol: meta.symbol, price: meta.regularMarketPrice, change: meta.chartPreviousClose ? ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose * 100).toFixed(2) : 0 });
-        }
-      }
-      this.lastPrices = prices;
-      this.renderContainer();
-    } catch (error) {
-      this.api.error("Failed to fetch crypto prices:", error);
-    }
-  }
-  render(container) {
-    this.container = container;
-    this.renderContainer();
-  }
-  renderContainer() {
-    if (!this.container || !this.lastPrices) return;
-    safeDOM.clear(this.container);
-    const frag = document.createDocumentFragment();
-    this.lastPrices.forEach(coin => {
-      const card = this.api.createElement("div", { className: "plugin-card crypto-card" });
-      const symbol = this.api.createElement("div", { className: "coin-symbol mono", textContent: coin.symbol });
-      const price = this.api.createElement("div", { className: "coin-price", textContent: "$" + coin.price.toFixed(2) });
-      const change = this.api.createElement("div", { className: "coin-change " + (parseFloat(coin.change) >= 0 ? "positive" : "negative"), textContent: (parseFloat(coin.change) >= 0 ? "+" : "") + coin.change + "%" });
-      card.appendChild(symbol);
-      card.appendChild(price);
-      card.appendChild(change);
-      frag.appendChild(card);
-    });
-    this.container.appendChild(frag);
-  }
-}
-
-// Example 2: Quote of the Day Plugin
-class QuotePlugin extends PluginSystem.BasePlugin {
-  constructor(config) {
-    super({ id: "daily-quote", name: "Cytat Dnia", version: "1.0.0", author: "LIFE OS", description: "Inspirujące cytaty na każdy dzień", config: { category: "inspire", ...config } });
-  }
-  async init(api) {
-    await super.init(api);
-    this.api = api;
-    this.fetchQuote();
-  }
-  async fetchQuote() {
-    try {
-      const data = await this.api.fetch("https://type.fit/api/quotes");
-      if (data && Array.isArray(data)) {
-        const randomQuote = data[Math.floor(Math.random() * data.length)];
-        this.currentQuote = { text: randomQuote.text, author: randomQuote.author || "Nieznany" };
-        this.renderContainer();
-      }
-    } catch (error) {
-      const fallbackQuotes = [
-        { text: "Największa chwała nie polega na tym, by nigdy nie upaść, ale by podnieść się za każdym razem.", author: "Konfucjusz" },
-        { text: "Życie jest jak jazda na rowerze. Żeby utrzymać równowagę, musisz być w ciągłym ruchu.", author: "Albert Einstein" },
-        { text: "Przyszłość zależy od tego, co robisz dzisiaj.", author: "Mahatma Gandhi" }
-      ];
-      this.currentQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
-      this.renderContainer();
-    }
-  }
-  render(container) {
-    this.container = container;
-    this.renderContainer();
-  }
-  renderContainer() {
-    if (!this.container || !this.currentQuote) return;
-    safeDOM.clear(this.container);
-    const quoteCard = this.api.createElement("div", { className: "plugin-card quote-card" });
-    const quoteText = this.api.createElement("blockquote", { className: "quote-text", textContent: """ + this.currentQuote.text + """ });
-    const quoteAuthor = this.api.createElement("cite", { className: "quote-author", textContent: "— " + this.currentQuote.author });
-    quoteCard.appendChild(quoteText);
-    quoteCard.appendChild(quoteAuthor);
-    this.container.appendChild(quoteCard);
-  }
-}
-
-// Example 3: Pomodoro Statistics Plugin
-class PomodoroStatsPlugin extends PluginSystem.BasePlugin {
-  constructor(config) {
-    super({ id: "pomodoro-stats", name: "Statystyki Pomodoro", version: "1.0.0", author: "LIFE OS", description: "Śledzenie sesji focus time", config: { targetSessions: 8, ...config } });
-  }
-  async init(api) {
-    await super.init(api);
-    this.api = api;
-    this.unsubscribe = PluginSystem.on("onDataUpdate", (data) => {
-      if (data.state && data.state.timer) { this.updateStats(data.state.timer); }
-    });
-    this.loadStats();
-    this.renderContainer();
-  }
-  async destroy() {
-    if (this.unsubscribe) this.unsubscribe();
-    await super.destroy();
-  }
-  loadStats() {
-    const saved = this.api.storage.get("pomodoroStats");
-    this.stats = saved || { totalSessions: 0, todaySessions: 0, lastDate: new Date().toDateString(), streak: 0 };
-    if (this.stats.lastDate !== new Date().toDateString()) {
-      this.stats.todaySessions = 0;
-      this.stats.lastDate = new Date().toDateString();
-    }
-  }
-  saveStats() {
-    this.api.storage.set("pomodoroStats", this.stats);
-  }
-  updateStats(timerState) {
-    if (timerState.session > (this.lastSessionCount || 0)) {
-      this.stats.totalSessions++;
-      this.stats.todaySessions++;
-      this.saveStats();
-      this.renderContainer();
-    }
-    this.lastSessionCount = timerState.session;
-  }
-  render(container) {
-    this.container = container;
-    this.renderContainer();
-  }
-  renderContainer() {
-    if (!this.container) return;
-    safeDOM.clear(this.container);
-    const statsCard = this.api.createElement("div", { className: "plugin-card stats-card" });
-    const title = this.api.createElement("h3", { className: "stats-title", textContent: "🍅 Postęp Pomodoro" });
-    const progress = Math.min((this.stats.todaySessions / this.config.targetSessions) * 100, 100);
-    const progressBar = this.api.createElement("div", { className: "progress-bar" });
-    const progressFill = this.api.createElement("div", { className: "progress-fill", style: "width: " + progress + "%" });
-    const stats = this.api.createElement("div", { className: "stats-grid" });
-    const today = this.api.createElement("div", { className: "stat-item" });
-    today.innerHTML = "<span class="stat-label">Dzisiaj:</span><span class="stat-value">" + this.stats.todaySessions + "/" + this.config.targetSessions + "</span>";
-    const total = this.api.createElement("div", { className: "stat-item" });
-    total.innerHTML = "<span class="stat-label">Łącznie:</span><span class="stat-value">" + this.stats.totalSessions + "</span>";
-    progressBar.appendChild(progressFill);
-    stats.appendChild(today);
-    stats.appendChild(total);
-    statsCard.appendChild(title);
-    statsCard.appendChild(progressBar);
-    statsCard.appendChild(stats);
-    this.container.appendChild(statsCard);
-  }
-}
-
-// Register example plugins
-try {
-  PluginSystem.register(CryptoPricePlugin);
-  PluginSystem.register(QuotePlugin);
-  PluginSystem.register(PomodoroStatsPlugin);
-} catch (error) {
-  console.error("[PluginSystem] Failed to register example plugins:", error);
-}
-
-// ═══════════════════════════════════════════════════
-// MARKET NEWS WIDGET PLUGIN
-// ═══════════════════════════════════════════════════
-class MarketNewsWidget extends PluginSystem.BasePlugin {
-  constructor(config) {
-    super({ 
-      id: 'market-news', 
-      name: 'Rynki i Gospodarka', 
-      version: '1.0.0', 
-      author: 'LIFE OS', 
-      description: 'Monitorowanie rynków finansowych, wiadomości ekonomicznych i danych energetycznych',
-      config: {
-        refreshInterval: CONFIG.MARKET_NEWS.REFRESH_INTERVAL,
-        maxNews: CONFIG.MARKET_NEWS.MAX_NEWS,
-        enableSentiment: CONFIG.MARKET_NEWS.ENABLE_SENTIMENT,
-        ...config
-      }
-    });
-    this.currentTab = 'news';
-    this.newsData = [];
-    this.economicData = {};
-    this.energyData = {};
-    this.lastUpdate = null;
-    this.refreshTimer = null;
-  }
-
-  async init(api) {
-    await super.init(api);
-    this.api = api;
-    await this.fetchAllData();
-    this.startAutoRefresh();
-    this.renderContainer();
-  }
-
-  async destroy() {
-    if (this.refreshTimer) clearInterval(this.refreshTimer);
-    if (this.unsubscribe) this.unsubscribe();
-    await super.destroy();
-  }
-
-  startAutoRefresh() {
-    this.refreshTimer = setInterval(async () => {
-      await this.fetchAllData();
-      if (this.container) this.renderContainer();
-    }, this.config.refreshInterval);
-  }
-
-  async fetchAllData() {
-    try {
-      await Promise.allSettled([
-        this.fetchFinnhubNews(),
-        this.fetchFREDEconomicData(),
-        this.fetchEIAEnergyData()
-      ]);
-      this.lastUpdate = new Date();
-      this.saveToCache();
-    } catch (error) {
-      console.error('[MarketNewsWidget] Error fetching data:', error);
-    }
-  }
-
-  async fetchFinnhubNews() {
-    try {
-      const now = new Date();
-      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const from = weekAgo.toISOString().split('T')[0];
-      const to = now.toISOString().split('T')[0];
-      
-      const response = await this.api.fetch(
-        `https://finnhub.io/api/v1/news?category=general&from=${from}&to=${to}`,
-        { headers: { 'X-Finnhub-Token': CONFIG.MARKET_NEWS.FINNHUB_API_KEY } }
-      );
-      
-      if (response && Array.isArray(response)) {
-        this.newsData = response.slice(0, this.config.maxNews).map(item => ({
-          id: item.id || Math.random().toString(36),
-          title: sanitize.text(item.headline || 'Brak tytułu'),
-          summary: sanitize.text(item.summary || ''),
-          source: sanitize.text(item.source || 'Unknown'),
-          url: item.url || '#',
-          image: item.image || '',
-          datetime: item.datetime ? new Date(item.datetime * 1000) : new Date(),
-          sentiment: item.sentiment || 'neutral'
-        }));
-      }
-    } catch (error) {
-      console.error('[MarketNewsWidget] Finnhub error:', error);
-      this.loadFromCache('news');
-    }
-  }
-
-  async fetchFREDEconomicData() {
-    try {
-      const series = [
-        { id: 'CPIAUCSL', name: 'Inflacja (CPI)', units: '%' },
-        { id: 'UNRATE', name: 'Bezrobocie', units: '%' },
-        { id: 'GDP', name: 'PKB', units: 'mld USD' },
-        { id: 'FEDFUNDS', name: 'Stopy procentowe', units: '%' }
-      ];
-
-      const promises = series.map(async (s) => {
-        try {
-          const response = await this.api.fetch(
-            `https://api.stlouisfed.org/fred/series/observations?series_id=${s.id}&api_key=${CONFIG.MARKET_NEWS.FRED_API_KEY}&file_type=json&limit=10`
-          );
-          if (response && response.observations) {
-            const data = response.observations.map(obs => ({
-              date: new Date(obs.date),
-              value: parseFloat(obs.value) || 0
-            })).reverse();
-            this.economicData[s.id] = {
-              name: s.name,
-              units: s.units,
-              data: data,
-              latest: data[0] || { value: 0, date: new Date() },
-              trend: data.length > 1 ? (data[0].value - data[1].value) / (data[1].value || 1) * 100 : 0
-            };
-          }
-        } catch (err) {
-          console.error(`[MarketNewsWidget] FRED ${s.id} error:`, err);
-        }
-      });
-
-      await Promise.all(promises);
-    } catch (error) {
-      console.error('[MarketNewsWidget] FRED error:', error);
-      this.loadFromCache('economic');
-    }
-  }
-
-  async fetchEIAEnergyData() {
-    try {
-      const endpoints = [
-        { id: 'oil', name: 'Ropa WTI', url: 'https://www.eia.gov/dnav/pet/hist/rwtcD.htm' },
-        { id: 'gas', name: 'Gaz ziemny', url: 'https://www.eia.gov/dnav/ng/hist/rngwhhdd.htm' },
-        { id: 'electricity', name: 'Elektryczność', url: 'https://www.eia.gov/electricity/monthly/' }
-      ];
-
-      // EIA API requires specific series IDs - using mock data for demo
-      // In production, replace with actual EIA API calls
-      this.energyData = {
-        oil: { name: 'Ropa WTI', price: 75.50, change: 1.2, unit: 'USD/baryłka' },
-        gas: { name: 'Gaz ziemny', price: 2.85, change: -0.5, unit: 'USD/MMBtu' },
-        electricity: { name: 'Elektryczność', price: 45.20, change: 0.3, unit: 'USD/MWh' }
-      };
-
-      // Note: Real EIA API implementation would go here
-      // Example: https://api.eia.gov/v2/series/?api_key=YOUR_KEY&...
-    } catch (error) {
-      console.error('[MarketNewsWidget] EIA error:', error);
-      this.loadFromCache('energy');
-    }
-  }
-
-  saveToCache() {
-    this.api.storage.set('marketNewsCache', {
-      news: this.newsData,
-      economic: this.economicData,
-      energy: this.energyData,
-      timestamp: Date.now()
-    });
-  }
-
-  loadFromCache(type) {
-    const cached = this.api.storage.get('marketNewsCache');
-    if (!cached || Date.now() - cached.timestamp > 3600000) return; // 1 hour max
-    
-    if (type === 'news' && cached.news) this.newsData = cached.news;
-    if (type === 'economic' && cached.economic) this.economicData = cached.economic;
-    if (type === 'energy' && cached.energy) this.energyData = cached.energy;
-  }
-
-  render(container) {
-    this.container = container;
-    this.renderContainer();
-  }
-
-  renderContainer() {
-    if (!this.container) return;
-    
-    safeDOM.clear(this.container);
-    
-    const widgetCard = this.api.createElement('div', { className: 'plugin-card market-news-card' });
-    
-    // Header with tabs
-    const header = this.api.createElement('div', { className: 'mn-header' });
-    const title = this.api.createElement('h3', { textContent: '📈 Rynki i Gospodarka', className: 'mn-title' });
-    
-    const tabs = this.api.createElement('div', { className: 'mn-tabs' });
-    ['news', 'economy', 'energy'].forEach(tabId => {
-      const tab = this.api.createElement('button', {
-        textContent: tabId === 'news' ? '📰 Wiadomości' : tabId === 'economy' ? '📊 Gospodarka' : '⚡ Energia',
-        className: `mn-tab ${this.currentTab === tabId ? 'active' : ''}`,
-        onclick: () => {
-          this.currentTab = tabId;
-          this.renderContainer();
-        }
-      });
-      tabs.appendChild(tab);
-    });
-    
-    header.appendChild(title);
-    header.appendChild(tabs);
-    widgetCard.appendChild(header);
-
-    // Content based on active tab
-    const content = this.api.createElement('div', { className: 'mn-content' });
-    
-    if (this.currentTab === 'news') {
-      content.appendChild(this.renderNews());
-    } else if (this.currentTab === 'economy') {
-      content.appendChild(this.renderEconomy());
-    } else if (this.currentTab === 'energy') {
-      content.appendChild(this.renderEnergy());
-    }
-    
-    widgetCard.appendChild(content);
-    
-    // Footer with last update
-    const footer = this.api.createElement('div', { className: 'mn-footer' });
-    const updateTime = this.lastUpdate ? this.lastUpdate.toLocaleTimeString('pl-PL') : 'Nigdy';
-    footer.appendChild(this.api.createElement('small', { 
-      textContent: `Ostatnia aktualizacja: ${updateTime}`,
-      className: 'mn-update-time'
-    }));
-    
-    const refreshBtn = this.api.createElement('button', {
-      textContent: '🔄 Odśwież',
-      className: 'mn-refresh-btn',
-      onclick: async () => {
-        await this.fetchAllData();
-        this.renderContainer();
-      }
-    });
-    
-    footer.appendChild(refreshBtn);
-    widgetCard.appendChild(footer);
-    this.container.appendChild(widgetCard);
-  }
-
-  renderNews() {
-    const container = this.api.createDocumentFragment();
-    
-    if (this.newsData.length === 0) {
-      container.appendChild(this.api.createElement('p', { textContent: 'Ładowanie wiadomości...', className: 'mn-loading' }));
-      return container;
-    }
-
-    this.newsData.forEach(news => {
-      const article = this.api.createElement('article', { className: 'mn-article' });
-      
-      if (news.image) {
-        const img = this.api.createElement('img', { 
-          src: news.image, 
-          alt: news.title,
-          className: 'mn-article-image',
-          loading: 'lazy'
-        });
-        article.appendChild(img);
-      }
-      
-      const info = this.api.createElement('div', { className: 'mn-article-info' });
-      
-      const headline = this.api.createElement('h4', { className: 'mn-article-headline' });
-      const link = this.api.createElement('a', {
-        href: news.url,
-        target: '_blank',
-        rel: 'noopener noreferrer',
-        textContent: news.title
-      });
-      headline.appendChild(link);
-      info.appendChild(headline);
-      
-      if (news.summary) {
-        info.appendChild(this.api.createElement('p', { 
-          textContent: news.summary.substring(0, 150) + (news.summary.length > 150 ? '...' : ''),
-          className: 'mn-article-summary'
-        }));
-      }
-      
-      const meta = this.api.createElement('div', { className: 'mn-article-meta' });
-      meta.appendChild(this.api.createElement('span', { 
-        textContent: news.source,
-        className: 'mn-article-source'
-      }));
-      meta.appendChild(this.api.createElement('span', { 
-        textContent: news.datetime.toLocaleDateString('pl-PL'),
-        className: 'mn-article-date'
-      }));
-      
-      if (this.config.enableSentiment && news.sentiment !== 'neutral') {
-        const sentimentBadge = this.api.createElement('span', {
-          textContent: news.sentiment === 'positive' ? '🟢 Pozytywny' : '🔴 Negatywny',
-          className: `mn-sentiment mn-sentiment-${news.sentiment}`
-        });
-        meta.appendChild(sentimentBadge);
-      }
-      
-      info.appendChild(meta);
-      article.appendChild(info);
-      container.appendChild(article);
-    });
-
-    return container;
-  }
-
-  renderEconomy() {
-    const container = this.api.createDocumentFragment();
-    
-    if (Object.keys(this.economicData).length === 0) {
-      container.appendChild(this.api.createElement('p', { textContent: 'Ładowanie danych ekonomicznych...', className: 'mn-loading' }));
-      return container;
-    }
-
-    Object.values(this.economicData).forEach(indicator => {
-      const card = this.api.createElement('div', { className: 'mn-indicator-card' });
-      
-      const header = this.api.createElement('div', { className: 'mn-indicator-header' });
-      header.appendChild(this.api.createElement('h4', { textContent: indicator.name }));
-      
-      const trendIcon = indicator.trend >= 0 ? '📈' : '📉';
-      const trendClass = indicator.trend >= 0 ? 'trend-up' : 'trend-down';
-      header.appendChild(this.api.createElement('span', { 
-        textContent: `${trendIcon} ${indicator.trend >= 0 ? '+' : ''}${indicator.trend.toFixed(2)}%`,
-        className: `mn-trend ${trendClass}`
-      }));
-      
-      card.appendChild(header);
-      
-      const value = this.api.createElement('div', { className: 'mn-indicator-value' });
-      value.appendChild(this.api.createElement('span', { 
-        textContent: indicator.latest.value.toFixed(2),
-        className: 'mn-value-number'
-      }));
-      value.appendChild(this.api.createElement('span', { 
-        textContent: indicator.units,
-        className: 'mn-value-unit'
-      }));
-      card.appendChild(value);
-      
-      const date = this.api.createElement('div', { 
-        textContent: `Dane z: ${indicator.latest.date.toLocaleDateString('pl-PL')}`,
-        className: 'mn-indicator-date'
-      });
-      card.appendChild(date);
-      
-      container.appendChild(card);
-    });
-
-    return container;
-  }
-
-  renderEnergy() {
-    const container = this.api.createDocumentFragment();
-    
-    if (Object.keys(this.energyData).length === 0) {
-      container.appendChild(this.api.createElement('p', { textContent: 'Ładowanie danych energetycznych...', className: 'mn-loading' }));
-      return container;
-    }
-
-    Object.values(this.energyData).forEach(commodity => {
-      const card = this.api.createElement('div', { className: 'mn-energy-card' });
-      
-      card.appendChild(this.api.createElement('h4', { textContent: commodity.name }));
-      
-      const priceRow = this.api.createElement('div', { className: 'mn-energy-price' });
-      priceRow.appendChild(this.api.createElement('span', { 
-        textContent: `${commodity.price.toFixed(2)} ${commodity.unit}`,
-        className: 'mn-energy-value'
-      }));
-      
-      const changeClass = commodity.change >= 0 ? 'change-positive' : 'change-negative';
-      const changeIcon = commodity.change >= 0 ? '▲' : '▼';
-      priceRow.appendChild(this.api.createElement('span', { 
-        textContent: `${changeIcon} ${commodity.change >= 0 ? '+' : ''}${commodity.change.toFixed(2)}%`,
-        className: `mn-energy-change ${changeClass}`
-      }));
-      
-      card.appendChild(priceRow);
-      container.appendChild(card);
-    });
-
-    return container;
-  }
-}
-
-// Register Market News Widget
-try {
-  PluginSystem.register(MarketNewsWidget);
-  console.log('[MarketNewsWidget] Registered successfully');
-} catch (error) {
-  console.error('[MarketNewsWidget] Registration failed:', error);
-}
-
-try {
-  PluginSystem.register(CryptoPricePlugin);
-  PluginSystem.register(QuotePlugin);
-  PluginSystem.register(PomodoroStatsPlugin);
-  console.log("[PluginSystem] Example plugins registered successfully");
-} catch (error) {
-  console.error("[PluginSystem] Failed to register example plugins:", error);
-}
 </script>
 </body>
 </html>
