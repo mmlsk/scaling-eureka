@@ -4145,15 +4145,6 @@ class PomodoroStatsPlugin extends PluginSystem.BasePlugin {
   }
 }
 
-// Register example plugins
-try {
-  PluginSystem.register(CryptoPricePlugin);
-  PluginSystem.register(QuotePlugin);
-  PluginSystem.register(PomodoroStatsPlugin);
-} catch (error) {
-  console.error("[PluginSystem] Failed to register example plugins:", error);
-}
-
 // ═══════════════════════════════════════════════════
 // MARKET NEWS WIDGET PLUGIN
 // ═══════════════════════════════════════════════════
@@ -4540,21 +4531,15 @@ class MarketNewsWidget extends PluginSystem.BasePlugin {
   }
 }
 
-// Register Market News Widget
+// Register all plugins
 try {
   PluginSystem.register(MarketNewsWidget);
-  console.log('[MarketNewsWidget] Registered successfully');
-} catch (error) {
-  console.error('[MarketNewsWidget] Registration failed:', error);
-}
-
-try {
   PluginSystem.register(CryptoPricePlugin);
   PluginSystem.register(QuotePlugin);
   PluginSystem.register(PomodoroStatsPlugin);
-  console.log("[PluginSystem] Example plugins registered successfully");
+  console.log('[PluginSystem] All plugins registered successfully');
 } catch (error) {
-  console.error("[PluginSystem] Failed to register example plugins:", error);
+  console.error('[PluginSystem] Failed to register plugins:', error);
 }
 </script>
 </body>
