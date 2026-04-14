@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0a09">
 <meta name="description" content="Personal Life OS - Todo, Weather, Finance, Health Tracker">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win https://finnhub.io https://api.stlouisfed.org https://api.eia.gov; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win https://finnhub.io https://ws.finnhub.io wss://ws.finnhub.io https://api.stlouisfed.org https://api.eia.gov https://api.openuv.io https://api.openaq.org https://danepubliczne.imgw.pl https://api.rainviewer.com https://gamma-api.polymarket.com https://data-api.polymarket.com https://date.nager.at https://www.googleapis.com https://api.polygon.io https://www.alphavantage.co; img-src 'self' data: https://tilecache.rainviewer.com; frame-src https://s3.tradingview.com https://www.tradingview.com;">
 <title>LIFE OS</title>
 <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkxJRkUgT1MiLAogICJzaG9ydF9uYW1lIjogIkxpZmVPUyIsCiAgImRlc2NyaXB0aW9uIjogIlBlcnNvbmFsIExpZmUgT1MgLSBUb2RvLCBXZWF0aGVyLCBGaW5hbmNlLCBIZWFsdGggVHJhY2tlciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwYTA5IiwKICAidGhlbWVfY29sb3IiOiAiIzBiMGEwOSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbXQp9">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1617,6 +1617,8 @@ a {
 .heatmap-cell.l2{background:rgba(69,110,50,.4)}
 .heatmap-cell.l3{background:rgba(69,110,50,.6)}
 .heatmap-cell.l4{background:rgba(69,110,50,.85)}
+.cd.holiday{background:rgba(194,49,39,.08);color:var(--az);}
+.cd.holiday.today{background:rgba(194,49,39,.2);}
 .corr-row{display:flex;align-items:center;gap:.5rem;padding:.25rem 0;border-bottom:1px solid var(--div)}
 .corr-label{font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);flex:1}
 .corr-val{font-family:'IBM Plex Mono',monospace;font-size:clamp(.65rem,.6rem + .15vw,.75rem);font-weight:500}
@@ -1942,19 +1944,25 @@ a {
     <button class="icon-btn" data-theme-toggle aria-label="Motyw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
   </div>
 </header>
+<div id="weather-alerts-bar" style="display:none;background:rgba(194,49,39,.15);color:var(--az);padding:.375rem 1rem;font-size:.7rem;font-weight:600;text-align:center;"></div>
+<div id="imgw-banner" style="display:none;background:rgba(196,162,74,.12);color:var(--a1);padding:.375rem 1rem;font-size:.7rem;font-weight:600;text-align:center;"></div>
+<div class="progress-bars" style="display:flex;gap:.75rem;padding:.375rem 1rem;background:var(--sur);border-bottom:1px solid var(--div);flex-wrap:wrap;">
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Dzień</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-day" style="height:100%;background:var(--a1);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-day-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Tydzień</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-week" style="height:100%;background:var(--a2);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-week-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Miesiąc</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-month" style="height:100%;background:var(--nom);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-month-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Rok</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-year" style="height:100%;background:var(--cold);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-year-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+</div>
 <main class="dash">
   <div class="zone"><span class="L">A — Corpus</span><div class="zone-line"></div></div>
   <div class="w c4" id="sw">
-    <div class="wh"><span class="L">Sen</span><div class="wh-r"><span class="L br mono" id="sleep-total">7h 22m</span></div></div>
+    <div class="wh"><span class="L">Sen</span><div class="wh-r"><span class="L br mono" id="sleep-total">--</span></div></div>
     <div class="wb">
-      <div class="sleep-times"><div><div class="L" style="margin-bottom:3px;">Start</div><div class="sleep-val mono" id="sleep-start">23:12</div></div><div style="text-align:right;"><div class="L" style="margin-bottom:3px;">Stop</div><div class="sleep-val mono" id="sleep-stop">06:34</div></div></div>
-      <div class="sleep-track"><div class="sseg core"></div><div class="sseg rem"></div><div class="sseg light"></div></div>
-      <div style="display:flex;gap:.5rem;font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);margin-bottom:.75rem;flex-wrap:wrap;"><span class="mono" style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--cold);"></span>Core 4h10m</span><span class="mono" style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--a1);"></span>REM 1h28m</span><span class="mono" style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--sdyn);"></span>Light 1h44m</span></div>
+      <div class="sleep-times"><div><div class="L" style="margin-bottom:3px;">Start</div><div class="sleep-val mono" id="sleep-start" style="cursor:pointer;">--:--</div></div><div style="text-align:right;"><div class="L" style="margin-bottom:3px;">Stop</div><div class="sleep-val mono" id="sleep-stop" style="cursor:pointer;">--:--</div></div></div>
       <div class="qrow"><button class="qb bad" data-action="setQ(this,'bad')">Niewyspany</button><button class="qb active med" data-action="setQ(this,'med')">Średnio</button><button class="qb good" data-action="setQ(this,'good')">Wyspany</button></div>
     </div>
   </div>
   <div class="w c4">
-    <div class="wh"><span class="L">Nootropy</span><span class="L a1">Stos aktywny</span></div>
+    <div class="wh"><span class="L">Nootropy</span><span class="L a1">Stos aktywny</span><button class="pill a1" style="margin-left:auto;cursor:pointer;font-size:.6rem;padding:2px 8px;" data-action="openNootEditor()">✏️</button></div>
     <div class="nl" id="noot-list" style="padding:.25rem 0;"></div>
   </div>
   <div class="w c4">
@@ -1972,7 +1980,7 @@ a {
     <div class="wb"><div class="hl" id="hlist"></div></div>
   </div>
   <div class="w c4">
-    <div class="wh"><span class="L">To-Do</span><span class="L mono" id="tdh">3 / 7</span></div>
+    <div class="wh"><span class="L">To-Do</span><span class="L mono" id="tdh">0 / 0</span><button class="pill" style="margin-left:auto;cursor:pointer;font-size:.55rem;padding:1px 6px;" data-action="archiveDone()">📦</button><button class="pill" style="cursor:pointer;font-size:.55rem;padding:1px 6px;" data-action="showArchive()">📂</button></div>
     <div class="tl" id="tlist"></div>
     <div class="tadd"><input class="tinp" id="tinp" placeholder="Nowe zadanie..."><button class="icon-btn" data-action="addTodo()" aria-label="Dodaj"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button></div>
   </div>
@@ -2076,11 +2084,37 @@ a {
     <div class="wb">
       <div style="display:flex;align-items:flex-end;gap:.75rem;margin-bottom:.75rem;"><span class="wtmp" id="weather-temp">--°</span><div style="display:flex;flex-direction:column;gap:2px;padding-bottom:4px;"><span id="weather-code" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Ładowanie…</span><span id="weather-feels" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Odczuwalnie --°</span><span id="weather-wind" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Wiatr -- km/h</span><span id="weather-humidity" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Wilgotność --%</span><span id="weather-updated" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Aktualizacja --:--</span></div></div>
       <div class="wfc" id="forecast-wrap"></div>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;">
+        <span class="pill" id="aqi-badge" style="display:none;font-size:.55rem;"></span>
+        <span class="pill" id="uv-badge" style="display:none;font-size:.55rem;color:var(--txm);"></span>
+      </div>
     </div>
   </div>
   <div class="w c12">
-    <div class="wh"><span class="L">Notatnik</span><span class="L">Strumień myśli</span></div>
-    <div class="wb"><textarea class="nta" id="notes" rows="3" placeholder="// Obserwacje, hipotezy, myśli robocze..."></textarea></div>
+    <div class="wh"><span class="L">Notatnik</span><span class="L">Strumień myśli</span><button class="pill" id="md-toggle" style="margin-left:auto;cursor:pointer;font-size:.55rem;padding:1px 8px;" data-action="toggleMdPreview()">👁 Podgląd</button></div>
+    <div class="wb"><textarea class="nta" id="notes" rows="3" placeholder="// Obserwacje, hipotezy, myśli robocze... (Markdown)"></textarea><div id="notes-preview" style="display:none;padding:.5rem;font-size:.75rem;color:var(--tx);line-height:1.6;min-height:60px;"></div></div>
+  </div>
+
+  <!-- Finance Widgets -->
+  <div class="w c4">
+    <div class="wh"><span class="L">🎲 Polymarket</span><span class="L">Top Events</span></div>
+    <div class="wb" id="polymarket-list" style="max-height:200px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">🔍 Insider Trades</span><span class="L">Finnhub</span></div>
+    <div class="wb" id="insiders-list" style="max-height:200px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">📄 SEC Filings</span><span class="L">Najnowsze</span></div>
+    <div class="wb" id="sec-list" style="max-height:200px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+  <div class="w c3">
+    <div class="wh"><span class="L">🍕 Pizza Index</span><span class="L">Inflacja</span></div>
+    <div class="wb" id="pizza-list" style="font-size:.65rem;"></div>
+  </div>
+  <div class="w c3">
+    <div class="wh"><span class="L">🇺🇸 Trump Tracker</span><span class="L">7d news</span></div>
+    <div class="wb" id="trump-list" style="max-height:180px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
   </div>
 
   <div class="zone"><span class="L">D — Klinika</span><div class="zone-line"></div></div>
@@ -2456,6 +2490,16 @@ a {
             <div id="analytics-correlations"></div>
           </div>
         </div>
+        <div class="analytics-row" style="margin-top:.75rem;">
+          <div class="analytics-card" style="grid-column:span 2;">
+            <div class="wh"><span class="L">Multi-data Overlay (14d)</span><span class="L a1">Nawyki / Nootropy / Sen / Timer</span></div>
+            <div id="overlay-chart" style="width:100%;"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Habit Grid</span></div>
+            <div id="habit-grid" style="width:100%;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2465,6 +2509,7 @@ a {
       <div id="plugins-container" class="plugins-grid"></div>
     </div>
 
+<div style="padding:.5rem 1rem;text-align:center;border-top:1px solid var(--div);"><button class="pill a1" style="cursor:pointer;font-size:.6rem;padding:2px 12px;" data-action="showEventStore()">📊 Event Store</button></div>
 </main>
 </div>
 <div id="cal-modal" class="modal-overlay" style="display:none">
@@ -2483,6 +2528,52 @@ a {
       <button class="btn-sec" onclick="closeCalModal()">Anuluj</button>
       <button class="btn-pri" onclick="saveCalEvent()">Zapisz</button>
     </div>
+  </div>
+</div>
+<!-- Noot Editor Modal -->
+<div id="noot-editor-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeNootEditor()">
+  <div class="modal-card" style="width:min(90vw,450px);">
+    <div class="modal-hdr"><span class="L">Edytuj stack nootropików</span><button class="modal-close" onclick="closeNootEditor()">&times;</button></div>
+    <div class="modal-body" id="noot-editor-list" style="max-height:300px;overflow-y:auto;"></div>
+    <div class="modal-footer">
+      <button class="btn-sec" data-action="addNootEntry()">+ Dodaj</button>
+      <button class="btn-pri" data-action="saveNootEditor()">Zapisz</button>
+    </div>
+  </div>
+</div>
+<!-- Archive Modal -->
+<div id="archive-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeArchive()">
+  <div class="modal-card" style="width:min(90vw,450px);">
+    <div class="modal-hdr"><span class="L">Archiwum zadań</span><button class="modal-close" onclick="closeArchive()">&times;</button></div>
+    <div class="modal-body" id="archive-list" style="max-height:350px;overflow-y:auto;"></div>
+  </div>
+</div>
+<!-- Event Store Modal -->
+<div id="eventstore-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeEventStore()">
+  <div class="modal-card" style="width:min(95vw,700px);">
+    <div class="modal-hdr"><span class="L">📊 Event Store</span><button class="modal-close" onclick="closeEventStore()">&times;</button></div>
+    <div style="display:flex;gap:.375rem;padding:.5rem;flex-wrap:wrap;">
+      <button class="pill a1" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('sleep')">Sen</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('habits')">Nawyki</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('nootropics')">Nootropy</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('todos')">Todo</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('timer')">Timer</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('weather')">Pogoda</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('mood')">Nastrój</button>
+      <span style="margin-left:auto;"></span>
+      <button class="btn-sec" style="font-size:.55rem;padding:2px 8px;" data-action="exportESSheet('sleep')">CSV</button>
+    </div>
+    <div class="modal-body" id="es-content" style="max-height:400px;overflow:auto;padding:.5rem;"></div>
+  </div>
+</div>
+<!-- TradingView Widget Modal -->
+<div id="tv-widget-modal" class="modal-overlay" style="display:none">
+  <div class="modal-card" style="width:min(95vw,800px);height:500px;">
+    <div class="modal-hdr">
+      <span class="L" id="tv-title">NVDA</span>
+      <button class="modal-close" onclick="closeTVModal()">&times;</button>
+    </div>
+    <div id="tv-chart" style="height:calc(100% - 40px);"></div>
   </div>
 </div>
 <script src="app.js" defer></script>
