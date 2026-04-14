@@ -1,4 +1,4 @@
-const CACHE_VERSION = 2;
+const CACHE_VERSION = 3;
 const CACHE_NAME = `lifeos-v${CACHE_VERSION}`;
 const STATIC_ASSETS = [
   './',
@@ -62,18 +62,16 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache-first for HTML/CSS/JS (same-origin)
+  // Network-first for HTML/JS (same-origin) — ensures updates are visible immediately
   if (url.origin === self.location.origin) {
     event.respondWith(
-      caches.match(event.request).then(cached => {
-        return cached || fetch(event.request).then(response => {
-          if (response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
-          return response;
-        });
-      })
+      fetch(event.request).then(response => {
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      }).catch(() => caches.match(event.request))
     );
     return;
   }
