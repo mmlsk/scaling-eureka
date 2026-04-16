@@ -1,9 +1,10 @@
-const CACHE_VERSION = 4;
+const CACHE_VERSION = 5;
 const CACHE_NAME = `lifeos-v${CACHE_VERSION}`;
+const BASE_PATH = '/scaling-eureka';
 const STATIC_ASSETS = [
-  '/',
-  '/dashboard',
-  '/calculators'
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/dashboard/`,
+  `${BASE_PATH}/calculators/`
 ];
 
 // Install: pre-cache static assets
@@ -60,7 +61,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Network-first for same-origin (Next.js pages and API)
+  // Network-first for same-origin (Next.js pages)
   if (url.origin === self.location.origin) {
     event.respondWith(
       fetch(event.request).then(response => {

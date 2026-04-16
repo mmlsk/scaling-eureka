@@ -1,26 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'export',
+  basePath: '/scaling-eureka',
+  trailingSlash: true,
   reactStrictMode: true,
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
-  },
   images: {
+    unoptimized: true,
     remotePatterns: [
       { hostname: 'tilecache.rainviewer.com' },
     ],
   },
-  headers: async () => [
-    {
-      source: '/sw.js',
-      headers: [
-        { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
-        { key: 'Service-Worker-Allowed', value: '/' },
-      ],
-    },
-  ],
 };
 
 export default nextConfig;
