@@ -1,0 +1,11 @@
+{
+  "name": "LIFE OS",
+  "short_name": "LifeOS",
+  "description": "Personal Life OS - Todo, Weather, Finance, Health Tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0a09",
+  "theme_color": "#0b0a09",
+  "orientation": "portrait",
+  "icons": []
+}
