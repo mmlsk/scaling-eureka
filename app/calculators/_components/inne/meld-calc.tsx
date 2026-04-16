@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { calcMELDNa } from '@/lib/calculators/formulas';
-import { CALC_VERSIONS, getVersionLabel } from '@/lib/calculators/versions';
 
 export default function MELDCalc() {
   const [bilirubin, setBilirubin] = useState<number>(1.0);
@@ -11,28 +10,12 @@ export default function MELDCalc() {
   const [sodium, setSodium] = useState<number>(140);
   const [dialysis, setDialysis] = useState(false);
 
-  const meta = CALC_VERSIONS['MELD-Na'];
-  const versionLabel = getVersionLabel('MELD-Na');
 
   const isValid = bilirubin > 0 && inr > 0 && creatinine > 0 && sodium > 0;
   const result = isValid ? calcMELDNa(bilirubin, inr, creatinine, sodium, dialysis) : null;
 
-  const severityColor =
-    result?.severity === 'ok'
-      ? 'bg-green-100 text-green-800'
-      : result?.severity === 'warn'
-        ? 'bg-yellow-100 text-yellow-800'
-        : 'bg-red-100 text-red-800';
-
   return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">MELD-Na</h3>
-        {versionLabel && (
-          <span className="text-xs text-gray-500">{meta.formula} v{meta.version}</span>
-        )}
-      </div>
-
+    <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="block text-sm font-medium mb-1">Bilirubina (mg/dL)</label>
@@ -43,7 +26,7 @@ export default function MELDCalc() {
             step={0.1}
             min={0.1}
             max={50}
-            className="w-full rounded border px-2 py-1"
+            className="input-field"
           />
         </div>
         <div>
@@ -55,7 +38,7 @@ export default function MELDCalc() {
             step={0.1}
             min={0.5}
             max={20}
-            className="w-full rounded border px-2 py-1"
+            className="input-field"
           />
         </div>
         <div>
@@ -67,7 +50,7 @@ export default function MELDCalc() {
             step={0.1}
             min={0.1}
             max={15}
-            className="w-full rounded border px-2 py-1"
+            className="input-field"
           />
         </div>
         <div>
@@ -78,7 +61,7 @@ export default function MELDCalc() {
             onChange={(e) => setSodium(Number(e.target.value))}
             min={100}
             max={180}
-            className="w-full rounded border px-2 py-1"
+            className="input-field"
           />
         </div>
       </div>
@@ -94,15 +77,15 @@ export default function MELDCalc() {
       </label>
 
       {result && (
-        <div className="border-t pt-3 space-y-2">
+        <div className="pt-3 space-y-2" style={{ borderTop: '1px solid var(--bor)' }}>
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold">{result.value}</span>
-            <span className="text-sm text-gray-500">pkt</span>
-            <span className={`ml-auto px-2 py-0.5 rounded text-xs font-medium ${severityColor}`}>
+            <span className="text-sm" style={{ color: 'var(--txm)' }}>pkt</span>
+            <span className={`calc-badge ${result.severity}`}>
               {result.stage}
             </span>
           </div>
-          <p className="text-sm text-gray-600">{result.interpretation}</p>
+          <p className="text-sm" style={{ color: 'var(--txm)' }}>{result.interpretation}</p>
         </div>
       )}
     </div>

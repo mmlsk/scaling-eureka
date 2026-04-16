@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { calcABCD2, type ABCD2Input } from '@/lib/calculators/formulas';
-import { CALC_VERSIONS, getVersionLabel } from '@/lib/calculators/versions';
 
 interface CheckItem {
   key: keyof ABCD2Input;
@@ -55,20 +54,8 @@ export default function ABCD2Calc() {
     });
   };
 
-  const severityColor =
-    result.severity === 'ok'
-      ? 'bg-green-100 text-green-800'
-      : result.severity === 'warn'
-        ? 'bg-yellow-100 text-yellow-800'
-        : 'bg-red-100 text-red-800';
-
   return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">ABCD&#xB2; Score</h3>
-        <span className="text-xs text-gray-500">TIA risk stratification</span>
-      </div>
-
+    <div className="space-y-4">
       <div className="space-y-2">
         {ITEMS.map((item) => (
           <label key={item.key} className="flex items-center gap-2 cursor-pointer">
@@ -79,20 +66,20 @@ export default function ABCD2Calc() {
               className="rounded"
             />
             <span className="flex-1">{item.label}</span>
-            <span className="text-xs text-gray-400">{item.points}</span>
+            <span className="text-xs" style={{ color: 'var(--txm)' }}>{item.points}</span>
           </label>
         ))}
       </div>
 
-      <div className="border-t pt-3 space-y-2">
+      <div className="pt-3 space-y-2" style={{ borderTop: '1px solid var(--bor)' }}>
         <div className="flex items-center gap-2">
           <span className="text-2xl font-bold">{result.value}</span>
-          <span className="text-sm text-gray-500">/ 7 pkt</span>
-          <span className={`ml-auto px-2 py-0.5 rounded text-xs font-medium ${severityColor}`}>
+          <span className="text-sm" style={{ color: 'var(--txm)' }}>/ 7 pkt</span>
+          <span className={`calc-badge ${result.severity}`}>
             {result.stage}
           </span>
         </div>
-        <p className="text-sm text-gray-600">{result.interpretation}</p>
+        <p className="text-sm" style={{ color: 'var(--txm)' }}>{result.interpretation}</p>
       </div>
     </div>
   );

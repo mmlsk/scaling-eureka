@@ -20,6 +20,19 @@ import { CSS } from '@dnd-kit/utilities';
 import { useDashboardLayout } from '@/store/useDashboardLayout';
 import { useHydration } from '@/hooks/useHydration';
 import type { WidgetLayoutItem } from '@/types/database';
+import ClockWidget from './clock-widget';
+import SleepWidget from './sleep-widget';
+import HabitsWidget from './habits-widget';
+import NootropicsWidget from './nootropics-widget';
+import TodoWidget from './todo-widget';
+import CalendarWidget from './calendar-widget';
+import TimerWidget from './timer-widget';
+import WeatherWidget from './weather-widget';
+import StocksWidget from './stocks-widget';
+import NotepadWidget from './notepad-widget';
+import AnalyticsWidget from './analytics-widget';
+import FinanceWidgets from './finance-widgets';
+import ProgressBars from './progress-bars';
 
 /** Placeholder widget for widgets not yet implemented. */
 function PlaceholderWidget({ id }: { id: string }) {
@@ -33,23 +46,30 @@ function PlaceholderWidget({ id }: { id: string }) {
   );
 }
 
+/* Wrap default-exported widgets that don't accept {id} props */
+function wrap(Comp: ComponentType) {
+  return function WrappedWidget(_props: { id: string }) {
+    return <Comp />;
+  };
+}
+
 /**
  * Widget registry — maps widget IDs to their React components.
- * As widgets are built, replace PlaceholderWidget entries with real components.
  */
 const WIDGET_REGISTRY: Record<string, ComponentType<{ id: string }>> = {
-  clock: PlaceholderWidget,
-  sleep: PlaceholderWidget,
-  habits: PlaceholderWidget,
-  nootropics: PlaceholderWidget,
-  todo: PlaceholderWidget,
-  calendar: PlaceholderWidget,
-  timer: PlaceholderWidget,
-  weather: PlaceholderWidget,
-  stocks: PlaceholderWidget,
-  notepad: PlaceholderWidget,
-  analytics: PlaceholderWidget,
-  finance: PlaceholderWidget,
+  clock: wrap(ClockWidget),
+  sleep: wrap(SleepWidget),
+  habits: wrap(HabitsWidget),
+  nootropics: wrap(NootropicsWidget),
+  todo: wrap(TodoWidget),
+  calendar: wrap(CalendarWidget),
+  timer: wrap(TimerWidget),
+  weather: wrap(WeatherWidget),
+  stocks: wrap(StocksWidget),
+  notepad: wrap(NotepadWidget),
+  analytics: wrap(AnalyticsWidget),
+  finance: wrap(FinanceWidgets),
+  progress: wrap(ProgressBars),
 };
 
 interface SortableWidgetProps {

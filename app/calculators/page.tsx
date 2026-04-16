@@ -1,12 +1,40 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Header } from '@/components/layout/header';
 import { Sidebar } from '@/components/layout/sidebar';
 import { CalcCard } from './_components/calc-card';
 import { CALC_VERSIONS } from '@/lib/calculators/versions';
 
 type TabId = 'cardio' | 'neuro' | 'pulm' | 'oiom' | 'ped' | 'inne';
+
+const CALC_COMPONENTS: Record<string, React.ComponentType> = {
+  'CHADS': dynamic(() => import('./_components/cardio/chads-calc')),
+  'MAP': dynamic(() => import('./_components/inne/map-calc')),
+  'QTc': dynamic(() => import('./_components/cardio/qtc-calc')),
+  'Wells-PE': dynamic(() => import('./_components/pulm/wells-pe-calc')),
+  'Wells-DVT': dynamic(() => import('./_components/pulm/wells-dvt-calc')),
+  'PERC': dynamic(() => import('./_components/pulm/perc-calc')),
+  'GCS': dynamic(() => import('./_components/neuro/gcs-calc')),
+  'NIHSS': dynamic(() => import('./_components/neuro/nihss-calc')),
+  'ABCD2': dynamic(() => import('./_components/neuro/abcd2-calc')),
+  'CURB-65': dynamic(() => import('./_components/pulm/curb65-calc')),
+  'NEWS2': dynamic(() => import('./_components/oiom/news2-calc')),
+  'SOFA': dynamic(() => import('./_components/oiom/sofa-calc')),
+  'qSOFA': dynamic(() => import('./_components/oiom/qsofa-calc')),
+  'Henderson-Hasselbalch': dynamic(() => import('./_components/oiom/hh-calc')),
+  'AG': dynamic(() => import('./_components/inne/ag-calc')),
+  'Ca-corr': dynamic(() => import('./_components/inne/ca-calc')),
+  'Dose': dynamic(() => import('./_components/oiom/dose-calc')),
+  'APGAR': dynamic(() => import('./_components/ped/apgar-calc')),
+  'eGFR': dynamic(() => import('./_components/inne/egfr-calc')),
+  'CG': dynamic(() => import('./_components/inne/cg-calc')),
+  'BMI': dynamic(() => import('./_components/inne/bmi-calc')),
+  'Child-Pugh': dynamic(() => import('./_components/inne/child-pugh-calc')),
+  'MELD-Na': dynamic(() => import('./_components/inne/meld-calc')),
+  'Centor': dynamic(() => import('./_components/ped/centor-calc')),
+};
 
 interface TabDef {
   id: TabId;
@@ -127,6 +155,7 @@ export default function CalculatorsPage() {
           >
             {filteredCalcs.map((calc) => {
               const meta = CALC_VERSIONS[calc.key];
+              const CalcComponent = CALC_COMPONENTS[calc.key];
               return (
                 <CalcCard
                   key={calc.key}
@@ -134,12 +163,7 @@ export default function CalculatorsPage() {
                   version={meta?.version ?? 'std'}
                   formula={meta?.formula ?? calc.key}
                 >
-                  <div
-                    className="widget-body"
-                    style={{ color: 'var(--txm)', fontStyle: 'italic' }}
-                  >
-                    Calculator form for {calc.title} will be rendered here.
-                  </div>
+                  {CalcComponent ? <CalcComponent /> : <div style={{ color: 'var(--txm)', fontStyle: 'italic' }}>Coming soon...</div>}
                 </CalcCard>
               );
             })}

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { calcHH, type HHInput } from '@/lib/calculators/formulas';
-import { CALC_VERSIONS, getVersionLabel } from '@/lib/calculators/versions';
 
 export default function HHCalc() {
   const [ph, setPh] = useState<number>(7.40);
@@ -14,8 +13,6 @@ export default function HHCalc() {
   const [cl, setCl] = useState<string>('');
   const [alb, setAlb] = useState<string>('');
 
-  const meta = CALC_VERSIONS['Henderson-Hasselbalch'];
-  const versionLabel = getVersionLabel('Henderson-Hasselbalch');
 
   const isValid = ph > 0 && pco2 > 0 && hco3 > 0;
 
@@ -33,14 +30,7 @@ export default function HHCalc() {
   const result = isValid ? calcHH(input) : null;
 
   return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Henderson-Hasselbalch</h3>
-        {versionLabel && (
-          <span className="text-xs text-gray-500">{meta.formula} v{meta.version}</span>
-        )}
-      </div>
-
+    <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
         <div>
           <label className="block text-xs font-medium mb-1">pH</label>
@@ -51,7 +41,7 @@ export default function HHCalc() {
             step={0.01}
             min={6.5}
             max={8.0}
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
         <div>
@@ -62,7 +52,7 @@ export default function HHCalc() {
             onChange={(e) => setPco2(Number(e.target.value))}
             min={5}
             max={150}
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
         <div>
@@ -73,7 +63,7 @@ export default function HHCalc() {
             onChange={(e) => setHco3(Number(e.target.value))}
             min={1}
             max={60}
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
       </div>
@@ -86,7 +76,7 @@ export default function HHCalc() {
             value={pao2}
             onChange={(e) => setPao2(e.target.value)}
             placeholder="opt."
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
         <div>
@@ -96,7 +86,7 @@ export default function HHCalc() {
             value={fio2}
             onChange={(e) => setFio2(e.target.value)}
             placeholder="opt."
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
         <div>
@@ -106,7 +96,7 @@ export default function HHCalc() {
             value={na}
             onChange={(e) => setNa(e.target.value)}
             placeholder="opt."
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
         <div>
@@ -116,7 +106,7 @@ export default function HHCalc() {
             value={cl}
             onChange={(e) => setCl(e.target.value)}
             placeholder="opt."
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
         <div>
@@ -126,19 +116,19 @@ export default function HHCalc() {
             value={alb}
             onChange={(e) => setAlb(e.target.value)}
             placeholder="opt."
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="input-field"
           />
         </div>
       </div>
 
       {result && (
-        <div className="border-t pt-3 space-y-2">
+        <div className="pt-3 space-y-2" style={{ borderTop: '1px solid var(--bor)' }}>
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold">{result.disorder}</span>
           </div>
           <div className="space-y-1">
             {result.lines.map((line, i) => (
-              <p key={i} className="text-sm text-gray-700 font-mono">{line}</p>
+              <p key={i} className="text-sm font-mono" style={{ color: 'var(--tx)' }}>{line}</p>
             ))}
           </div>
         </div>

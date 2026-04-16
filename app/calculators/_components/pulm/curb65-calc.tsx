@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { calcCURB65 } from '@/lib/calculators/formulas';
-import { CALC_VERSIONS, getVersionLabel } from '@/lib/calculators/versions';
 
 const CRITERIA = [
   'Confusion (splątanie)',
@@ -15,8 +14,6 @@ const CRITERIA = [
 export default function CURB65Calc() {
   const [checks, setChecks] = useState<boolean[]>(CRITERIA.map(() => false));
 
-  const meta = CALC_VERSIONS['CURB-65'];
-  const versionLabel = getVersionLabel('CURB-65');
 
   const result = calcCURB65(checks);
 
@@ -28,22 +25,8 @@ export default function CURB65Calc() {
     });
   };
 
-  const severityColor =
-    result.severity === 'ok'
-      ? 'bg-green-100 text-green-800'
-      : result.severity === 'warn'
-        ? 'bg-yellow-100 text-yellow-800'
-        : 'bg-red-100 text-red-800';
-
   return (
-    <div className="rounded-lg border p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">CURB-65</h3>
-        {versionLabel && (
-          <span className="text-xs text-gray-500">{meta.formula} v{meta.version}</span>
-        )}
-      </div>
-
+    <div className="space-y-4">
       <div className="space-y-2">
         {CRITERIA.map((label, i) => (
           <label key={label} className="flex items-center gap-2 cursor-pointer">
@@ -58,15 +41,15 @@ export default function CURB65Calc() {
         ))}
       </div>
 
-      <div className="border-t pt-3 space-y-2">
+      <div className="pt-3 space-y-2" style={{ borderTop: '1px solid var(--bor)' }}>
         <div className="flex items-center gap-2">
           <span className="text-2xl font-bold">{result.value}</span>
-          <span className="text-sm text-gray-500">/ 5 pkt</span>
-          <span className={`ml-auto px-2 py-0.5 rounded text-xs font-medium ${severityColor}`}>
+          <span className="text-sm" style={{ color: 'var(--txm)' }}>/ 5 pkt</span>
+          <span className={`calc-badge ${result.severity}`}>
             {result.stage}
           </span>
         </div>
-        <p className="text-sm text-gray-600">{result.interpretation}</p>
+        <p className="text-sm" style={{ color: 'var(--txm)' }}>{result.interpretation}</p>
       </div>
     </div>
   );
