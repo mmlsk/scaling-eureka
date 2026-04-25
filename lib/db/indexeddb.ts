@@ -125,8 +125,7 @@ export const db = new LifeOSDB();
  * Clear all IndexedDB tables. Call on logout to remove local user data.
  */
 export async function clearAllTables(): Promise<void> {
-  await db.transaction(
-    'rw',
+  const tables = [
     db.habits,
     db.habitEntries,
     db.todos,
@@ -139,21 +138,8 @@ export async function clearAllTables(): Promise<void> {
     db.timerSessions,
     db.eventStore,
     db.syncQueue,
-    async () => {
-      await Promise.all([
-        db.habits.clear(),
-        db.habitEntries.clear(),
-        db.todos.clear(),
-        db.nootropicStack.clear(),
-        db.nootropicLog.clear(),
-        db.sleepLog.clear(),
-        db.calendarEvents.clear(),
-        db.notes.clear(),
-        db.moodEntries.clear(),
-        db.timerSessions.clear(),
-        db.eventStore.clear(),
-        db.syncQueue.clear(),
-      ]);
-    },
-  );
+  ];
+  await db.transaction('rw', tables, async () => {
+    await Promise.all(tables.map((t) => t.clear()));
+  });
 }
