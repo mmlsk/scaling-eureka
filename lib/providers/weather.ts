@@ -5,10 +5,12 @@ import type {
 } from '@/types/api';
 import type { IMGWAlert } from '@/types/state';
 
+import { DEFAULT_LOCATION } from '@/lib/config/location';
+
 // ── Config ──
-const LAT = 53.43;
-const LON = 14.55;
-const TIMEZONE = 'Europe/Warsaw';
+const LAT = DEFAULT_LOCATION.latitude;
+const LON = DEFAULT_LOCATION.longitude;
+const TIMEZONE = DEFAULT_LOCATION.timezone;
 
 // ── WMO Weather Code Labels (Polish) ──
 const WMO_LABELS: Record<number, string> = {

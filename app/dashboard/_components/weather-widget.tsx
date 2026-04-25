@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useHydration } from '@/hooks/useHydration';
 import { weatherLabel, weatherIcon } from '@/lib/providers/weather';
+import { DEFAULT_LOCATION } from '@/lib/config/location';
 import type { WeatherData, AirQuality, UVData } from '@/types/state';
 
 interface WeatherResult {
@@ -25,9 +26,9 @@ function uvBadge(uv: number): { label: string; cls: string } {
 
 async function fetchWeatherData(): Promise<WeatherResult> {
   const params = new URLSearchParams({
-    latitude: '53.43',
-    longitude: '14.55',
-    timezone: 'Europe/Warsaw',
+    latitude: String(DEFAULT_LOCATION.latitude),
+    longitude: String(DEFAULT_LOCATION.longitude),
+    timezone: DEFAULT_LOCATION.timezone,
     current: 'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code',
     daily: 'weather_code,temperature_2m_max,temperature_2m_min',
     forecast_days: '7',
@@ -45,8 +46,8 @@ async function fetchWeatherData(): Promise<WeatherResult> {
   let uvData: UVData | null = null;
   try {
     const aqParams = new URLSearchParams({
-      latitude: '53.43',
-      longitude: '14.55',
+      latitude: String(DEFAULT_LOCATION.latitude),
+      longitude: String(DEFAULT_LOCATION.longitude),
       current: 'pm2_5,pm10,uv_index',
     });
     const aqRes = await fetch(
@@ -72,7 +73,7 @@ export default function WeatherWidget() {
   const hydrated = useHydration();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['weather', '53.43', '14.55'],
+    queryKey: ['weather', String(DEFAULT_LOCATION.latitude), String(DEFAULT_LOCATION.longitude)],
     queryFn: fetchWeatherData,
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
@@ -116,7 +117,7 @@ export default function WeatherWidget() {
   return (
     <div className="widget">
       <div className="widget-header">
-        <span>Pogoda Szczecin</span>
+        <span>Pogoda {DEFAULT_LOCATION.city}</span>
         <div className="flex gap-1">
           {airQuality && (
             <span className={`pill ${aqBadge(airQuality.pm25).cls}`}>
