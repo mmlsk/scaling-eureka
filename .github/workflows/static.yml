@@ -1,24 +1,21 @@
-name: Deploy to GitHub Pages
+name: CI
 
 on:
   push:
+    branches: ["main"]
+  pull_request:
     branches: ["main"]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: "ci-${{ github.ref }}"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,7 +29,7 @@ jobs:
         run: npm ci
       - name: Audit dependencies
         run: npm audit --audit-level=moderate
-        continue-on-error: true  # dependabot handles fixes; don't break deploy
+        continue-on-error: true  # dependabot handles fixes; don't break CI
       - name: Run tests
         run: npm test -- --run  # vitest in non-watch mode
       - name: Build
@@ -47,12 +44,3 @@ jobs:
           NEXT_PUBLIC_OPENUV_KEY: ${{ secrets.NEXT_PUBLIC_OPENUV_KEY }}
           NEXT_PUBLIC_FRED_KEY: ${{ secrets.NEXT_PUBLIC_FRED_KEY }}
           NEXT_PUBLIC_EIA_KEY: ${{ secrets.NEXT_PUBLIC_EIA_KEY }}
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './out'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
