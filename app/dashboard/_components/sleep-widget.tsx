@@ -30,12 +30,11 @@ function parseHHMM(time: string): number | null {
 
 export default function SleepWidget() {
   const hydrated = useHydration();
-  const { sleep, setSleep, sleepLog, getSleepDuration } = useLifeOsStore(
+  const { sleep, setSleep, sleepLog } = useLifeOsStore(
     useShallow((s) => ({
       sleep: s.sleep,
       setSleep: s.setSleep,
       sleepLog: s.sleepLog,
-      getSleepDuration: s.getSleepDuration,
     })),
   );
 

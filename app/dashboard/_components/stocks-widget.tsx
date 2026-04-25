@@ -22,12 +22,9 @@ function isNYSEOpen(): boolean {
 }
 
 function MarketStatus() {
-  const [open, setOpen] = useState(false);
   const hydrated = useHydration();
 
-  useEffect(() => {
-    if (hydrated) setOpen(isNYSEOpen());
-  }, [hydrated]);
+  const open = hydrated ? isNYSEOpen() : false;
 
   const now = new Date();
   const nyHour = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
@@ -123,11 +120,13 @@ export default function StocksWidget() {
 
   useEffect(() => {
     if (!hydrated) return;
-    setCountdown(REFRESH_INTERVAL_S);
     const interval = setInterval(() => {
       setCountdown((prev) => (prev <= 1 ? REFRESH_INTERVAL_S : prev - 1));
     }, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setCountdown(REFRESH_INTERVAL_S);
+    };
   }, [hydrated, rows]);
 
   const TABS: { key: StockTab; label: string }[] = [

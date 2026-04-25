@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useHydration } from '@/hooks/useHydration';
-import { fetchYahoo, TICKERS, MACRO_LIST, type TickerConfig } from '@/lib/providers/stocks';
-import type { QuoteResult } from '@/types/api';
+import { fetchYahoo, TICKERS, MACRO_LIST } from '@/lib/providers/stocks';
+import type { QuoteResult, TickerConfig } from '@/types/api';
 
 export interface StockRow {
   config: TickerConfig;

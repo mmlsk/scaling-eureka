@@ -44,7 +44,7 @@ function AQIGauge({ aqi }: { aqi: number }) {
 }
 
 export default function AirQualityWidget() {
-  const { data, isLoading, error } = useAirQuality();
+  const { data, isLoading, error, dataUpdatedAt } = useAirQuality();
 
   if (isLoading || !data) {
     return (
@@ -147,7 +147,7 @@ export default function AirQualityWidget() {
           })}
         </div>
 
-        <LastUpdated timestamp={Date.now()} source="Open-Meteo AQ" />
+        <LastUpdated timestamp={dataUpdatedAt || null} source="Open-Meteo AQ" />
       </div>
     </div>
   );
