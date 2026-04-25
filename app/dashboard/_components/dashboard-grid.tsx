@@ -1,10 +1,12 @@
 'use client';
 
-import { useMemo, type ComponentType } from 'react';
+import { lazy, Suspense, useMemo, useState, type ComponentType } from 'react';
 import {
   DndContext,
+  DragOverlay,
   closestCenter,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -19,20 +21,31 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { useDashboardLayout } from '@/store/useDashboardLayout';
 import { useHydration } from '@/hooks/useHydration';
+import { useMediaQuery } from '@/lib/hooks/use-media-query';
 import type { WidgetLayoutItem } from '@/types/database';
-import ClockWidget from './clock-widget';
-import SleepWidget from './sleep-widget';
-import HabitsWidget from './habits-widget';
-import NootropicsWidget from './nootropics-widget';
-import TodoWidget from './todo-widget';
-import CalendarWidget from './calendar-widget';
-import TimerWidget from './timer-widget';
-import WeatherWidget from './weather-widget';
-import StocksWidget from './stocks-widget';
-import NotepadWidget from './notepad-widget';
-import AnalyticsWidget from './analytics-widget';
-import FinanceWidgets from './finance-widgets';
-import ProgressBars from './progress-bars';
+
+/* ─── Lazy-loaded widgets ─── */
+const ClockWidget = lazy(() => import('./clock-widget'));
+const SleepWidget = lazy(() => import('./sleep-widget'));
+const HabitsWidget = lazy(() => import('./habits-widget'));
+const NootropicsWidget = lazy(() => import('./nootropics-widget'));
+const TodoWidget = lazy(() => import('./todo-widget'));
+const CalendarWidget = lazy(() => import('./calendar-widget'));
+const TimerWidget = lazy(() => import('./timer-widget'));
+const WeatherWidget = lazy(() => import('./weather-widget'));
+const StocksWidget = lazy(() => import('./stocks-widget'));
+const NotepadWidget = lazy(() => import('./notepad-widget'));
+const AnalyticsWidget = lazy(() => import('./analytics-widget'));
+const FinanceWidgets = lazy(() => import('./finance-widgets'));
+const ProgressBars = lazy(() => import('./progress-bars'));
+
+function WidgetSkeleton() {
+  return (
+    <div className="widget">
+      <div className="skeleton" style={{ height: '80px', width: '100%' }} />
+    </div>
+  );
+}
 
 /** Placeholder widget for widgets not yet implemented. */
 function PlaceholderWidget({ id }: { id: string }) {
@@ -72,11 +85,43 @@ const WIDGET_REGISTRY: Record<string, ComponentType<{ id: string }>> = {
   progress: wrap(ProgressBars),
 };
 
-interface SortableWidgetProps {
-  item: WidgetLayoutItem;
+/** Widget title map for DragOverlay ghost preview */
+const WIDGET_TITLES: Record<string, string> = {
+  clock: 'Zegar',
+  sleep: 'Sen',
+  habits: 'Nawyki',
+  nootropics: 'Nootropy',
+  todo: 'Todo',
+  calendar: 'Kalendarz',
+  timer: 'Timer',
+  weather: 'Pogoda',
+  stocks: 'Giełda',
+  notepad: 'Notatki',
+  analytics: 'Analityka',
+  finance: 'Finanse',
+  progress: 'Postęp',
+};
+
+function WidgetGhostPreview({ widgetId }: { widgetId: string }) {
+  return (
+    <div
+      className="widget"
+      style={{ opacity: 0.8, transform: 'scale(1.05)', pointerEvents: 'none' }}
+    >
+      <div className="widget-header">{WIDGET_TITLES[widgetId] ?? widgetId}</div>
+      <div className="widget-body">
+        <div className="skeleton" style={{ height: '40px', width: '100%' }} />
+      </div>
+    </div>
+  );
 }
 
-function SortableWidget({ item }: SortableWidgetProps) {
+interface SortableWidgetProps {
+  item: WidgetLayoutItem;
+  isMobile: boolean;
+}
+
+function SortableWidget({ item, isMobile }: SortableWidgetProps) {
   const {
     attributes,
     listeners,
@@ -86,10 +131,12 @@ function SortableWidget({ item }: SortableWidgetProps) {
     isDragging,
   } = useSortable({ id: item.id });
 
+  const colSpan = isMobile ? 1 : (item.w ?? 1);
+
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
-    gridColumn: `span ${item.w}`,
+    gridColumn: `span ${colSpan}`,
     gridRow: `span ${item.h}`,
     opacity: isDragging ? 0.5 : 1,
     cursor: 'grab',
@@ -99,7 +146,9 @@ function SortableWidget({ item }: SortableWidgetProps) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <WidgetComponent id={item.id} />
+      <Suspense fallback={<WidgetSkeleton />}>
+        <WidgetComponent id={item.id} />
+      </Suspense>
     </div>
   );
 }
@@ -108,10 +157,15 @@ export function DashboardGrid() {
   const layout = useDashboardLayout((s) => s.layout);
   const setLayout = useDashboardLayout((s) => s.setLayout);
   const hydrated = useHydration();
+  const isMobile = useMediaQuery('(max-width: 640px)');
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: { distance: 8 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 250, tolerance: 5 },
     }),
     useSensor(KeyboardSensor),
   );
@@ -119,6 +173,7 @@ export function DashboardGrid() {
   const itemIds = useMemo(() => layout.map((w) => w.id), [layout]);
 
   function handleDragEnd(event: DragEndEvent) {
+    setActiveId(null);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -146,15 +201,20 @@ export function DashboardGrid() {
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={(e) => setActiveId(String(e.active.id))}
       onDragEnd={handleDragEnd}
+      onDragCancel={() => setActiveId(null)}
     >
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div className="dashboard-grid">
           {layout.map((item) => (
-            <SortableWidget key={item.id} item={item} />
+            <SortableWidget key={item.id} item={item} isMobile={isMobile} />
           ))}
         </div>
       </SortableContext>
+      <DragOverlay>
+        {activeId ? <WidgetGhostPreview widgetId={activeId} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 }
