@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Block any .env* files (except .env.example)
+STAGED=$(git diff --cached --name-only)
+for f in $STAGED; do
+  case "$f" in
+    .env|.env.local|.env.*.local|.env.production|.env.development)
+      echo "Refusing to commit secret file: $f"
+      echo "   Add to .gitignore and use GitHub Secrets instead."
+      exit 1
+      ;;
+  esac
+done
+
+# Run tests
+npm test --silent || exit 1
