@@ -1,6 +1,14 @@
 # LIFE OS Dashboard
 
-Personal medical/productivity dashboard — a single-page application for health tracking, clinical calculators, habit monitoring, financial data, and daily planning.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=mmlsk/scaling-eureka)
+
+Personal medical/productivity dashboard — aplikacja do sledzenia zdrowia, kalkulatorow klinicznych, nawykov, danych finansowych i planowania dnia.
+
+## Dokumentacja
+
+- [RUNBOOK.md](./RUNBOOK.md) — procedury operacyjne
+- [SECURITY.md](./.github/SECURITY.md) — polityka bezpieczenstwa
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — diagram architektury
 
 ## Features
 
@@ -13,7 +21,7 @@ Personal medical/productivity dashboard — a single-page application for health
 **ICU/OIOM**: SOFA, qSOFA, NEWS2, Henderson-Hasselbalch (ABG), Dosing Calculator (mg/kg, mcg/kg/min)
 **Other**: BMI/BSA, Child-Pugh, MAP, Anion Gap, Corrected Calcium, MELD-Na
 
-All calculators include:
+Wszystkie kalkulatory zawieraja:
 - Real-time calculation with validated input ranges
 - Color-coded risk badges (ok/warn/crit)
 - Reference ranges and clinical interpretation
@@ -45,97 +53,65 @@ All calculators include:
 - Supplement refill reminders
 - Service Worker for offline support
 
-## Architecture
-
-```
-index.html          — SPA shell (~2500 lines, all HTML + CSS)
-app.js              — Application logic (~2500 lines, minified style)
-sw.js               — Service Worker (cache-first static, SWR weather)
-proxy-worker.js     — Cloudflare Worker CORS proxy
-wrangler.toml       — Cloudflare Worker deployment config
-tests/calc-tests.js — Medical calculator regression tests
-```
-
 ## Tech Stack
 
-- **Vanilla JS** — no frameworks, no build step
-- **CSS Custom Properties** — theming via `--az`, `--c2`, `--tx`, etc.
-- **localStorage** — persistence via StorageManager with debounced saves and versioning
-- **Service Worker API** — offline support, font caching
-- **Cloudflare Workers** — CORS proxy with KV-backed rate limiting
-- **Inline SVG** — sparklines, charts, analytics visualizations
+- **Next.js 16** — App Router, Server Components
+- **React 19** — UI framework
+- **TypeScript 5** — type safety
+- **Tailwind CSS 4** — styling
+- **Supabase** — Auth, Postgres (RLS), pgvector
+- **Dexie 4** — IndexedDB offline-first storage
+- **Zustand 5** — client state management
+- **TanStack Query 5** — server state caching
+- **Zod 4** — runtime env validation
+- **Cloudflare Workers** — CORS proxy with KV rate limiting
 
-## Deployment
+## Deployment (Vercel)
 
-### GitHub Pages
-1. Push to GitHub
-2. Enable Pages in Settings (source: main branch)
-3. Access at `https://<user>.github.io/<repo>/`
+1. Fork / clone repo
+2. Import do [Vercel](https://vercel.com)
+3. Ustaw Environment Variables (patrz nizej)
+4. Deploy — Vercel automatycznie buduje i deployuje przy push do `main`
 
-### Docker
+## Environment Variables
+
+| Zmienna | Wymagana | Opis |
+|---------|----------|------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Tak | URL projektu Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Tak | Publiczny klucz anon Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Nie | Service role key (server-side only) |
+| `NEXT_PUBLIC_FINNHUB_API_KEY` | Nie | Finnhub stock data |
+| `ALPHA_VANTAGE_KEY` | Nie | Alpha Vantage stock data (fallback) |
+| `POLYGON_KEY` | Nie | Polygon.io stock data |
+| `NEXT_PUBLIC_OPENAQ_KEY` | Nie | OpenAQ air quality |
+| `NEXT_PUBLIC_OPENUV_KEY` | Nie | OpenUV UV index |
+| `NEXT_PUBLIC_GOOGLE_CAL_API_KEY` | Nie | Google Calendar API |
+| `GOOGLE_CAL_CALENDAR_ID` | Nie | Google Calendar ID |
+| `FINNHUB_NEWS_KEY` | Nie | Finnhub news feed |
+| `FRED_API_KEY` | Nie | FRED economic data |
+| `EIA_API_KEY` | Nie | EIA energy data |
+| `OPENAI_API_KEY` | Nie | OpenAI embeddings (AI assistant) |
+| `LATITUDE` | Nie | Szerokosc geograficzna (default: 53.43) |
+| `LONGITUDE` | Nie | Dlugosc geograficzna (default: 14.55) |
+| `TIMEZONE` | Nie | Strefa czasowa (default: Europe/Warsaw) |
+| `CITY_NAME` | Nie | Nazwa miasta (default: Szczecin) |
+
+Skopiuj `.env.example` do `.env.local` i uzupelnij wartosci.
+
+## Local Development
+
 ```bash
-docker build -t life-os .
-docker run -p 80:80 life-os
+npm install
+cp .env.example .env.local
+# uzupelnij .env.local
+npm run dev
 ```
-
-### Cloudflare Worker (CORS Proxy)
-```bash
-# 1. Install wrangler
-npm install -g wrangler
-
-# 2. Login
-wrangler login
-
-# 3. Create KV namespace for rate limiting
-wrangler kv:namespace create RATE_LIMIT_KV
-# Copy the namespace ID from the output
-
-# 4. Update wrangler.toml with your KV namespace ID
-# Replace <YOUR_KV_NAMESPACE_ID> in wrangler.toml
-
-# 5. Deploy
-wrangler deploy
-
-# 6. Update CSP connect-src in index.html with your worker URL
-```
-
-### Local Development
-```bash
-python -m http.server 8080
-# or
-npx http-server -p 8080
-```
-
-## Configuration
-
-### Location / Timezone
-Edit `CONFIG.WEATHER_API` in `app.js`:
-```js
-LATITUDE: 53.4285,   // Your latitude
-LONGITUDE: 14.5528,  // Your longitude
-TIMEZONE: 'Europe/Berlin'
-```
-
-### Theme
-```html
-<html data-theme="dark" data-palette="reaktor">
-```
-Palettes: `reaktor`, `strefa`, `zimna`, `niebieski`, `nocny`, `biala`
-
-### API Keys
-Market news APIs are configured in `CONFIG.MARKET_NEWS`:
-- Finnhub (stock news)
-- FRED (economic data)
-- EIA (energy data)
 
 ## Testing
 
-Run medical calculator regression tests:
 ```bash
-# Node.js
-node tests/calc-tests.js
-
-# Browser: paste contents of tests/calc-tests.js into console
+npm test              # uruchom testy
+npm run test:coverage # testy z pokryciem kodu
 ```
 
 ## Browser Support
