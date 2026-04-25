@@ -1,6 +1,12 @@
 import type { StateCreator } from 'zustand';
 import type { LocalTodo } from '@/types/state';
 
+/**
+ * TodosSlice — offline fallback store.
+ * Source of truth: Supabase via TanStack Query (lib/queries/use-todos.ts).
+ * This slice remains for offline-first localStorage persistence when Supabase
+ * is unreachable; UI components should prefer the TanStack Query hooks.
+ */
 export interface TodosSlice {
   todos: LocalTodo[];
   archivedTodos: (LocalTodo & { archivedAt?: string })[];

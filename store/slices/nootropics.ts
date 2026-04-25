@@ -1,6 +1,12 @@
 import type { StateCreator } from 'zustand';
 import type { LocalNootropic } from '@/types/state';
 
+/**
+ * NootropicsSlice — offline fallback store.
+ * Source of truth: Supabase via TanStack Query (lib/queries/use-nootropics.ts).
+ * This slice remains for offline-first localStorage persistence when Supabase
+ * is unreachable; UI components should prefer the TanStack Query hooks.
+ */
 export interface NootropicsSlice {
   nootropics: LocalNootropic[];
   nootropicLog: Record<string, Record<string, string>>;

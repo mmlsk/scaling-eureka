@@ -13,13 +13,14 @@
 |          |                    |                                  |
 |  +-------v--------------------v-----------+                     |
 |  |        Zustand Store (slices)          |                     |
-|  |  habits | nootropics | sleep |         |                     |
-|  |  todos | calendar | dashboard          |                     |
+|  |  UI: theme | timer | layout | feelings |                     |
+|  |  (offline fallback: todos/habits/etc.) |                     |
 |  +-------+--------------------+-----------+                     |
 |          |                    |                                  |
 |  +-------v-----------+  +----v-----------------+                |
 |  | TanStack Query    |  | Dexie (IndexedDB)    |                |
-|  |  (cache+fetch)    |  |  offline-first        |                |
+|  |  (source of truth |  |  offline queue        |                |
+|  |   for domain data)|  |  + notepad             |                |
 |  +-------+-----------+  +----+-----------------+                |
 |          |                    |                                  |
 +----------+--------------------+---------------------------------+
@@ -39,6 +40,17 @@
 |  Rate limit (KV) -> Polygon, Finnhub, Alpha Vantage, etc.      |
 +-----------------------------------------------------------------+
 ```
+
+## Source of truth
+
+| Domena | Source of truth | Cache | Offline |
+|--------|----------------|-------|---------|
+| Theme, timer, layout, UI flags | **Zustand** (z persist) | — | localStorage |
+| Todos, habits, nootropics, sleep_log | **Supabase** (przez TanStack Query) | TanStack cache | Background sync z Dexie queue |
+| Notepad markdown | **Dexie** (offline-first) | — | Push do Supabase async |
+
+TanStack Query hooki: `lib/queries/use-todos.ts`, `use-habits.ts`, `use-nootropics.ts`, `use-sleep.ts`.
+Zustand slices (`store/slices/`) pozostaja jako offline fallback, ale **nie sa** kanoniczne dla domain data.
 
 ## Module boundaries
 

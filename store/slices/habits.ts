@@ -1,6 +1,12 @@
 import type { StateCreator } from 'zustand';
 import type { LocalHabit } from '@/types/state';
 
+/**
+ * HabitsSlice — offline fallback store.
+ * Source of truth: Supabase via TanStack Query (lib/queries/use-habits.ts).
+ * This slice remains for offline-first localStorage persistence when Supabase
+ * is unreachable; UI components should prefer the TanStack Query hooks.
+ */
 export interface HabitsSlice {
   habits: LocalHabit[];
   addHabit: (name: string) => void;
