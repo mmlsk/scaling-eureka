@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useHydration } from '@/hooks/useHydration';
 import { TICKERS, MACRO_LIST, fetchYahoo } from '@/lib/providers/stocks';
 import { formatPrice, formatPercent } from '@/lib/utils/format';
@@ -11,10 +12,7 @@ type TabKey = 'portfel' | 'makro';
 interface StockRow {
   config: TickerConfig;
   quote: QuoteResult | null;
-  loading: boolean;
 }
-
-const REFRESH_INTERVAL_S = 120;
 
 function isNYSEOpen(): boolean {
   const nyDate = new Date(
@@ -24,6 +22,20 @@ function isNYSEOpen(): boolean {
   if (day === 0 || day === 6) return false;
   const totalMin = nyDate.getHours() * 60 + nyDate.getMinutes();
   return totalMin >= 570 && totalMin < 960;
+}
+
+async function fetchStocks(tickers: TickerConfig[]): Promise<StockRow[]> {
+  const results = await Promise.allSettled(
+    tickers.map((t) => fetchYahoo(t.sym)),
+  );
+
+  return tickers.map((config, idx) => {
+    const result = results[idx];
+    return {
+      config,
+      quote: result.status === 'fulfilled' ? result.value : null,
+    };
+  });
 }
 
 function Sparkline({ closes }: { closes: number[] }) {
@@ -69,67 +81,43 @@ function SkeletonRow() {
   );
 }
 
+const REFRESH_INTERVAL_S = 120;
+
 export default function StocksWidget() {
   const hydrated = useHydration();
   const [tab, setTab] = useState<TabKey>('portfel');
-  const [rows, setRows] = useState<StockRow[]>([]);
   const [countdown, setCountdown] = useState(REFRESH_INTERVAL_S);
   const [marketOpen, setMarketOpen] = useState(false);
-  const fetchingRef = useRef(false);
 
   const tickers = tab === 'portfel' ? TICKERS : MACRO_LIST;
 
-  const fetchAll = useCallback(async () => {
-    if (fetchingRef.current) return;
-    fetchingRef.current = true;
-
-    const initialRows: StockRow[] = tickers.map((config) => ({
-      config,
-      quote: null,
-      loading: true,
-    }));
-    setRows(initialRows);
-
-    const results = await Promise.allSettled(
-      tickers.map((t) => fetchYahoo(t.sym)),
-    );
-
-    const updatedRows: StockRow[] = tickers.map((config, idx) => {
-      const result = results[idx];
-      return {
-        config,
-        quote: result.status === 'fulfilled' ? result.value : null,
-        loading: false,
-      };
-    });
-
-    setRows(updatedRows);
-    setCountdown(REFRESH_INTERVAL_S);
-    fetchingRef.current = false;
-  }, [tickers]);
+  const { data: rows, isLoading } = useQuery({
+    queryKey: ['stocks', tab],
+    queryFn: () => fetchStocks(tickers),
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    retry: 2,
+    refetchOnWindowFocus: false,
+    refetchInterval: REFRESH_INTERVAL_S * 1000,
+    enabled: hydrated,
+  });
 
   useEffect(() => {
     if (!hydrated) return;
     setMarketOpen(isNYSEOpen());
-    void fetchAll();
-  }, [hydrated, fetchAll]);
+  }, [hydrated]);
 
-  // Countdown timer
+  // Countdown timer (visual only)
   useEffect(() => {
     if (!hydrated) return;
+    setCountdown(REFRESH_INTERVAL_S);
 
     const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          void fetchAll();
-          return REFRESH_INTERVAL_S;
-        }
-        return prev - 1;
-      });
+      setCountdown((prev) => (prev <= 1 ? REFRESH_INTERVAL_S : prev - 1));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [hydrated, fetchAll]);
+  }, [hydrated, rows]);
 
   if (!hydrated) {
     return (
@@ -172,13 +160,9 @@ export default function StocksWidget() {
         </div>
       </div>
       <div className="widget-body">
-        {rows.length === 0
+        {isLoading || !rows
           ? Array.from({ length: 5 }, (_, i) => <SkeletonRow key={i} />)
           : rows.map((row) => {
-              if (row.loading) {
-                return <SkeletonRow key={row.config.sym} />;
-              }
-
               const q = row.quote;
               const isUp = q ? q.chg >= 0 : true;
 

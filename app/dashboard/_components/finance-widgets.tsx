@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useHydration } from '@/hooks/useHydration';
 import { PIZZA_INDEX } from '@/lib/providers/finance';
 import type { PolymarketEvent, InsiderTrade, SECFiling, TrumpNewsItem } from '@/types/api';
@@ -15,14 +16,6 @@ const TAB_LABELS: Record<FinanceTab, string> = {
   trump: 'Trump Tracker',
 };
 
-interface FinanceState {
-  polymarket: PolymarketEvent[];
-  insiders: InsiderTrade[];
-  sec: SECFiling[];
-  trump: TrumpNewsItem[];
-  loading: Record<FinanceTab, boolean>;
-}
-
 function parseOutcomePrices(pricesStr: string): number[] {
   try {
     const parsed: string[] = JSON.parse(pricesStr);
@@ -32,53 +25,27 @@ function parseOutcomePrices(pricesStr: string): number[] {
   }
 }
 
+async function fetchPolymarket(): Promise<PolymarketEvent[]> {
+  const res = await fetch(
+    'https://gamma-api.polymarket.com/events?limit=10&active=true&closed=false',
+  );
+  if (!res.ok) throw new Error('Polymarket fetch failed');
+  return res.json();
+}
+
 export default function FinanceWidgets() {
   const hydrated = useHydration();
   const [tab, setTab] = useState<FinanceTab>('polymarket');
-  const [state, setState] = useState<FinanceState>({
-    polymarket: [],
-    insiders: [],
-    sec: [],
-    trump: [],
-    loading: {
-      polymarket: false,
-      insiders: false,
-      sec: false,
-      pizza: false,
-      trump: false,
-    },
+
+  const polymarketQuery = useQuery({
+    queryKey: ['finance', 'polymarket'],
+    queryFn: fetchPolymarket,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 2,
+    refetchOnWindowFocus: false,
+    enabled: hydrated && tab === 'polymarket',
   });
-
-  const fetchPolymarketData = useCallback(async () => {
-    setState((prev) => ({
-      ...prev,
-      loading: { ...prev.loading, polymarket: true },
-    }));
-    try {
-      const res = await fetch(
-        'https://gamma-api.polymarket.com/events?limit=10&active=true&closed=false',
-      );
-      if (!res.ok) throw new Error('Polymarket fetch failed');
-      const data: PolymarketEvent[] = await res.json();
-      setState((prev) => ({
-        ...prev,
-        polymarket: data,
-        loading: { ...prev.loading, polymarket: false },
-      }));
-    } catch {
-      setState((prev) => ({
-        ...prev,
-        loading: { ...prev.loading, polymarket: false },
-      }));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    if (tab === 'polymarket' && state.polymarket.length === 0) {
-      void fetchPolymarketData();
-    }
-  }, [hydrated, tab, state.polymarket.length, fetchPolymarketData]);
 
   if (!hydrated) {
     return (
@@ -119,19 +86,19 @@ export default function FinanceWidgets() {
         <div className="max-h-52 overflow-y-auto">
           {tab === 'polymarket' && (
             <PolymarketTab
-              events={state.polymarket}
-              loading={state.loading.polymarket}
+              events={polymarketQuery.data ?? []}
+              loading={polymarketQuery.isLoading}
             />
           )}
           {tab === 'insiders' && (
-            <InsidersTab insiders={state.insiders} loading={state.loading.insiders} />
+            <InsidersTab insiders={[]} loading={false} />
           )}
           {tab === 'sec' && (
-            <SECTab filings={state.sec} loading={state.loading.sec} />
+            <SECTab filings={[]} loading={false} />
           )}
           {tab === 'pizza' && <PizzaTab />}
           {tab === 'trump' && (
-            <TrumpTab news={state.trump} loading={state.loading.trump} />
+            <TrumpTab news={[]} loading={false} />
           )}
         </div>
       </div>

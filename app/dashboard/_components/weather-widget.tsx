@@ -1,17 +1,14 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useHydration } from '@/hooks/useHydration';
 import { weatherLabel, weatherIcon } from '@/lib/providers/weather';
-import type { WeatherData, AirQuality, UVData, IMGWAlert } from '@/types/state';
+import type { WeatherData, AirQuality, UVData } from '@/types/state';
 
-interface WeatherState {
-  weather: WeatherData | null;
+interface WeatherResult {
+  weather: WeatherData;
   airQuality: AirQuality | null;
   uvData: UVData | null;
-  alerts: IMGWAlert[];
-  loading: boolean;
-  error: string | null;
 }
 
 function aqBadge(pm25: number): { label: string; cls: string } {
@@ -26,84 +23,65 @@ function uvBadge(uv: number): { label: string; cls: string } {
   return { label: 'Wysoki', cls: 'crit' };
 }
 
-export default function WeatherWidget() {
-  const hydrated = useHydration();
-  const [state, setState] = useState<WeatherState>({
-    weather: null,
-    airQuality: null,
-    uvData: null,
-    alerts: [],
-    loading: true,
-    error: null,
+async function fetchWeatherData(): Promise<WeatherResult> {
+  const params = new URLSearchParams({
+    latitude: '53.43',
+    longitude: '14.55',
+    timezone: 'Europe/Warsaw',
+    current: 'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code',
+    daily: 'weather_code,temperature_2m_max,temperature_2m_min',
+    forecast_days: '7',
   });
 
-  const fetchWeatherData = useCallback(async () => {
-    try {
-      setState((prev) => ({ ...prev, loading: true, error: null }));
+  const weatherRes = await fetch(
+    `https://api.open-meteo.com/v1/forecast?${params.toString()}`,
+  );
 
-      const params = new URLSearchParams({
-        latitude: '53.43',
-        longitude: '14.55',
-        timezone: 'Europe/Warsaw',
-        current: 'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code',
-        daily: 'weather_code,temperature_2m_max,temperature_2m_min',
-        forecast_days: '7',
-      });
+  if (!weatherRes.ok) throw new Error('Weather fetch failed');
+  const weather: WeatherData = await weatherRes.json();
 
-      const weatherRes = await fetch(
-        `https://api.open-meteo.com/v1/forecast?${params.toString()}`,
-      );
-
-      if (!weatherRes.ok) throw new Error('Weather fetch failed');
-      const weatherData: WeatherData = await weatherRes.json();
-
-      // Try air quality (non-blocking)
-      let aq: AirQuality | null = null;
-      try {
-        const aqParams = new URLSearchParams({
-          latitude: '53.43',
-          longitude: '14.55',
-          current: 'pm2_5,pm10,uv_index',
-        });
-        const aqRes = await fetch(
-          `https://air-quality-api.open-meteo.com/v1/air-quality?${aqParams.toString()}`,
-        );
-        if (aqRes.ok) {
-          const aqData = await aqRes.json() as { current: { pm2_5: number; pm10: number; uv_index: number } };
-          aq = {
-            pm25: aqData.current.pm2_5,
-            pm10: aqData.current.pm10,
-            uv: aqData.current.uv_index,
-          };
-        }
-      } catch {
-        // AQ optional
-      }
-
-      setState({
-        weather: weatherData,
-        airQuality: aq,
-        uvData: aq ? { uv: aq.uv, uvMax: aq.uv } : null,
-        alerts: [],
-        loading: false,
-        error: null,
-      });
-    } catch (err) {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
-        error: err instanceof Error ? err.message : 'Unknown error',
-      }));
+  // Try air quality (non-blocking)
+  let airQuality: AirQuality | null = null;
+  let uvData: UVData | null = null;
+  try {
+    const aqParams = new URLSearchParams({
+      latitude: '53.43',
+      longitude: '14.55',
+      current: 'pm2_5,pm10,uv_index',
+    });
+    const aqRes = await fetch(
+      `https://air-quality-api.open-meteo.com/v1/air-quality?${aqParams.toString()}`,
+    );
+    if (aqRes.ok) {
+      const aqData = await aqRes.json() as { current: { pm2_5: number; pm10: number; uv_index: number } };
+      airQuality = {
+        pm25: aqData.current.pm2_5,
+        pm10: aqData.current.pm10,
+        uv: aqData.current.uv_index,
+      };
+      uvData = { uv: airQuality.uv, uvMax: airQuality.uv };
     }
-  }, []);
+  } catch {
+    // AQ optional
+  }
 
-  useEffect(() => {
-    if (hydrated) {
-      void fetchWeatherData();
-    }
-  }, [hydrated, fetchWeatherData]);
+  return { weather, airQuality, uvData };
+}
 
-  if (!hydrated || state.loading) {
+export default function WeatherWidget() {
+  const hydrated = useHydration();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['weather', '53.43', '14.55'],
+    queryFn: fetchWeatherData,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 2,
+    refetchOnWindowFocus: false,
+    enabled: hydrated,
+  });
+
+  if (!hydrated || isLoading) {
     return (
       <div className="widget">
         <div className="widget-header">Pogoda</div>
@@ -121,18 +99,18 @@ export default function WeatherWidget() {
     );
   }
 
-  if (state.error || !state.weather) {
+  if (error || !data) {
     return (
       <div className="widget">
         <div className="widget-header">Pogoda</div>
         <div className="widget-body" style={{ color: 'var(--az)' }}>
-          {state.error ?? 'Brak danych pogodowych'}
+          {error instanceof Error ? error.message : 'Brak danych pogodowych'}
         </div>
       </div>
     );
   }
 
-  const { weather, airQuality, uvData, alerts } = state;
+  const { weather, airQuality, uvData } = data;
   const cur = weather.current;
 
   return (
@@ -153,18 +131,6 @@ export default function WeatherWidget() {
         </div>
       </div>
       <div className="widget-body">
-        {/* IMGW Alerts Banner */}
-        {alerts.length > 0 && (
-          <div
-            className="rounded p-2 mb-2 text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)]"
-            style={{ background: 'rgba(194,49,39,0.12)', color: 'var(--az)' }}
-          >
-            {alerts.map((alert, idx) => (
-              <div key={idx}>{alert.phenomena ?? alert.description ?? 'Alert IMGW'}</div>
-            ))}
-          </div>
-        )}
-
         {/* Current conditions */}
         <div className="flex items-start gap-3 mb-3">
           <div>
