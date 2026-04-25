@@ -487,6 +487,17 @@ body::before {
 
 .pal-swatch.active { border-color: var(--a1); }
 
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .progress-fill,
+  .widget-shell,
+  *[class*='animate-'] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* DnD drag styles */
 .dragging {
   opacity: 0.5;
