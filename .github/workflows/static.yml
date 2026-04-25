@@ -35,10 +35,13 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_FINNHUB_API_KEY: ${{ secrets.NEXT_PUBLIC_FINNHUB_API_KEY }}
-          NEXT_PUBLIC_OPENAQ_KEY: '31be3947719d5998e4cff9ebc398e68ea9f3d2cc9d356b201ad130bc6f48b305'
-          NEXT_PUBLIC_OPENUV_KEY: 'openuv-4gq73rmnyg313s-io'
-          NEXT_PUBLIC_GOOGLE_CAL_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_CAL_API_KEY }}
+          NEXT_PUBLIC_POLYGON_KEY: ${{ secrets.NEXT_PUBLIC_POLYGON_KEY }}
+          NEXT_PUBLIC_ALPHAVANTAGE_KEY: ${{ secrets.NEXT_PUBLIC_ALPHAVANTAGE_KEY }}
+          NEXT_PUBLIC_FINNHUB_KEY: ${{ secrets.NEXT_PUBLIC_FINNHUB_KEY }}
+          NEXT_PUBLIC_OPENAQ_KEY: ${{ secrets.NEXT_PUBLIC_OPENAQ_KEY }}
+          NEXT_PUBLIC_OPENUV_KEY: ${{ secrets.NEXT_PUBLIC_OPENUV_KEY }}
+          NEXT_PUBLIC_FRED_KEY: ${{ secrets.NEXT_PUBLIC_FRED_KEY }}
+          NEXT_PUBLIC_EIA_KEY: ${{ secrets.NEXT_PUBLIC_EIA_KEY }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
