@@ -8,6 +8,9 @@ import { createNootropicsSlice, type NootropicsSlice } from '@/store/slices/noot
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
 
+/** Isolate timer session count so ticking doesn't re-render analytics */
+const useTimerSession = () => useLifeOsStore((s) => s.timerSession);
+
 const useHabitsStore = create<HabitsSlice>()(
   persist(createHabitsSlice, { name: 'life-os-habits' }),
 );
@@ -170,7 +173,7 @@ export default function AnalyticsWidget() {
   const hydrated = useHydration();
   const habits = useHabitsStore((s) => s.habits);
   const nootropics = useNootropicsStore((s) => s.nootropics);
-  const timer = useLifeOsStore((s) => s.timer);
+  const timerSession = useTimerSession();
 
   const completionRates = useMemo(() => computeCompletionRates(habits), [habits]);
 
@@ -213,7 +216,7 @@ export default function AnalyticsWidget() {
             Nootropy: {nootropicsTakenPct.toFixed(0)}%
           </span>
           <span className="pill">
-            Pomodoro: {timer.session}
+            Pomodoro: {timerSession}
           </span>
         </div>
 
@@ -245,12 +248,12 @@ export default function AnalyticsWidget() {
           />
           <CorrelationBar
             label="Pomodoro sesje"
-            value={Math.min(timer.session * 10, 100)}
+            value={Math.min(timerSession * 10, 100)}
             maxValue={100}
           />
           <CorrelationBar
             label="Ogólna produktywność"
-            value={(avgCompletion + nootropicsTakenPct + Math.min(timer.session * 10, 100)) / 3}
+            value={(avgCompletion + nootropicsTakenPct + Math.min(timerSession * 10, 100)) / 3}
             maxValue={100}
           />
         </div>

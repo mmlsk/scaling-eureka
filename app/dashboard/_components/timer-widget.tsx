@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
 import { fmtTime } from '@/lib/utils/format';
@@ -8,10 +9,14 @@ import { fmtTime } from '@/lib/utils/format';
 export default function TimerWidget() {
   const hydrated = useHydration();
   const timer = useLifeOsStore((s) => s.timer);
-  const startTimer = useLifeOsStore((s) => s.startTimer);
-  const pauseTimer = useLifeOsStore((s) => s.pauseTimer);
-  const resetTimer = useLifeOsStore((s) => s.resetTimer);
-  const cyclePreset = useLifeOsStore((s) => s.cyclePreset);
+  const { startTimer, pauseTimer, resetTimer, cyclePreset } = useLifeOsStore(
+    useShallow((s) => ({
+      startTimer: s.startTimer,
+      pauseTimer: s.pauseTimer,
+      resetTimer: s.resetTimer,
+      cyclePreset: s.cyclePreset,
+    })),
+  );
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 

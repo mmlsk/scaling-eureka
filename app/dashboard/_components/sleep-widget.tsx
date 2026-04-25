@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
 
@@ -20,8 +21,9 @@ const QUALITY_CLASSES: Record<SleepQuality, string> = {
 
 export default function SleepWidget() {
   const hydrated = useHydration();
-  const sleep = useLifeOsStore((s) => s.sleep);
-  const setSleep = useLifeOsStore((s) => s.setSleep);
+  const { sleep, setSleep } = useLifeOsStore(
+    useShallow((s) => ({ sleep: s.sleep, setSleep: s.setSleep })),
+  );
 
   const [editingField, setEditingField] = useState<'start' | 'stop' | null>(null);
   const [quality, setQuality] = useState<SleepQuality>('med');
