@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createNootropicsSlice, type NootropicsSlice } from '@/store/slices/nootropics';
@@ -25,14 +25,23 @@ export default function NootropicsWidget() {
     const trimmedName = newName.trim();
     const trimmedDose = newDose.trim();
     if (!trimmedName) return;
-    addNootropic(trimmedName, trimmedDose || '—');
+    addNootropic(trimmedName, trimmedDose || '\u2014');
     setNewName('');
     setNewDose('');
   }, [newName, newDose, addNootropic]);
 
+  const stats = useMemo(() => {
+    const taken = nootropics.filter((n) => n.status === 'taken').length;
+    const skipped = nootropics.filter((n) => n.status === 'skipped').length;
+    const pending = nootropics.filter((n) => n.status === 'pending').length;
+    return { taken, skipped, pending, total: nootropics.length };
+  }, [nootropics]);
+
+  const progressPct = stats.total > 0 ? ((stats.taken + stats.skipped) / stats.total) * 100 : 0;
+
   if (!hydrated) {
     return (
-      <div className="widget">
+      <div className="widget" aria-label="Widget: Nootropy">
         <div className="widget-header">Nootropy</div>
         <div className="widget-body">
           <div className="skeleton" style={{ height: '4rem', width: '100%' }} />
@@ -41,20 +50,21 @@ export default function NootropicsWidget() {
     );
   }
 
-  const takenCount = nootropics.filter((n) => n.status === 'taken').length;
-  const totalCount = nootropics.length;
-
   return (
-    <div className="widget">
+    <div className="widget" aria-label="Widget: Nootropy">
       <div className="widget-header">
         <span>Nootropy</span>
         <div className="flex items-center gap-2">
-          {totalCount > 0 && (
-            <span className="pill">
-              {takenCount}/{totalCount}
+          {stats.total > 0 && (
+            <span className="pill" aria-label={`${stats.taken} z ${stats.total} przyjetych`}>
+              {stats.taken}/{stats.total}
             </span>
           )}
-          <button className="btn-secondary" onClick={() => setEditing(!editing)}>
+          <button
+            className="btn-secondary"
+            onClick={() => setEditing(!editing)}
+            aria-label={editing ? 'Zakoncz edycje' : 'Edytuj liste'}
+          >
             {editing ? 'Gotowe' : 'Edytuj'}
           </button>
         </div>
@@ -70,6 +80,7 @@ export default function NootropicsWidget() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleAdd();
               }}
+              aria-label="Nazwa nowego nootropu"
             />
             <input
               className="input-field"
@@ -80,16 +91,40 @@ export default function NootropicsWidget() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleAdd();
               }}
+              aria-label="Dawka nowego nootropu"
             />
-            <button className="btn-primary" onClick={handleAdd}>
+            <button className="btn-primary" onClick={handleAdd} aria-label="Dodaj nootrop">
               +
             </button>
           </div>
         )}
 
+        {/* Progress bar */}
+        {stats.total > 0 && (
+          <div className="mb-2">
+            <div className="progress-track">
+              <div
+                className="progress-fill"
+                style={{
+                  width: `${progressPct}%`,
+                  background: stats.taken === stats.total ? 'var(--nom)' : 'var(--a1)',
+                }}
+              />
+            </div>
+            <div
+              className="flex justify-between mt-0.5"
+              style={{ fontSize: 'clamp(0.4rem, 0.38rem + 0.06vw, 0.48rem)', color: 'var(--txf)' }}
+            >
+              <span>{stats.taken} przyjete</span>
+              {stats.skipped > 0 && <span>{stats.skipped} pominiete</span>}
+              {stats.pending > 0 && <span>{stats.pending} oczekuje</span>}
+            </div>
+          </div>
+        )}
+
         {nootropics.length === 0 ? (
           <div style={{ color: 'var(--txm)' }} className="text-center py-3">
-            Brak nootropów. Kliknij Edytuj aby dodać.
+            Brak nootropow. Kliknij Edytuj aby dodac.
           </div>
         ) : (
           <div className="space-y-1">
@@ -101,11 +136,28 @@ export default function NootropicsWidget() {
                 onClick={() => {
                   if (!editing) toggleNootropicStatus(idx);
                 }}
+                role="button"
+                tabIndex={0}
+                aria-label={`${noot.name} ${noot.dose} - status: ${noot.status}`}
+                onKeyDown={(e) => {
+                  if (!editing && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    toggleNootropicStatus(idx);
+                  }
+                }}
               >
                 <span className={`noot-status ${noot.status}`} />
                 <span className="flex-1 truncate">{noot.name}</span>
                 <span style={{ color: 'var(--txm)' }} className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)]">
                   {noot.dose}
+                </span>
+                <span
+                  style={{
+                    fontSize: 'clamp(0.4rem, 0.38rem + 0.06vw, 0.48rem)',
+                    color: noot.status === 'taken' ? 'var(--nom)' : noot.status === 'skipped' ? 'var(--az)' : 'var(--txf)',
+                  }}
+                >
+                  {noot.status === 'taken' ? '\u2713' : noot.status === 'skipped' ? '\u2717' : '\u2022'}
                 </span>
                 {editing && (
                   <button
@@ -115,6 +167,7 @@ export default function NootropicsWidget() {
                       e.stopPropagation();
                       removeNootropic(idx);
                     }}
+                    aria-label={`Usun ${noot.name}`}
                   >
                     X
                   </button>

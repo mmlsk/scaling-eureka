@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createTodosSlice, type TodosSlice } from '@/store/slices/todos';
@@ -21,9 +21,11 @@ const PRIORITY_COLORS: Record<Priority, string> = {
 
 const PRIORITY_LABELS: Record<Priority, string> = {
   H: 'Wysoki',
-  M: 'Średni',
+  M: 'Sredni',
   L: 'Niski',
 };
+
+const PRIORITY_ORDER: Record<Priority, number> = { H: 0, M: 1, L: 2 };
 
 export default function TodoWidget() {
   const hydrated = useHydration();
@@ -48,9 +50,21 @@ export default function TodoWidget() {
     setPriority(cycle[(idx + 1) % cycle.length]);
   }, [priority]);
 
+  const doneCount = useMemo(() => todos.filter((t) => t.done).length, [todos]);
+  const pendingCount = todos.length - doneCount;
+
+  // Sort: undone first (by priority), then done
+  const sortedTodos = useMemo(() => {
+    const indexed = todos.map((t, i) => ({ ...t, origIdx: i }));
+    return indexed.sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      return PRIORITY_ORDER[a.p] - PRIORITY_ORDER[b.p];
+    });
+  }, [todos]);
+
   if (!hydrated) {
     return (
-      <div className="widget">
+      <div className="widget" aria-label="Widget: Todo">
         <div className="widget-header">Todo</div>
         <div className="widget-body">
           <div className="skeleton" style={{ height: '4rem', width: '100%' }} />
@@ -59,19 +73,16 @@ export default function TodoWidget() {
     );
   }
 
-  const doneCount = todos.filter((t) => t.done).length;
-  const totalCount = todos.length;
-
   return (
-    <div className="widget">
+    <div className="widget" aria-label="Widget: Todo">
       <div className="widget-header">
         <span>Todo</span>
         <div className="flex items-center gap-2">
-          <span className="pill">
-            {doneCount}/{totalCount}
+          <span className="pill" aria-label={`${doneCount} z ${todos.length} wykonanych`}>
+            {doneCount}/{todos.length}
           </span>
           {doneCount > 0 && (
-            <button className="btn-secondary" onClick={archiveDone}>
+            <button className="btn-secondary" onClick={archiveDone} aria-label="Archiwizuj wykonane">
               Archiwizuj
             </button>
           )}
@@ -79,7 +90,7 @@ export default function TodoWidget() {
       </div>
       <div className="widget-body">
         {/* Add Input */}
-        <div className="flex gap-2 mb-3">
+        <div className="flex gap-2 mb-2">
           <input
             className="input-field flex-1"
             placeholder="Nowe zadanie..."
@@ -88,32 +99,55 @@ export default function TodoWidget() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleAdd();
             }}
+            aria-label="Nowe zadanie"
           />
           <button
             className={`pill ${PRIORITY_COLORS[priority]} cursor-pointer`}
             onClick={cyclePriority}
             title={`Priorytet: ${PRIORITY_LABELS[priority]}`}
+            aria-label={`Priorytet: ${PRIORITY_LABELS[priority]}, kliknij aby zmienic`}
           >
             {priority}
           </button>
-          <button className="btn-primary" onClick={handleAdd}>
+          <button className="btn-primary" onClick={handleAdd} aria-label="Dodaj zadanie">
             +
           </button>
         </div>
 
+        {/* Progress bar */}
+        {todos.length > 0 && (
+          <div className="mb-2">
+            <div className="progress-track">
+              <div
+                className="progress-fill"
+                style={{ width: `${(doneCount / todos.length) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Todo List */}
         {todos.length === 0 ? (
           <div style={{ color: 'var(--txm)' }} className="text-center py-3">
-            Brak zadań.
+            Brak zadan.
           </div>
         ) : (
           <div className="space-y-1 max-h-48 overflow-y-auto">
-            {todos.map((todo, idx) => (
+            {sortedTodos.map((todo) => (
               <div
-                key={`${todo.t}-${idx}`}
+                key={`${todo.t}-${todo.origIdx}`}
                 className="flex items-center gap-2 py-1 cursor-pointer"
                 style={{ borderBottom: '1px solid var(--div)' }}
-                onClick={() => toggleTodo(idx)}
+                onClick={() => toggleTodo(todo.origIdx)}
+                role="button"
+                tabIndex={0}
+                aria-label={`${todo.t} - priorytet ${PRIORITY_LABELS[todo.p]}, ${todo.done ? 'wykonane' : 'do zrobienia'}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTodo(todo.origIdx);
+                  }
+                }}
               >
                 <span
                   className="inline-block w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center"
@@ -140,6 +174,17 @@ export default function TodoWidget() {
                 <span className={`pill ${PRIORITY_COLORS[todo.p]}`}>{todo.p}</span>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Stats footer */}
+        {todos.length > 0 && (
+          <div
+            className="flex justify-between pt-1 mt-1"
+            style={{ borderTop: '1px solid var(--div)', fontSize: 'clamp(0.4rem, 0.38rem + 0.06vw, 0.48rem)', color: 'var(--txf)' }}
+          >
+            <span>{pendingCount} do zrobienia</span>
+            <span>{doneCount} wykonanych dzis</span>
           </div>
         )}
       </div>

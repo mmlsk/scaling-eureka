@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createHabitsSlice, type HabitsSlice } from '@/store/slices/habits';
@@ -29,9 +29,17 @@ export default function HabitsWidget() {
     setShowInput(false);
   }, [newHabitName, addHabit]);
 
+  // Today's progress
+  const todayStats = useMemo(() => {
+    const doneToday = habits.filter((h) => h.d.includes(0)).length;
+    return { done: doneToday, total: habits.length };
+  }, [habits]);
+
+  const progressPct = todayStats.total > 0 ? (todayStats.done / todayStats.total) * 100 : 0;
+
   if (!hydrated) {
     return (
-      <div className="widget">
+      <div className="widget" aria-label="Widget: Nawyki">
         <div className="widget-header">Nawyki</div>
         <div className="widget-body">
           <div className="skeleton" style={{ height: '4rem', width: '100%' }} />
@@ -41,12 +49,23 @@ export default function HabitsWidget() {
   }
 
   return (
-    <div className="widget">
+    <div className="widget" aria-label="Widget: Nawyki">
       <div className="widget-header">
         <span>Nawyki</span>
-        <button className="btn-secondary" onClick={() => setShowInput(!showInput)}>
-          + Dodaj
-        </button>
+        <div className="flex items-center gap-2">
+          {todayStats.total > 0 && (
+            <span className="pill" aria-label={`${todayStats.done} z ${todayStats.total} dzis`}>
+              {todayStats.done}/{todayStats.total}
+            </span>
+          )}
+          <button
+            className="btn-secondary"
+            onClick={() => setShowInput(!showInput)}
+            aria-label="Dodaj nawyk"
+          >
+            + Dodaj
+          </button>
+        </div>
       </div>
       <div className="widget-body">
         {showInput && (
@@ -60,6 +79,7 @@ export default function HabitsWidget() {
                 if (e.key === 'Enter') handleAddHabit();
               }}
               autoFocus
+              aria-label="Nazwa nowego nawyku"
             />
             <button className="btn-primary" onClick={handleAddHabit}>
               OK
@@ -67,9 +87,21 @@ export default function HabitsWidget() {
           </div>
         )}
 
+        {/* Today's progress bar */}
+        {todayStats.total > 0 && (
+          <div className="mb-3">
+            <div className="progress-track">
+              <div
+                className="progress-fill"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+          </div>
+        )}
+
         {habits.length === 0 ? (
           <div style={{ color: 'var(--txm)' }} className="text-center py-3">
-            Brak nawyków. Dodaj pierwszy nawyk.
+            Brak nawykow. Dodaj pierwszy nawyk.
           </div>
         ) : (
           <div className="space-y-2">
@@ -91,14 +123,21 @@ export default function HabitsWidget() {
                         key={dayIdx}
                         className={`habit-dot ${isDone ? 'done' : ''} ${isToday ? 'cur' : ''}`}
                         onClick={() => toggleHabitDay(hIdx, offset)}
-                        title={`${offset === 0 ? 'Dziś' : `${offset}d temu`}`}
+                        title={`${offset === 0 ? 'Dzis' : `${offset}d temu`}`}
+                        aria-label={`${habit.n}, ${offset === 0 ? 'dzis' : `${offset} dni temu`}: ${isDone ? 'zrobione' : 'niezrobione'}`}
                       />
                     );
                   })}
                 </div>
-                <span className="pill" style={{ minWidth: '2rem', textAlign: 'center' }}>
-                  {habit.s}
-                </span>
+                <div className="flex items-center gap-1">
+                  <span
+                    className="pill"
+                    style={{ minWidth: '2rem', textAlign: 'center' }}
+                    aria-label={`Seria: ${habit.s} dni`}
+                  >
+                    {habit.s > 0 && '\uD83D\uDD25'}{habit.s}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
