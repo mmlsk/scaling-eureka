@@ -9,7 +9,7 @@ import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
 
 /** Isolate timer session count so ticking doesn't re-render analytics */
-const useTimerSession = () => useLifeOsStore((s) => s.timerSession);
+const useTimerSession = () => useLifeOsStore((s) => s.timer.session);
 
 const useHabitsStore = create<HabitsSlice>()(
   persist(createHabitsSlice, { name: 'life-os-habits' }),
