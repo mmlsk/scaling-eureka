@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark" data-palette="reaktor">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0a09">
+<meta name="description" content="Personal Life OS - Todo, Weather, Finance, Health Tracker">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; connect-src 'self' https://api.open-meteo.com https://air-quality-api.open-meteo.com https://query1.finance.yahoo.com https://cdn.jsdelivr.net https://corsproxy.io https://api.allorigins.win https://finnhub.io https://ws.finnhub.io wss://ws.finnhub.io https://api.stlouisfed.org https://api.eia.gov https://api.openuv.io https://api.openaq.org https://danepubliczne.imgw.pl https://api.rainviewer.com https://gamma-api.polymarket.com https://data-api.polymarket.com https://date.nager.at https://www.googleapis.com https://api.polygon.io https://www.alphavantage.co; img-src 'self' data: https://tilecache.rainviewer.com; frame-src https://s3.tradingview.com https://www.tradingview.com;">
+<title>LIFE OS</title>
+<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkxJRkUgT1MiLAogICJzaG9ydF9uYW1lIjogIkxpZmVPUyIsCiAgImRlc2NyaXB0aW9uIjogIlBlcnNvbmFsIExpZmUgT1MgLSBUb2RvLCBXZWF0aGVyLCBGaW5hbmNlLCBIZWFsdGggVHJhY2tlciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMGIwYTA5IiwKICAidGhlbWVfY29sb3IiOiAiIzBiMGEwOSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbXQp9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+[data-palette="reaktor"][data-theme="dark"] {
+  --bg:#0b0a09;
+  --sur:#111009;
+  --sur2:#161410;
+  --soff:#1e1c17;
+  --sdyn:#28251e;
+  --div:#252219;
+  --bor:#302c22;
+  --tx:#c5c1b7;
+  --txm:#665f52;
+  --txf:#352f25;
+  --txi:#0b0a09;
+  --a1:#c4a24a;
+  --a1h:#b08c30;
+  --a1d:rgba(196,162,74,.10);
+  --a2:#d4581c;
+  --a2h:#bc4208;
+  --a2d:rgba(212,88,28,.10);
+  --az:#c23127;
+  --nom:#456e32;
+  --cold:#3a6480;
+}
+[data-palette="reaktor"][data-theme="light"] {
+  --bg:#edeae3;
+  --sur:#f2efe8;
+  --sur2:#f7f5f0;
+  --soff:#e6e2d9;
+  --sdyn:#d8d4c9;
+  --div:#cdc9be;
+  --bor:#c0bcb0;
+  --tx:#1a1710;
+  --txm:#6b6356;
+  --txf:#a8a296;
+  --txi:#f2efe8;
+  --a1:#8c6e1e;
+  --a1h:#7a5c0e;
+  --a1d:rgba(140,110,30,.1);
+  --a2:#b03a08;
+  --a2h:#962e00;
+  --a2d:rgba(176,58,8,.1);
+  --az:#aa2418;
+  --nom:#3a5e28;
+  --cold:#2c5068;
+}
+[data-palette="strefa"][data-theme="dark"] {
+  --bg:#080a06;
+  --sur:#0e1009;
+  --sur2:#14160d;
+  --soff:#1c1f14;
+  --sdyn:#24271a;
+  --div:#222519;
+  --bor:#2c301f;
+  --tx:#bec4ae;
+  --txm:#606850;
+  --txf:#303820;
+  --txi:#080a06;
+  --a1:#6a8a3a;
+  --a1h:#567228;
+  --a1d:rgba(106,138,58,.12);
+  --a2:#8a7a3a;
+  --a2h:#72620a;
+  --a2d:rgba(138,122,58,.10);
+  --az:#c04828;
+  --nom:#4a7030;
+  --cold:#4a6858;
+}
+[data-palette="strefa"][data-theme="light"] {
+  --bg:#ede8dc;
+  --sur:#f2ede0;
+  --sur2:#f8f4ea;
+  --soff:#e5e0d2;
+  --sdyn:#d8d2c2;
+  --div:#ccc6b4;
+  --bor:#bfb9a5;
+  --tx:#181408;
+  --txm:#6a6050;
+  --txf:#a8a090;
+  --txi:#f2ede0;
+  --a1:#4a6428;
+  --a1h:#385018;
+  --a1d:rgba(74,100,40,.1);
+  --a2:#7a6818;
+  --a2h:#5e5008;
+  --a2d:rgba(122,104,24,.1);
+  --az:#a84020;
+  --nom:#385428;
+  --cold:#3a5448;
+}
+[data-palette="zimna"][data-theme="dark"] {
+  --bg:#060606;
+  --sur:#0c0c0c;
+  --sur2:#121212;
+  --soff:#1a1a1a;
+  --sdyn:#222222;
+  --div:#1e1e1e;
+  --bor:#2a2a2a;
+  --tx:#d0ccc8;
+  --txm:#505050;
+  --txf:#282828;
+  --txi:#060606;
+  --a1:#b0c0cc;
+  --a1h:#90a8b8;
+  --a1d:rgba(176,192,204,.10);
+  --a2:#d8d0c4;
+  --a2h:#bcb4a8;
+  --a2d:rgba(216,208,196,.08);
+  --az:#a0a0a0;
+  --nom:#606060;
+  --cold:#98aab8;
+}
+[data-palette="zimna"][data-theme="light"] {
+  --bg:#f0f0ee;
+  --sur:#f6f6f4;
+  --sur2:#fafafa;
+  --soff:#e8e8e6;
+  --sdyn:#dcdcda;
+  --div:#d0d0ce;
+  --bor:#c4c4c2;
+  --tx:#121212;
+  --txm:#606060;
+  --txf:#aaaaaa;
+  --txi:#f6f6f4;
+  --a1:#485868;
+  --a1h:#384858;
+  --a1d:rgba(72,88,104,.1);
+  --a2:#888078;
+  --a2h:#706860;
+  --a2d:rgba(136,128,120,.1);
+  --az:#606060;
+  --nom:#484848;
+  --cold:#687888;
+}
+[data-palette="niebieski"][data-theme="dark"] {
+  --bg:#050810;
+  --sur:#090c1a;
+  --sur2:#0e1222;
+  --soff:#131828;
+  --sdyn:#1c2238;
+  --div:#141a28;
+  --bor:#1e2840;
+  --tx:#bcc8dc;
+  --txm:#485870;
+  --txf:#252e40;
+  --txi:#050810;
+  --a1:#4878b8;
+  --a1h:#3060a0;
+  --a1d:rgba(72,120,184,.12);
+  --a2:#6090c8;
+  --a2h:#4878b0;
+  --a2d:rgba(96,144,200,.10);
+  --az:#c04058;
+  --nom:#386890;
+  --cold:#7898c0;
+}
+[data-palette="niebieski"][data-theme="light"] {
+  --bg:#e8ecf4;
+  --sur:#eef1f8;
+  --sur2:#f4f6fc;
+  --soff:#e0e6f0;
+  --sdyn:#d4daea;
+  --div:#c8d0e4;
+  --bor:#bcc8da;
+  --tx:#0c1828;
+  --txm:#485870;
+  --txf:#a0b0c8;
+  --txi:#eef1f8;
+  --a1:#2858a8;
+  --a1h:#1c4890;
+  --a1d:rgba(40,88,168,.1);
+  --a2:#3870b8;
+  --a2h:#2858a0;
+  --a2d:rgba(56,112,184,.1);
+  --az:#b03050;
+  --nom:#286888;
+  --cold:#507898;
+}
+[data-palette="nocny"][data-theme="dark"] {
+  --bg:#060808;
+  --sur:#0c1010;
+  --sur2:#111618;
+  --soff:#181e20;
+  --sdyn:#20282a;
+  --div:#162022;
+  --bor:#1e2c2e;
+  --tx:#b8c4c4;
+  --txm:#485858;
+  --txf:#242e2e;
+  --txi:#060808;
+  --a1:#1ab0a8;
+  --a1h:#0c9890;
+  --a1d:rgba(26,176,168,.12);
+  --a2:#a83838;
+  --a2h:#903030;
+  --a2d:rgba(168,56,56,.10);
+  --az:#e03040;
+  --nom:#2a8060;
+  --cold:#3890a0;
+}
+[data-palette="nocny"][data-theme="light"] {
+  --bg:#e4ecec;
+  --sur:#eaf2f2;
+  --sur2:#f0f8f8;
+  --soff:#dce6e6;
+  --sdyn:#d0dcdc;
+  --div:#c4d0d0;
+  --bor:#b8c8c8;
+  --tx:#0c1818;
+  --txm:#485858;
+  --txf:#a0b4b4;
+  --txi:#eaf2f2;
+  --a1:#0c8880;
+  --a1h:#087068;
+  --a1d:rgba(12,136,128,.1);
+  --a2:#983028;
+  --a2h:#802820;
+  --a2d:rgba(152,48,40,.1);
+  --az:#c82838;
+  --nom:#1a6850;
+  --cold:#2a7888;
+}
+[data-palette="biala"][data-theme="dark"] {
+  --bg:#0e0a07;
+  --sur:#141009;
+  --sur2:#1a150d;
+  --soff:#221c14;
+  --sdyn:#2c2418;
+  --div:#241e14;
+  --bor:#302818;
+  --tx:#c8bfaa;
+  --txm:#6a5e48;
+  --txf:#362e1e;
+  --txi:#0e0a07;
+  --a1:#a83818;
+  --a1h:#902e08;
+  --a1d:rgba(168,56,24,.12);
+  --a2:#386438;
+  --a2h:#284c28;
+  --a2d:rgba(56,100,56,.10);
+  --az:#c82818;
+  --nom:#3a5828;
+  --cold:#386478;
+}
+[data-palette="biala"][data-theme="light"] {
+  --bg:#f0ece0;
+  --sur:#f5f2e6;
+  --sur2:#faf8f2;
+  --soff:#e8e4d6;
+  --sdyn:#dcd8c8;
+  --div:#d0ccba;
+  --bor:#c4c0ac;
+  --tx:#1a1408;
+  --txm:#7a6a58;
+  --txf:#b0a894;
+  --txi:#f5f2e6;
+  --a1:#8a3818;
+  --a1h:#722e0c;
+  --a1d:rgba(138,56,24,.1);
+  --a2:#386438;
+  --a2h:#285228;
+  --a2d:rgba(56,100,56,.1);
+  --az:#b82818;
+  --nom:#385828;
+  --cold:#386478;
+}
+*,:before,:after {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+html {
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body {
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  color:var(--tx);
+  background:var(--bg);
+  min-height:100vh;
+  min-height:-webkit-fill-available;
+  line-height:1.5;
+  transition:background .2s,color .2s;
+}
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.025;
+  mix-blend-mode:overlay;
+}
+button {
+  cursor:pointer;
+  background:none;
+  border:none;
+  font:inherit;
+  color:inherit;
+}
+input,textarea {
+  font:inherit;
+  color:inherit;
+}
+a {
+  color:inherit;
+  text-decoration:none;
+}
+::-webkit-scrollbar {
+  width:5px;
+  height:5px;
+}
+::-webkit-scrollbar-thumb {
+  background:var(--bor);
+  border-radius:3px;
+}
+.L {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.15em;
+  color:var(--txm);
+  line-height:1;
+}
+.L.br {
+  color:var(--tx);
+}
+.L.a1 {
+  color:var(--a1);
+}
+.L.a2 {
+  color:var(--a2);
+}
+.L.az {
+  color:var(--az);
+}
+.L.nom {
+  color:var(--nom);
+}
+.mono {
+  font-family:'IBM Plex Mono','Courier New',monospace;
+}
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.5rem 1rem;
+  background:var(--sur);
+  border-bottom:1px solid var(--bor);
+  position:sticky;
+  top:0;
+  z-index:100;
+  min-height:52px;
+  flex-wrap:wrap;
+}
+.logo {
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+}
+.clock-block {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+}
+.clock-time {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(1rem,.9rem + .5vw,1.25rem);
+  font-weight:300;
+  letter-spacing:.04em;
+  line-height:1;
+  color:var(--tx);
+}
+.clock-time.a1c {
+  color:var(--a1);
+}
+.clock-sep {
+  width:1px;
+  height:28px;
+  background:var(--bor);
+}
+.mkt-dot {
+  width:6px;
+  height:6px;
+  border-radius:9999px;
+}
+.mkt-dot.open {
+  background:var(--nom);
+}
+.mkt-dot.closed {
+  background:var(--txm);
+}
+.icon-btn {
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:3px;
+  color:var(--txm);
+  transition:all .1s;
+  cursor: pointer;
+}
+.icon-btn:hover {
+  color:var(--tx);
+  background:var(--soff);
+}
+.icon-btn:focus-visible {
+  outline: 2px solid var(--a1);
+  outline-offset: 2px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+.pal-row {
+  display:flex;
+  align-items:center;
+  gap:.375rem;
+  flex-wrap:wrap;
+}
+.pal-swatch {
+  width:18px;
+  height:18px;
+  border-radius:3px;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:all .12s;
+  position:relative;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.pal-swatch::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,var(--s-a1) 45%,var(--s-a2) 45%);
+}
+.pal-swatch:hover {
+  transform:scale(1.15);
+}
+.pal-swatch.active {
+  border-color:var(--tx);
+}
+.pal-swatch[data-p="reaktor"] {
+  --s-bg:#0b0a09;
+  --s-a1:#c4a24a;
+  --s-a2:#d4581c;
+  background:var(--s-bg);
+}
+.pal-swatch[data-p="strefa"] {
+  --s-bg:#080a06;
+  --s-a1:#6a8a3a;
+  --s-a2:#8a7a3a;
+  background:var(--s-bg);
+}
+.pal-swatch[data-p="zimna"] {
+  --s-bg:#060606;
+  --s-a1:#b0c0cc;
+  --s-a2:#d8d0c4;
+  background:var(--s-bg);
+}
+.pal-swatch[data-p="niebieski"] {
+  --s-bg:#050810;
+  --s-a1:#4878b8;
+  --s-a2:#6090c8;
+  background:var(--s-bg);
+}
+.pal-swatch[data-p="nocny"] {
+  --s-bg:#060808;
+  --s-a1:#1ab0a8;
+  --s-a2:#a83838;
+  background:var(--s-bg);
+}
+.pal-swatch[data-p="biala"] {
+  --s-bg:#f0ece0;
+  --s-a1:#8a3818;
+  --s-a2:#386438;
+  background:var(--s-bg);
+}
+.pal-label {
+  position:absolute;
+  bottom:calc(100% + 6px);
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--sur2);
+  border:1px solid var(--bor);
+  border-radius:3px;
+  padding:2px 5px;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--tx);
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .1s;
+}
+.pal-swatch:hover .pal-label {
+  opacity:1;
+}
+.toolbar {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.toolbar .ghost {
+  padding:.4rem .6rem;
+  border:1px solid var(--bor);
+  border-radius:4px;
+  background:var(--sur2);
+  color:var(--tx);
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  transition:all .1s;
+}
+.toolbar .ghost:hover {
+  border-color:var(--txm);
+  background:var(--soff);
+}
+.toolbar .ghost.a1 {
+  border-color:var(--a1);
+  color:var(--a1);
+}
+.toolbar .ghost.a2 {
+  border-color:var(--a2);
+  color:var(--a2);
+}
+.dash {
+  padding:1rem;
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:.75rem;
+  align-items:start;
+}
+.c2 {
+  grid-column:span 2;
+}
+.c3 {
+  grid-column:span 3;
+}
+.c4 {
+  grid-column:span 4;
+}
+.c5 {
+  grid-column:span 5;
+}
+.c6 {
+  grid-column:span 6;
+}
+.c7 {
+  grid-column:span 7;
+}
+.c8 {
+  grid-column:span 8;
+}
+.c12 {
+  grid-column:span 12;
+}
+.zone {
+  grid-column:span 12;
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:.25rem 0;
+}
+.zone-line {
+  flex:1;
+  height:1px;
+  background:var(--div);
+}
+.w {
+  background:var(--sur);
+  border:1px solid var(--bor);
+  border-radius:5px;
+  overflow:hidden;
+  transition:border-color .15s;
+}
+.w.critical {
+  border-color:var(--az);
+}
+.w.critical .wh {
+  border-bottom-color:rgba(194,49,39,.35);
+}
+.wh {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:.5rem .75rem;
+  border-bottom:1px solid var(--div);
+  background:var(--sur2);
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.wh-r {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.wb {
+  padding:.75rem;
+}
+.alert-dot {
+  width:5px;
+  height:5px;
+  border-radius:9999px;
+  background:var(--az);
+  flex-shrink:0;
+}
+.sleep-times {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:.75rem;
+}
+.sleep-val {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.875rem,.82rem + .3vw,1rem);
+  color:var(--tx);
+}
+.sleep-track,.timer-track {
+  position:relative;
+  height:18px;
+  background:var(--soff);
+  border-radius:3px;
+  margin-bottom:.75rem;
+  overflow:hidden;
+}
+.sseg {
+  position:absolute;
+  top:0;
+  height:100%;
+  border-radius:3px;
+}
+.sseg.core {
+  background:var(--cold);
+  left:18%;
+  width:40%;
+}
+.sseg.rem {
+  background:var(--a1);
+  left:58%;
+  width:20%;
+}
+.sseg.light {
+  background:var(--sdyn);
+  left:78%;
+  width:13%;
+}
+.qrow {
+  display:flex;
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.qb {
+  padding:2px .5rem;
+  border-radius:9999px;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  border:1px solid var(--bor);
+  cursor:pointer;
+  transition:all .1s;
+  color:var(--txm);
+}
+.qb:hover {
+  border-color: var(--txm);
+  color: var(--tx);
+}
+.qb:focus-visible {
+  outline: 2px solid var(--a1);
+  outline-offset: 2px;
+}
+.qb.active.bad {
+  background:rgba(194,49,39,.12);
+  border-color:var(--az);
+  color:var(--az);
+}
+.qb.active.med {
+  background:var(--a1d);
+  border-color:var(--a1);
+  color:var(--a1);
+}
+.qb.active.good {
+  background:rgba(69,110,50,.12);
+  border-color:var(--nom);
+  color:var(--nom);
+}
+.nl {
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.ni {
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:.375rem .75rem;
+  border-radius:3px;
+  transition:background .1s;
+}
+.ni:hover {
+  background:var(--soff);
+}
+.nd {
+  width:7px;
+  height:7px;
+  border-radius:9999px;
+  flex-shrink:0;
+}
+.nd.taken {
+  background:var(--nom);
+}
+.nd.pending {
+  background:var(--a1);
+}
+.nd.skip {
+  background:var(--txf);
+}
+.nn {
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  flex:1;
+}
+.ndose {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+}
+.fg {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+}
+.fc {
+  padding:2px .75rem;
+  border-radius:9999px;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:500;
+  border:1px solid var(--bor);
+  cursor:pointer;
+  transition:all .1s;
+  color:var(--txm);
+}
+.fc:hover {
+  border-color:var(--txm);
+  color:var(--tx);
+}
+.fc:focus-visible {
+  outline: 2px solid var(--a1);
+  outline-offset: 2px;
+}
+.fc.sel {
+  background:var(--a2d);
+  border-color:var(--a2);
+  color:var(--a2);
+}
+.cgrid {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:2px;
+}
+.cdl {
+  text-align:center;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--txm);
+  padding:2px 0;
+  margin-bottom:.25rem;
+}
+.cd {
+  aspect-ratio:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:3px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  cursor:pointer;
+  transition:all .1s;
+  position:relative;
+}
+.cd:hover {
+  background:var(--soff);
+  color:var(--tx);
+}
+.cd.other {
+  color:var(--txf);
+}
+.cd.today {
+  background:var(--a1);
+  color:var(--bg);
+  font-weight:600;
+}
+.cd.evt::after {
+  content:'';
+  position:absolute;
+  bottom:2px;
+  width:3px;
+  height:3px;
+  border-radius:9999px;
+  background:var(--a2);
+}
+.hl {
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.hr {
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+}
+.hn {
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  min-width:88px;
+}
+.hd {
+  display:flex;
+  gap:3px;
+  flex-wrap:wrap;
+}
+.dot {
+  width:11px;
+  height:11px;
+  border-radius:2px;
+  background:var(--soff);
+  cursor:pointer;
+  transition:background .1s;
+}
+.dot.done {
+  background:var(--nom);
+}
+.dot.cur {
+  box-shadow:0 0 0 1.5px var(--a1);
+}
+.hstr {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  margin-left:auto;
+}
+.tl {
+  display:flex;
+  flex-direction:column;
+}
+.ti {
+  display:flex;
+  align-items:flex-start;
+  gap:.75rem;
+  padding:.375rem .75rem;
+  transition:background .1s;
+  cursor:pointer;
+}
+.ti:hover {
+  background:var(--soff);
+}
+.tc {
+  width:13px;
+  height:13px;
+  border-radius:2px;
+  border:1.5px solid var(--bor);
+  flex-shrink:0;
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .1s;
+}
+.tc.done {
+  background:var(--nom);
+  border-color:var(--nom);
+}
+.tc.done::after {
+  content:'';
+  width:7px;
+  height:4px;
+  border-left:1.5px solid white;
+  border-bottom:1.5px solid white;
+  transform:rotate(-45deg) translate(1px,-1px);
+  display:block;
+}
+.tt {
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  line-height:1.4;
+  flex:1;
+}
+.tt.done {
+  text-decoration:line-through;
+  color:var(--txm);
+}
+.tp {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.05em;
+  flex-shrink:0;
+  padding-top:2px;
+}
+.tp.H {
+  color:var(--az);
+}
+.tp.M {
+  color:var(--a1);
+}
+.tp.L {
+  color:var(--txm);
+}
+.tadd {
+  display:flex;
+  gap:.5rem;
+  padding:.5rem .75rem;
+  border-top:1px solid var(--div);
+}
+.tinp {
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  color:var(--tx);
+}
+.tinp::placeholder,.nta::placeholder {
+  color:var(--txf);
+}
+.pl {
+  display:flex;
+  flex-direction:column;
+  gap:.75rem;
+}
+.pi {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.ph {
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:.5rem;
+}
+.pn {
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+}
+.pp {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+}
+.pt,.rbw {
+  height:3px;
+  background:var(--soff);
+  border-radius:9999px;
+  overflow:hidden;
+}
+.pf,.rb {
+  height:100%;
+  border-radius:9999px;
+  background:var(--a1);
+}
+.rfl {
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.ri {
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:.375rem .75rem;
+  border-radius:3px;
+  border:1px solid transparent;
+}
+.ri.crit {
+  background:rgba(194,49,39,.05);
+  border-color:rgba(194,49,39,.25);
+}
+.rn {
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  flex:1;
+}
+.rbw {
+  width:48px;
+  flex-shrink:0;
+}
+.rd {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  min-width:36px;
+  text-align:right;
+}
+.rd.crit {
+  color:var(--az);
+}
+.sl {
+  display:flex;
+  flex-direction:column;
+}
+.sr {
+  display:grid;
+  grid-template-columns:1fr 52px auto auto;
+  align-items:center;
+  gap:.75rem;
+  padding:.375rem .75rem;
+  border-bottom:1px solid var(--div);
+  transition:background .1s;
+}
+.sr:last-child {
+  border-bottom:none;
+}
+.sr:hover {
+  background:var(--soff);
+}
+.stk {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  font-weight:500;
+}
+.sn {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  margin-top:1px;
+}
+.sp {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  text-align:right;
+}
+.sc {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:600;
+  text-align:right;
+  min-width:50px;
+}
+.sc.up {
+  color:var(--nom);
+}
+.sc.dn {
+  color:var(--az);
+}
+.ntabs {
+  display:flex;
+  border-bottom:1px solid var(--div);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.ntabs::-webkit-scrollbar {
+  display:none;
+}
+.ntab {
+  padding:.5rem .75rem;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--txm);
+  border-bottom:2px solid transparent;
+  cursor:pointer;
+  transition:all .1s;
+  white-space:nowrap;
+  margin-bottom:-1px;
+  background:none;
+  border-top:none;
+  border-left:none;
+  border-right:none;
+}
+.ntab.active {
+  color:var(--a1);
+  border-bottom-color:var(--a1);
+}
+.ntab:hover:not(.active) {
+  color:var(--tx);
+}
+.np {
+  display:none;
+  flex-direction:column;
+}
+.np.active {
+  display:flex;
+}
+.nit {
+  display:flex;
+  gap:.75rem;
+  padding:.375rem .75rem;
+  border-bottom:1px solid var(--div);
+  cursor:pointer;
+  transition:background .1s;
+  align-items:flex-start;
+}
+.nit:last-child {
+  border-bottom:none;
+}
+.nit:hover {
+  background:var(--soff);
+}
+.ntm {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  white-space:nowrap;
+  padding-top:1px;
+  min-width:36px;
+}
+.nh {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+  line-height:1.45;
+}
+.ns {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  margin-top:2px;
+}
+.wtmp {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(2.5rem,1.5rem + 3.5vw,4rem);
+  font-weight:300;
+  line-height:1;
+  color:var(--tx);
+}
+.wfc {
+  display:flex;
+  gap:.5rem;
+  border-top:1px solid var(--div);
+  padding-top:.75rem;
+}
+.wfd {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+}
+.wfdl {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--txm);
+}
+.wfdt {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+}
+.nta {
+  width:100%;
+  background:transparent;
+  border:none;
+  outline:none;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+  line-height:1.8;
+  resize:none;
+  min-height:68px;
+}
+.timer-screen {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(2rem,1.2rem + 2vw,3rem);
+  line-height:1;
+  color:var(--tx);
+  margin-bottom:.75rem;
+}
+.timer-track {
+  height:4px;
+}
+.timer-fill {
+  height:100%;
+  background:var(--a1);
+  width:0%;
+  transition:width .2s linear;
+}
+.timer-meta {
+  display:flex;
+  justify-content:space-between;
+  gap:.5rem;
+  margin-top:.5rem;
+  flex-wrap:wrap;
+}
+.timer-btns {
+  display:flex;
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.btn {
+  padding:.4rem .6rem;
+  border:1px solid var(--bor);
+  border-radius:4px;
+  background:var(--sur2);
+  color:var(--tx);
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  transition:all .1s;
+}
+.btn:hover {
+  border-color:var(--txm);
+  background:var(--soff);
+}
+.btn.a1 {
+  border-color:var(--a1);
+  color:var(--a1);
+}
+.btn.a2 {
+  border-color:var(--a2);
+  color:var(--a2);
+}
+.btn.az {
+  border-color:var(--az);
+  color:var(--az);
+}
+.subgrid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.75rem;
+}
+.statusline {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.pill {
+  padding:2px .5rem;
+  border-radius:9999px;
+  border:1px solid var(--bor);
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.pill.a1 {
+  border-color:var(--a1);
+  color:var(--a1);
+  background:var(--a1d);
+}
+.pill.nom {
+  border-color:var(--nom);
+  color:var(--nom);
+  background:rgba(69,110,50,.12);
+}
+.pill.az {
+  border-color:var(--az);
+  color:var(--az);
+  background:rgba(194,49,39,.12);
+}
+.muted {
+  color:var(--txm);
+}
+.hidden {
+  display:none!important;
+}
+@media(max-width:1200px) {
+  .c3,.c4,.c5,.c6{grid-column:span 6}.c7,.c8{grid-column:span 12}.subgrid{grid-template-columns:1fr};
+}
+@media(max-width:768px) {
+  .c2,.c3,.c4,.c5,.c6,.c7,.c8{grid-column:span 12}.dash{padding:.75rem}.topbar{padding:.5rem .75rem}.clock-wrap{display:none!important};
+}
+/* ── STOCKS ENHANCED ── */.sp-pane {
+  display:none;
+}
+.sp-pane.active {
+  display:block;
+}
+.sr {
+  display:grid;
+  grid-template-columns:1fr 72px auto auto;
+  align-items:center;
+  gap:.5rem;
+  padding:.35rem .75rem;
+  border-bottom:1px solid var(--div);
+  transition:background .1s;
+}
+.sr:last-child {
+  border-bottom:none;
+}
+.sr:hover {
+  background:var(--soff);
+}
+.stk {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  font-weight:500;
+}
+.sn {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  margin-top:1px;
+}
+.sp {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  text-align:right;
+}
+.sc {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:600;
+  text-align:right;
+  min-width:54px;
+}
+.sc.up {
+  color:var(--nom);
+}
+.sc.dn {
+  color:var(--az);
+}
+.bs-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.75rem;
+  padding:.75rem;
+}
+.bs-form {
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.bs-row {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.bs-lbl {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--txm);
+  min-width:36px;
+}
+.bs-inp {
+  background:var(--soff);
+  border:1px solid var(--bor);
+  border-radius:3px;
+  padding:3px 6px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+  width:90px;
+  outline:none;
+  transition:border-color .1s;
+}
+.bs-inp:focus {
+  border-color:var(--a1);
+}
+.bs-sel {
+  background:var(--soff);
+  border:1px solid var(--bor);
+  border-radius:3px;
+  padding:3px 6px;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+  outline:none;
+}
+.bs-out {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2px;
+}
+.bs-orow {
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding:4px 0;
+  border-bottom:1px solid var(--div);
+}
+.bs-orow:last-child {
+  border-bottom:none;
+}
+.bs-oname {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--txm);
+}
+.bs-oval {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.75rem,.7rem + .25vw,.875rem);
+  color:var(--tx);
+}
+.bs-oval.price {
+  color:var(--a1);
+  font-weight:700;
+}
+.skeleton {
+  background:linear-gradient(90deg,var(--soff) 25%,var(--sdyn) 50%,var(--soff) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s ease-in-out infinite;
+  border-radius:3px;
+}
+@keyframes shimmer {
+  0%{background-position:-200% 0}100%{background-position:200% 0};
+}
+.skeleton-text {
+  height:1em;
+  margin-bottom:3px;
+}
+/* ── KALKULATORY KLINICZNE ── */.mp {
+  display:none;
+}
+.mp.active {
+  display:block;
+}
+.calc-row {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:.75rem;
+  padding:.75rem;
+}
+.calc-card {
+  background:var(--sur2);
+  border:1px solid var(--bor);
+  border-radius:5px;
+  overflow:hidden;
+}
+.calc-ch {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:.375rem .75rem;
+  border-bottom:1px solid var(--div);
+  background:var(--soff);
+}
+.calc-body {
+  display:grid;
+  grid-template-columns:1fr auto;
+}
+.calc-inp-col {
+  padding:.5rem .75rem;
+  display:flex;
+  flex-direction:column;
+  gap:.375rem;
+}
+.calc-res-col {
+  padding:.625rem .75rem;
+  border-left:1px solid var(--div);
+  min-width:116px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:.125rem;
+}
+.calc-score {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(1.75rem,1rem + 2.5vw,2.5rem);
+  font-weight:300;
+  line-height:1;
+  color:var(--tx);
+}
+.calc-unit {
+  font-size:clamp(.58rem,.55rem + .1vw,.7rem);
+  color:var(--txm);
+}
+.calc-badge {
+  display:inline-block;
+  padding:2px 7px;
+  border-radius:9999px;
+  font-size:clamp(.58rem,.55rem + .1vw,.7rem);
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.calc-badge.ok {
+  background:rgba(69,110,50,.15);
+  color:var(--nom);
+}
+.calc-badge.warn {
+  background:var(--a1d);
+  color:var(--a1);
+}
+.calc-badge.crit {
+  background:rgba(194,49,39,.15);
+  color:var(--az);
+}
+.calc-badge.info {
+  background:rgba(58,100,128,.12);
+  color:var(--cold);
+}
+.calc-interp {
+  font-size:clamp(.55rem,.52rem + .1vw,.68rem);
+  color:var(--txm);
+  text-align:center;
+  max-width:100px;
+  line-height:1.35;
+}
+.crow {
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.clbl {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--txm);
+  min-width:56px;
+  flex-shrink:0;
+}
+.cinp {
+  background:var(--soff);
+  border:1px solid var(--bor);
+  border-radius:3px;
+  padding:2px 5px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+  width:72px;
+  outline:none;
+  transition:border-color .1s;
+}
+.cinp:focus {
+  border-color:var(--a1);
+}
+.csel {
+  background:var(--soff);
+  border:1px solid var(--bor);
+  border-radius:3px;
+  padding:2px 5px;
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+  outline:none;
+}
+.cchk-row {
+  display:flex;
+  align-items:center;
+  gap:.375rem;
+  cursor:pointer;
+  padding:.1rem 0;
+}
+.cchk {
+  width:11px;
+  height:11px;
+  border-radius:2px;
+  flex-shrink:0;
+  accent-color:var(--a1);
+}
+.cchk-lbl {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--tx);
+}
+.cchk-pts {
+  font-size:clamp(.6rem,.58rem + .12vw,.72rem);
+  color:var(--txm);
+  margin-left:auto;
+  font-family:'IBM Plex Mono',monospace;
+}
+.calc-src {
+  display:block;
+  padding:.25rem .75rem;
+  font-size:clamp(.48rem,.46rem + .08vw,.56rem);
+  color:var(--txf);
+  border-top:1px solid var(--div);
+}
+.calc-warn-note {
+  font-size:clamp(.52rem,.5rem + .08vw,.62rem);
+  color:var(--a1);
+  font-weight:500;
+  margin-top:2px;
+}
+.calc-crit-note {
+  font-size:clamp(.52rem,.5rem + .08vw,.62rem);
+  color:var(--az);
+  font-weight:700;
+  margin-top:2px;
+}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px)}
+.modal-card{background:var(--sur2);border:1px solid var(--div);border-radius:5px;padding:1.5rem;width:min(90vw,400px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.modal-close{background:none;border:none;color:var(--tx);font-size:1.5rem;cursor:pointer}
+.modal-body{display:flex;flex-direction:column;gap:.5rem}
+.modal-footer{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1rem}
+.btn-pri{background:var(--a1);color:var(--txi);border:none;padding:.5rem 1.25rem;border-radius:3px;cursor:pointer;font-weight:500;font-size:clamp(.6rem,.58rem + .12vw,.72rem)}
+.btn-sec{background:var(--soff);color:var(--tx);border:1px solid var(--bor);padding:.5rem 1.25rem;border-radius:3px;cursor:pointer;font-size:clamp(.6rem,.58rem + .12vw,.72rem)}
+.analytics-section{padding:.75rem}
+.analytics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.75rem}
+.analytics-card{background:var(--sur2);border:1px solid var(--bor);border-radius:5px;padding:.75rem}
+.analytics-card .wh{margin-bottom:.5rem}
+.heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,14px);gap:2px}
+.heatmap-cell{width:12px;height:12px;border-radius:2px;background:var(--soff)}
+.heatmap-cell.l1{background:rgba(69,110,50,.2)}
+.heatmap-cell.l2{background:rgba(69,110,50,.4)}
+.heatmap-cell.l3{background:rgba(69,110,50,.6)}
+.heatmap-cell.l4{background:rgba(69,110,50,.85)}
+.cd.holiday{background:rgba(194,49,39,.08);color:var(--az);}
+.cd.holiday.today{background:rgba(194,49,39,.2);}
+.corr-row{display:flex;align-items:center;gap:.5rem;padding:.25rem 0;border-bottom:1px solid var(--div)}
+.corr-label{font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);flex:1}
+.corr-val{font-family:'IBM Plex Mono',monospace;font-size:clamp(.65rem,.6rem + .15vw,.75rem);font-weight:500}
+.trend-up{color:var(--nom)}
+.trend-down{color:var(--az)}
+.trend-neutral{color:var(--txm)}
+
+/* ═══════════════════════════════════════════════════
+   MARKET NEWS WIDGET STYLES
+   ═══════════════════════════════════════════════════ */
+.market-news-card {
+  grid-column: span 2;
+}
+
+.mn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent);
+}
+
+.mn-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--tx);
+  margin: 0;
+}
+
+.mn-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mn-tab {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  background: var(--bg3);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--tx);
+  transition: all 0.2s ease;
+}
+
+.mn-tab:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.mn-tab.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+
+.mn-content {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.mn-article {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--bg3);
+}
+
+.mn-article:last-child {
+  border-bottom: none;
+}
+
+.mn-article-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.mn-article-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mn-article-headline {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.mn-article-headline a {
+  color: var(--tx);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mn-article-headline a:hover {
+  color: var(--accent);
+}
+
+.mn-article-summary {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--txm);
+  line-height: 1.5;
+}
+
+.mn-article-meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--txs);
+  flex-wrap: wrap;
+}
+
+.mn-sentiment {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.mn-sentiment-positive {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.mn-sentiment-negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.mn-indicator-card,
+.mn-energy-card {
+  background: var(--bg3);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--accent);
+}
+
+.mn-indicator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.mn-indicator-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--tx);
+}
+
+.mn-trend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.trend-up {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.trend-down {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.mn-indicator-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.mn-value-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.mn-value-unit {
+  font-size: 0.8rem;
+  color: var(--txm);
+}
+
+.mn-indicator-date {
+  font-size: 0.75rem;
+  color: var(--txs);
+}
+
+.mn-energy-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.mn-energy-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.mn-energy-change {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.change-positive {
+  color: #22c55e;
+}
+
+.change-negative {
+  color: #ef4444;
+}
+
+.mn-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--bg3);
+}
+
+.mn-update-time {
+  color: var(--txs);
+  font-size: 0.75rem;
+}
+
+.mn-refresh-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  background: var(--bg3);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--tx);
+  transition: all 0.2s;
+}
+
+.mn-refresh-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.mn-loading {
+  text-align: center;
+  color: var(--txm);
+  padding: 2rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .market-news-card {
+    grid-column: span 1;
+  }
+  
+  .mn-article {
+    flex-direction: column;
+  }
+  
+  .mn-article-image {
+    width: 100%;
+    height: 150px;
+  }
+  
+  .mn-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .mn-tab {
+    flex: 1;
+    text-align: center;
+    min-width: 80px;
+  }
+}
+</style>
+</head>
+<body>
+<div style="display:grid;grid-template-rows:auto 1fr;min-height:100dvh;">
+<header class="topbar">
+  <div class="logo">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="Life OS"><rect x=".75" y=".75" width="24.5" height="24.5" rx="3" stroke="currentColor" stroke-width="1.2" opacity=".35"/><rect x="4" y="4" width="7" height="7" rx="1.2" fill="currentColor" opacity=".7"/><rect x="13" y="4" width="9" height="3.2" rx="1" fill="currentColor" opacity=".4"/><rect x="13" y="8.8" width="9" height="2" rx="1" fill="currentColor" opacity=".25"/><rect x="4" y="13.5" width="18" height="1.8" rx="1" fill="currentColor" opacity=".3"/><rect x="4" y="17" width="12" height="1.8" rx="1" fill="currentColor" opacity=".2"/><circle cx="20.5" cy="19" r="3.2" stroke="currentColor" stroke-width="1.2" opacity=".55"/><circle cx="20.5" cy="19" r=".9" fill="currentColor" opacity=".55"/></svg>
+    <span class="L br">Life OS</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+    <span class="L">Paleta</span>
+    <div class="pal-row">
+      <div class="pal-swatch active" data-p="reaktor" data-action="setPalette(this)"><span class="pal-label">REAKTOR</span></div>
+      <div class="pal-swatch" data-p="strefa" data-action="setPalette(this)"><span class="pal-label">STREFA</span></div>
+      <div class="pal-swatch" data-p="zimna" data-action="setPalette(this)"><span class="pal-label">ZIMNA WOJNA</span></div>
+      <div class="pal-swatch" data-p="niebieski" data-action="setPalette(this)"><span class="pal-label">NIEBIESKI</span></div>
+      <div class="pal-swatch" data-p="nocny" data-action="setPalette(this)"><span class="pal-label">NOCNY POŚCIG</span></div>
+      <div class="pal-swatch" data-p="biala" data-action="setPalette(this)"><span class="pal-label">BIAŁA NOC</span></div>
+    </div>
+  </div>
+  <div class="clock-wrap" style="display:flex;align-items:center;gap:1.25rem;">
+    <div class="clock-block"><div class="clock-time mono" id="ltime">--:--:--</div><div class="L" style="margin-top:2px;">Szczecin / CEST</div></div>
+    <div class="clock-sep"></div>
+    <div class="clock-block"><div class="clock-time a1c mono" id="ntime">--:--:--</div><div class="L" style="margin-top:2px;">NYSE / EDT</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <div class="L mono" id="cdate">--</div>
+    <div class="statusline"><div class="mkt-dot closed" id="mdot"></div><span class="L" id="mlabel">ZAMKNIĘTY</span></div>
+  </div>
+  <div class="toolbar">
+    <button class="ghost a1" data-action="exportState()">Export</button>
+    <label class="ghost" style="cursor:pointer;display:inline-flex;align-items:center;">Import<input id="import-file" type="file" accept="application/json" class="hidden"></label>
+    <button class="ghost a2" data-action="downloadTemplate()">Template</button>
+    <button class="icon-btn" data-theme-toggle aria-label="Motyw"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  </div>
+</header>
+<div id="weather-alerts-bar" style="display:none;background:rgba(194,49,39,.15);color:var(--az);padding:.375rem 1rem;font-size:.7rem;font-weight:600;text-align:center;"></div>
+<div id="imgw-banner" style="display:none;background:rgba(196,162,74,.12);color:var(--a1);padding:.375rem 1rem;font-size:.7rem;font-weight:600;text-align:center;"></div>
+<div class="progress-bars" style="display:flex;gap:.75rem;padding:.375rem 1rem;background:var(--sur);border-bottom:1px solid var(--div);flex-wrap:wrap;">
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Dzień</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-day" style="height:100%;background:var(--a1);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-day-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Tydzień</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-week" style="height:100%;background:var(--a2);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-week-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Miesiąc</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-month" style="height:100%;background:var(--nom);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-month-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+  <div class="pbar" style="flex:1;min-width:80px;"><span class="L" style="font-size:.55rem;">Rok</span><div class="pbar-track" style="height:4px;background:var(--soff);border-radius:2px;margin:2px 0;"><div class="pbar-fill" id="pb-year" style="height:100%;background:var(--cold);border-radius:2px;width:0;transition:width .5s;"></div></div><span class="mono" id="pb-year-pct" style="font-size:.55rem;color:var(--txm);">0%</span></div>
+</div>
+<main class="dash">
+  <div class="zone"><span class="L">A — Corpus</span><div class="zone-line"></div></div>
+  <div class="w c4" id="sw">
+    <div class="wh"><span class="L">Sen</span><div class="wh-r"><span class="L br mono" id="sleep-total">--</span></div></div>
+    <div class="wb">
+      <div class="sleep-times"><div><div class="L" style="margin-bottom:3px;">Start</div><div class="sleep-val mono" id="sleep-start" style="cursor:pointer;">--:--</div></div><div style="text-align:right;"><div class="L" style="margin-bottom:3px;">Stop</div><div class="sleep-val mono" id="sleep-stop" style="cursor:pointer;">--:--</div></div></div>
+      <div class="qrow"><button class="qb bad" data-action="setQ(this,'bad')">Niewyspany</button><button class="qb active med" data-action="setQ(this,'med')">Średnio</button><button class="qb good" data-action="setQ(this,'good')">Wyspany</button></div>
+    </div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">Nootropy</span><span class="L a1">Stos aktywny</span><button class="pill a1" style="margin-left:auto;cursor:pointer;font-size:.6rem;padding:2px 8px;" data-action="openNootEditor()">✏️</button></div>
+    <div class="nl" id="noot-list" style="padding:.25rem 0;"></div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">Stan</span><span class="L" id="fcnt">2 wybrane</span></div>
+    <div class="wb"><div class="fg" id="feel-wrap"></div></div>
+  </div>
+
+  <div class="zone"><span class="L">B — Tempus</span><div class="zone-line"></div></div>
+  <div class="w c3">
+    <div class="wh"><span class="L">Kalendarz</span><span class="L mono" id="calhdr">Kwiecień 2026</span><button class="pill a1" style="margin-left:auto;cursor:pointer;font-size:.65rem;padding:2px 8px;" data-action="openCalModal()">+</button></div>
+    <div class="wb"><div class="cgrid" id="calgrid"></div></div>
+  </div>
+  <div class="w c5">
+    <div class="wh"><span class="L">Nawyki</span><span class="L">14 dni</span></div>
+    <div class="wb"><div class="hl" id="hlist"></div></div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">To-Do</span><span class="L mono" id="tdh">0 / 0</span><button class="pill" style="margin-left:auto;cursor:pointer;font-size:.55rem;padding:1px 6px;" data-action="archiveDone()">📦</button><button class="pill" style="cursor:pointer;font-size:.55rem;padding:1px 6px;" data-action="showArchive()">📂</button></div>
+    <div class="tl" id="tlist"></div>
+    <div class="tadd"><input class="tinp" id="tinp" placeholder="Nowe zadanie..."><button class="icon-btn" data-action="addTodo()" aria-label="Dodaj"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg></button></div>
+  </div>
+
+  <div class="w c4" id="timer-widget">
+    <div class="wh"><span class="L">Focus Timer</span><span class="L mono" id="timer-mode">25:00</span></div>
+    <div class="wb">
+      <div class="timer-screen mono" id="timer-screen">25:00</div>
+      <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+      <div class="timer-meta"><span class="pill a1" id="timer-state">gotowy</span><span class="L mono" id="timer-session">sesja 1</span></div>
+      <div class="timer-btns" style="margin-top:.75rem;">
+        <button class="btn a1" data-action="startTimer()">Start</button>
+        <button class="btn" data-action="pauseTimer()">Pause</button>
+        <button class="btn az" data-action="resetTimer()">Reset</button>
+        <button class="btn a2" data-action="cyclePreset()">Preset</button>
+      </div>
+      <div class="statusline" style="margin-top:.75rem;"><span class="L">Tryb</span><span class="pill" id="timer-preset-label">25 / 5</span><span class="L muted">Powiąż z nauką i To-Do</span></div>
+    </div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">Postęp</span><span class="L">Projekty</span></div>
+    <div class="wb"><div class="pl"><div class="pi"><div class="ph"><span class="pn">Praca roczna — Pediatria</span><span class="pp mono">68%</span></div><div class="pt"><div class="pf" style="width:68%"></div></div></div><div class="pi"><div class="ph"><span class="pn">Portfel opcji Q2</span><span class="pp mono">42%</span></div><div class="pt"><div class="pf" style="width:42%;background:var(--a2)"></div></div></div><div class="pi"><div class="ph"><span class="pn">Life OS — Backend</span><span class="pp mono">31%</span></div><div class="pt"><div class="pf" style="width:31%"></div></div></div><div class="pi"><div class="ph"><span class="pn">Anatomia kończyn</span><span class="pp mono">90%</span></div><div class="pt"><div class="pf" style="width:90%;background:var(--nom)"></div></div></div><div class="pi"><div class="ph"><span class="pn">Strategia Theta Decay</span><span class="pp mono">55%</span></div><div class="pt"><div class="pf" style="width:55%"></div></div></div><div class="pi"><div class="ph"><span class="pn">Notatki — kardiologia</span><span class="pp mono">77%</span></div><div class="pt"><div class="pf" style="width:77%;background:var(--cold)"></div></div></div></div></div>
+  </div>
+  <div class="w c4 critical">
+    <div class="wh"><span class="L">Soczewki / Leki</span><div class="wh-r"><div class="alert-dot"></div><span class="L az">Refill</span></div></div>
+    <div class="rfl" id="refill-list" style="padding:.25rem 0;"></div>
+  </div>
+
+  <div class="zone"><span class="L">C — Exterior</span><div class="zone-line"></div></div>
+  <!-- STOCKS EXPANDED -->
+  <div class="w c7">
+    <div class="wh">
+      <span class="L">Giełda</span>
+      <div class="wh-r">
+        <div class="mkt-dot closed" id="s-dot"></div>
+        <span class="L" id="s-status">--</span>
+        <div class="clock-sep" style="height:16px;margin:0 .25rem;"></div>
+        <span class="L mono" id="s-countdown" style="color:var(--txm);">--s</span>
+        <div class="clock-sep" style="height:16px;margin:0 .25rem;"></div>
+        <span class="L mono" id="s-updated" style="color:var(--txm);">--</span>
+      </div>
+    </div>
+    <div class="ntabs" id="s-tabs">
+      <button class="ntab active" data-action="switchSTab(this,'portfel')">Portfel</button>
+      <button class="ntab" data-action="switchSTab(this,'makro')">Makro</button>
+      <button class="ntab" data-action="switchSTab(this,'opcje')">Opcje B-S</button>
+    </div>
+    <div id="sp-portfel" class="sp-pane active"><div id="sl-portfel"></div></div>
+    <div id="sp-makro" class="sp-pane"><div id="sl-makro"></div></div>
+    <div id="sp-opcje" class="sp-pane">
+      <div class="bs-grid">
+        <div>
+          <div style="padding:.25rem .75rem .5rem;border-bottom:1px solid var(--div);margin-bottom:.5rem;">
+            <span class="L" style="color:var(--a1);">Parametry wejściowe</span>
+          </div>
+          <div class="bs-form" style="padding:0 .75rem .75rem;">
+            <div class="bs-row"><span class="bs-lbl">S</span><input class="bs-inp" id="bs-s" type="number" value="174" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Spot</span></div>
+            <div class="bs-row"><span class="bs-lbl">K</span><input class="bs-inp" id="bs-k" type="number" value="175" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Strike</span></div>
+            <div class="bs-row"><span class="bs-lbl">T</span><input class="bs-inp" id="bs-t" type="number" value="30" step="1" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Dni (DTE)</span></div>
+            <div class="bs-row"><span class="bs-lbl">IV</span><input class="bs-inp" id="bs-iv" type="number" value="28" step="0.5" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Implied Vol</span></div>
+            <div class="bs-row"><span class="bs-lbl">r</span><input class="bs-inp" id="bs-r" type="number" value="5.25" step="0.05" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">% Risk-free</span></div>
+            <div class="bs-row"><span class="bs-lbl">Typ</span><select class="bs-sel" id="bs-type" data-action-change="true"><option value="call">Call</option><option value="put">Put</option></select></div>
+          </div>
+          <div style="padding:.25rem .75rem .5rem;border-top:1px solid var(--div);border-bottom:1px solid var(--div);margin-top:.25rem;">
+            <span class="L">Diagram wypłaty</span>
+          </div>
+          <div style="padding:.5rem .75rem;">
+            <svg id="bs-payoff" width="220" height="70" viewBox="0 0 220 70"></svg>
+          </div>
+        </div>
+        <div>
+          <div style="padding:.25rem .75rem .5rem;border-bottom:1px solid var(--div);margin-bottom:.5rem;">
+            <span class="L" style="color:var(--nom);">Greeks</span>
+          </div>
+          <div style="padding:0 .75rem .75rem;">
+            <div class="bs-out">
+              <div class="bs-orow" style="grid-column:span 2;"><span class="bs-oname">Cena opcji</span><span class="bs-oval price" id="bs-price">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">Δ Delta</span><span class="bs-oval" id="bs-delta">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">Γ Gamma</span><span class="bs-oval" id="bs-gamma">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">Θ Theta/d</span><span class="bs-oval" id="bs-theta">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">V Vega/1%</span><span class="bs-oval" id="bs-vega">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">ρ Rho/1%</span><span class="bs-oval" id="bs-rho">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">d1</span><span class="bs-oval" id="bs-d1">--</span></div>
+              <div class="bs-orow"><span class="bs-oname">d2</span><span class="bs-oval" id="bs-d2">--</span></div>
+            </div>
+            <div style="margin-top:.75rem;padding:.5rem;background:var(--soff);border-radius:3px;">
+              <div class="L" style="margin-bottom:4px;">Interpretacja</div>
+              <div id="bs-interp" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);line-height:1.6;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w c5">
+    <div class="ntabs"><button class="ntab active" data-action="switchN(this,'all')">Wszystkie</button><button class="ntab" data-action="switchN(this,'fin')">Finanse</button><button class="ntab" data-action="switchN(this,'med')">Medycyna</button><button class="ntab" data-action="switchN(this,'pol')">Polityka</button><button class="ntab" data-action="switchN(this,'tch')">Tech</button></div>
+    <div id="np-all" class="np active"></div><div id="np-fin" class="np"></div><div id="np-med" class="np"></div><div id="np-pol" class="np"></div><div id="np-tch" class="np"></div>
+  </div>
+  <div class="w c3">
+    <div class="wh"><span class="L">Pogoda</span><span class="L mono">Szczecin</span></div>
+    <div class="wb">
+      <div style="display:flex;align-items:flex-end;gap:.75rem;margin-bottom:.75rem;"><span class="wtmp" id="weather-temp">--°</span><div style="display:flex;flex-direction:column;gap:2px;padding-bottom:4px;"><span id="weather-code" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Ładowanie…</span><span id="weather-feels" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Odczuwalnie --°</span><span id="weather-wind" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Wiatr -- km/h</span><span id="weather-humidity" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Wilgotność --%</span><span id="weather-updated" style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm);">Aktualizacja --:--</span></div></div>
+      <div class="wfc" id="forecast-wrap"></div>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap;">
+        <span class="pill" id="aqi-badge" style="display:none;font-size:.55rem;"></span>
+        <span class="pill" id="uv-badge" style="display:none;font-size:.55rem;color:var(--txm);"></span>
+      </div>
+    </div>
+  </div>
+  <div class="w c12">
+    <div class="wh"><span class="L">Notatnik</span><span class="L">Strumień myśli</span><button class="pill" id="md-toggle" style="margin-left:auto;cursor:pointer;font-size:.55rem;padding:1px 8px;" data-action="toggleMdPreview()">👁 Podgląd</button></div>
+    <div class="wb"><textarea class="nta" id="notes" rows="3" placeholder="// Obserwacje, hipotezy, myśli robocze... (Markdown)"></textarea><div id="notes-preview" style="display:none;padding:.5rem;font-size:.75rem;color:var(--tx);line-height:1.6;min-height:60px;"></div></div>
+  </div>
+
+  <!-- Finance Widgets -->
+  <div class="w c4">
+    <div class="wh"><span class="L">🎲 Polymarket</span><span class="L">Top Events</span></div>
+    <div class="wb" id="polymarket-list" style="max-height:200px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">🔍 Insider Trades</span><span class="L">Finnhub</span></div>
+    <div class="wb" id="insiders-list" style="max-height:200px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+  <div class="w c4">
+    <div class="wh"><span class="L">📄 SEC Filings</span><span class="L">Najnowsze</span></div>
+    <div class="wb" id="sec-list" style="max-height:200px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+  <div class="w c3">
+    <div class="wh"><span class="L">🍕 Pizza Index</span><span class="L">Inflacja</span></div>
+    <div class="wb" id="pizza-list" style="font-size:.65rem;"></div>
+  </div>
+  <div class="w c3">
+    <div class="wh"><span class="L">🇺🇸 Trump Tracker</span><span class="L">7d news</span></div>
+    <div class="wb" id="trump-list" style="max-height:180px;overflow-y:auto;font-size:.65rem;">Ładowanie...</div>
+  </div>
+
+  <div class="zone"><span class="L">D — Klinika</span><div class="zone-line"></div></div>
+
+  <div class="w c12">
+    <div class="wh">
+      <span class="L">Kalkulatory Kliniczne</span>
+      <span class="L a1">Evidence-based · real-time</span>
+    </div>
+    <div class="ntabs" id="med-tabs">
+      <button class="ntab active" data-action="switchMed(this,'nerki')">🫘 Nerki</button>
+      <button class="ntab" data-action="switchMed(this,'kardio')">❤️ Kardiologia</button>
+      <button class="ntab" data-action="switchMed(this,'neuro')">🧠 Neurologia</button>
+      <button class="ntab" data-action="switchMed(this,'pulm')">🫁 Oddechowy</button>
+      <button class="ntab" data-action="switchMed(this,'ped')">👶 Pediatria</button>
+      <button class="ntab" data-action="switchMed(this,'inne')">⚖️ Inne</button>
+      <button class="ntab" data-action="switchMed(this,'oiom')">🏥 OIOM</button>
+    </div>
+
+    <div id="mp-nerki" class="mp active"><div class="calc-row">
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">eGFR</span><span class="L" style="color:var(--txm)">CKD-EPI 2021</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="egfr-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="egfr-age" type="number" value="30" step="1" min="18" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
+            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="egfr-sex" data-action-change="true"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="egfr-val">--</span><span class="calc-unit">mL/min/1.73m²</span><span class="calc-badge info" id="egfr-stage">--</span><span class="calc-interp" id="egfr-interp"></span></div>
+        </div>
+        <span class="calc-src">Inker LA et al, NEJM 2021 | CKD-EPI 2021</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">CrCl</span><span class="L" style="color:var(--txm)">Cockcroft-Gault</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Scr</span><input class="cinp" id="cg-scr" type="number" value="1.0" step="0.01" min="0.1" max="20" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Wiek</span><input class="cinp" id="cg-age" type="number" value="30" step="1" min="18" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">lat</span></div>
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="cg-wt" type="number" value="70" step="0.5" min="20" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">Płeć</span><select class="csel" id="cg-sex" data-action-change="true"><option value="M">Mężczyzna</option><option value="F">Kobieta</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="cg-val">--</span><span class="calc-unit">mL/min</span><span class="calc-badge info" id="cg-stage">--</span><span class="calc-interp" id="cg-interp"></span></div>
+        </div>
+        <span class="calc-src">Cockcroft DW, Gault MH. Nephron, 1976</span>
+      </div>
+    </div></div>
+
+    <div id="mp-kardio" class="mp"><div class="calc-row">
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">CHA₂DS₂-VASc</span><span class="L" style="color:var(--txm)">Ryzyko udaru w migotaniu przedsionków</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 128px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-chf" data-action-change="true"><span class="cchk-lbl">C — Niewydolność serca</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-htn" data-action-change="true"><span class="cchk-lbl">H — Nadciśnienie tętnicze</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age75" data-action-change="true"><span class="cchk-lbl">A₂ — Wiek ≥ 75 lat</span><span class="cchk-pts">+2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-dm" data-action-change="true"><span class="cchk-lbl">D — Cukrzyca</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-stroke" data-action-change="true"><span class="cchk-lbl">S₂ — Udar / TIA w wywiadzie</span><span class="cchk-pts">+2</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-vasc" data-action-change="true"><span class="cchk-lbl">V — Choroba naczyniowa</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-age6574" data-action-change="true"><span class="cchk-lbl">A — Wiek 65–74 lata</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="ch-female" data-action-change="true"><span class="cchk-lbl">Sc — Płeć żeńska</span><span class="cchk-pts">+1</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="chads-val">0</span><span class="calc-unit">/ 9 pkt</span><span class="calc-badge info" id="chads-risk">NISKIE</span><span class="calc-interp" id="chads-interp">0% rocz. ryzyko udaru</span></div>
+        </div>
+        <span class="calc-src">Lip GY et al, Chest 2010 | ESC Guidelines</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">QTc</span><span class="L" style="color:var(--txm)">Skorygowany QT</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">QT</span><input class="cinp" id="qtc-qt" type="number" value="400" step="1" min="200" max="700" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">ms</span></div>
+            <div class="crow"><span class="clbl">HR</span><input class="cinp" id="qtc-hr" type="number" value="70" step="1" min="30" max="200" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">/min</span></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="qtc-val">--</span><span class="calc-unit">ms (Bazett)</span><span class="calc-badge info" id="qtc-lev">--</span><span class="calc-interp" id="qtc-interp"></span></div>
+        </div>
+        <span class="calc-src">Bazett 1920, Fridericia 1920, Framingham | MDCalc</span>
+      </div>
+    </div></div>
+
+    <div id="mp-neuro" class="mp"><div class="calc-row">
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">GCS</span><span class="L" style="color:var(--txm)">Glasgow Coma Scale</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl" style="min-width:52px">E — Oczy</span><select class="csel" id="gcs-e" style="flex:1" data-action-change="true"><option value="4">4 — Spontanicznie</option><option value="3">3 — Na głos</option><option value="2">2 — Na ból</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">V — Mowa</span><select class="csel" id="gcs-v" style="flex:1" data-action-change="true"><option value="5">5 — Zorientowany</option><option value="4">4 — Zagubiony</option><option value="3">3 — Słowa</option><option value="2">2 — Dźwięki</option><option value="1">1 — Brak</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">M — Ruch</span><select class="csel" id="gcs-m" style="flex:1" data-action-change="true"><option value="6">6 — Wykonuje polecenia</option><option value="5">5 — Lokalizuje ból</option><option value="4">4 — Wycofuje kończynę</option><option value="3">3 — Dekortykacja</option><option value="2">2 — Decerebracja</option><option value="1">1 — Brak</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="gcs-val">15</span><span class="calc-unit" id="gcs-sub">E4V5M6</span><span class="calc-badge ok" id="gcs-sev">--</span><span class="calc-interp" id="gcs-interp"></span></div>
+        </div>
+        <span class="calc-src">Teasdale G, Jennett B. Lancet, 1974</span>
+      </div>
+    </div></div>
+
+    <div id="mp-pulm" class="mp"><div class="calc-row">
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">CURB-65</span><span class="L" style="color:var(--txm)">Pozaszpitalne zapalenie płuc — CAP</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-c" data-action-change="true"><span class="cchk-lbl">Confusion — zaburzenia świadomości</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-u" data-action-change="true"><span class="cchk-lbl">Urea — BUN > 19 mg/dL (mocznik >7 mmol/L)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-r" data-action-change="true"><span class="cchk-lbl">Respiratory Rate ≥ 30 /min</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-b" data-action-change="true"><span class="cchk-lbl">Blood pressure sys&lt;90 lub dia≤60 mmHg</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="curb-65" data-action-change="true"><span class="cchk-lbl">Age ≥ 65 lat</span><span class="cchk-pts">+1</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="curb-val">0</span><span class="calc-unit">/ 5 pkt</span><span class="calc-badge ok" id="curb-lev">--</span><span class="calc-interp" id="curb-interp"></span></div>
+        </div>
+        <span class="calc-src">Lim WS et al, Thorax 2003 | BTS Guidelines</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Wells DVT</span><span class="L" style="color:var(--txm)">Zakrzepica żył głębokich</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-ca" data-action-change="true"><span class="cchk-lbl">Aktywna choroba nowotworowa</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-par" data-action-change="true"><span class="cchk-lbl">Porażenie kończyny / niedawny gips</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-bed" data-action-change="true"><span class="cchk-lbl">Unieruchomienie ≥3d lub op. &lt;12 tyg.</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-sw" data-action-change="true"><span class="cchk-lbl">Cała noga obrzęknięta</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-cf" data-action-change="true"><span class="cchk-lbl">Obrzęk łydki ≥ 3 cm większy</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-pe" data-action-change="true"><span class="cchk-lbl">Pitting edema (objaśniony przez DVT)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-col" data-action-change="true"><span class="cchk-lbl">Żyły poboczne powierzchowne</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-prev" data-action-change="true"><span class="cchk-lbl">DVT w wywiadzie</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="dvt-alt" data-action-change="true"><span class="cchk-lbl">Inna diagnoza równie prawdopodobna</span><span class="cchk-pts">−2</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="wells-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge ok" id="wells-lev">--</span><span class="calc-interp" id="wells-interp"></span></div>
+        </div>
+        <span class="calc-src">Wells PS et al, NEJM 2003 | MDCalc</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Wells PE</span><span class="L" style="color:var(--txm)">Zatorowość płucna</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-dvt" data-action-change="true"><span class="cchk-lbl">Objawy zakrzepicy żył głębokich (DVT)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-hr" data-action-change="true"><span class="cchk-lbl">HR &gt; 100 /min</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-immob" data-action-change="true"><span class="cchk-lbl">Unieruchomienie / operacja w ciągu 4 tyg.</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-signs" data-action-change="true"><span class="cchk-lbl">Zapalenie żył (objawy DVT)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-hemo" data-action-change="true"><span class="cchk-lbl">Hemoptysis (krwioplucie)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-cancer" data-action-change="true"><span class="cchk-lbl">Nowotwór (leczony w ciągu 6 mies.)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="pe-noalt" data-action-change="true"><span class="cchk-lbl">Brak innej diagnozy bardziej prawdopodobnej</span><span class="cchk-pts">+1</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="wellspe-val">0</span><span class="calc-unit">/ 7 pkt</span><span class="calc-badge ok" id="wellspe-lev">--</span><span class="calc-interp" id="wellspe-interp"></span></div>
+        </div>
+        <span class="calc-src">Wells PS et al, Thromb Haemost 2000</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">PERC Rule</span><span class="L" style="color:var(--txm)">Wykluczenie PE — niskie ryzyko</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-age" data-action-change="true"><span class="cchk-lbl">Wiek &lt; 50</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-hr" data-action-change="true"><span class="cchk-lbl">HR &lt; 100</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-sao2" data-action-change="true"><span class="cchk-lbl">SaO₂ ≥ 95%</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-leg" data-action-change="true"><span class="cchk-lbl">Brak obrzęku nogi (jednostronnego)</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-hemo" data-action-change="true"><span class="cchk-lbl">Brak hemoptozy</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-surg" data-action-change="true"><span class="cchk-lbl">Brak urazu / operacji w ciągu 4 tyg.</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-dvthx" data-action-change="true"><span class="cchk-lbl">Brak historii DVT/PE</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="perc-estro" data-action-change="true"><span class="cchk-lbl">Brak stosowania estrogenów</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="perc-val">0/8</span><span class="calc-unit">kryteria</span><span class="calc-badge warn" id="perc-lev">--</span><span class="calc-interp" id="perc-interp"></span></div>
+        </div>
+        <span class="calc-src">Kline JA et al, J Thromb Haemost 2004</span>
+      </div>
+    </div></div>
+
+    <div id="mp-ped" class="mp"><div class="calc-row">
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">APGAR</span><span class="L" style="color:var(--txm)">1 min / 5 min po urodzeniu</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl" style="min-width:68px">Kolor skóry</span><select class="csel" id="ap-app" style="flex:1" data-action-change="true"><option value="0">0 — Sinica centralna</option><option value="1">1 — Sinica obwodowa</option><option value="2" selected>2 — Różowy</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Akcja serca</span><select class="csel" id="ap-pul" style="flex:1" data-action-change="true"><option value="0">0 — Brak tętna</option><option value="1">1 — &lt; 100 /min</option><option value="2" selected>2 — ≥ 100 /min</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Odruchy</span><select class="csel" id="ap-gri" style="flex:1" data-action-change="true"><option value="0">0 — Brak reakcji</option><option value="1">1 — Grymas</option><option value="2" selected>2 — Kaszel / kichanie</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Napięcie</span><select class="csel" id="ap-act" style="flex:1" data-action-change="true"><option value="0">0 — Wiotkość</option><option value="1">1 — Zgięcie kończyn</option><option value="2" selected>2 — Aktywne ruchy</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Oddech</span><select class="csel" id="ap-res" style="flex:1" data-action-change="true"><option value="0">0 — Brak</option><option value="1">1 — Nieregularny/płytki</option><option value="2" selected>2 — Regularny / płacz</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="apgar-val">10</span><span class="calc-unit">/ 10 pkt</span><span class="calc-badge ok" id="apgar-lev">--</span><span class="calc-interp" id="apgar-interp"></span></div>
+        </div>
+        <span class="calc-src">Apgar V, Anesth Analg 1953</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Centor / McIsaac</span><span class="L" style="color:var(--txm)">Paciorkowcowe zapalenie gardła</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-exud" data-action-change="true"><span class="cchk-lbl">Wysięk na migdałkach</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-node" data-action-change="true"><span class="cchk-lbl">Powiększone węzły szyjne przednie</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-temp" data-action-change="true"><span class="cchk-lbl">Temperatura > 38°C</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="cen-cough" data-action-change="true"><span class="cchk-lbl">Brak kaszlu</span><span class="cchk-pts">+1</span></label>
+            <div style="margin-top:.375rem;padding-top:.375rem;border-top:1px solid var(--div)">
+              <span class="clbl" style="display:block;margin-bottom:.25rem">Wiek (McIsaac)</span>
+              <select class="csel" id="cen-age" data-action-change="true" style="width:100%"><option value="-1">pod 15 lat (−1)</option><option value="0" selected>15–44 lata (0)</option><option value="-1b">45+ lat (−1)</option></select>
+            </div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="cen-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge info" id="cen-lev">--</span><span class="calc-interp" id="cen-interp"></span></div>
+        </div>
+        <span class="calc-src">Centor RM, Med Decis Making 1981 | McIsaac WJ, CMAJ 1998</span>
+      </div>
+    </div></div>
+
+    <div id="mp-inne" class="mp"><div class="calc-row">
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">BMI / BSA</span><span class="L" style="color:var(--txm)">Mosteller</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="bmi-wt" type="number" value="70" step="0.5" min="20" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">Wzrost</span><input class="cinp" id="bmi-ht" type="number" value="175" step="1" min="100" max="250" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">cm</span></div>
+          </div>
+          <div class="calc-res-col">
+            <span class="calc-score" id="bmi-val">--</span><span class="calc-unit">kg/m²</span>
+            <span class="calc-badge ok" id="bmi-lev">--</span>
+            <span class="calc-interp" id="bmi-interp"></span>
+            <div style="margin-top:.5rem;border-top:1px solid var(--div);padding-top:.375rem;width:100%;text-align:center;">
+              <span class="calc-unit">BSA</span>
+              <span class="calc-score" id="bsa-val" style="font-size:1.25rem">--</span>
+              <span class="calc-unit">m²</span>
+            </div>
+          </div>
+        </div>
+        <span class="calc-src">WHO BMI Classification | Mosteller RD, NEJM 1987</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Child-Pugh</span><span class="L" style="color:var(--txm)">Rezerwa wątroby — marskość</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Bilirubina</span><select class="csel" id="cp-bil" data-action-change="true"><option value="1">&lt; 34 µmol/L</option><option value="2">34–50 µmol/L</option><option value="3">&gt; 50 µmol/L</option></select></div>
+            <div class="crow"><span class="clbl">Albuminy</span><select class="csel" id="cp-alb" data-action-change="true"><option value="1">&gt; 35 g/L</option><option value="2">28–35 g/L</option><option value="3">&lt; 28 g/L</option></select></div>
+            <div class="crow"><span class="clbl">INR</span><select class="csel" id="cp-inr" data-action-change="true"><option value="1">&lt; 1.7</option><option value="2">1.7–2.3</option><option value="3">&gt; 2.3</option></select></div>
+            <div class="crow"><span class="clbl">Wodobrzusze</span><select class="csel" id="cp-asc" data-action-change="true"><option value="1">Brak</option><option value="2">Łagodne</option><option value="3">Nasilone</option></select></div>
+            <div class="crow"><span class="clbl">Encefalopatia</span><select class="csel" id="cp-enc" data-action-change="true"><option value="1">Brak</option><option value="2">St. I–II</option><option value="3">St. III–IV</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="cp-val">5</span><span class="calc-unit">/ 15 pkt</span><span class="calc-badge ok" id="cp-cls">Klasa A</span><span class="calc-interp" id="cp-interp">śmiertelność &lt;5% / rok</span></div>
+        </div>
+        <span class="calc-src">Pugh RN et al, Br J Surg 1973</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">MAP</span><span class="L" style="color:var(--txm)">Średnie ciśnienie tętnicze</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Skurczowe</span><input class="cinp" id="map-sys" type="number" value="120" step="1" min="70" max="250" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mmHg</span></div>
+            <div class="crow"><span class="clbl">Rozkurczowe</span><input class="cinp" id="map-dia" type="number" value="80" step="1" min="40" max="150" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mmHg</span></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="map-val">--</span><span class="calc-unit">mmHg</span><span class="calc-badge ok" id="map-lev">--</span><span class="calc-interp" id="map-interp"></span></div>
+        </div>
+        <span class="calc-src">MAP = DBP + (SBP−DBP)/3 | Surviving Sepsis 2021</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Anion Gap</span><span class="L" style="color:var(--txm)">Luka anionowa</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Na⁺</span><input class="cinp" id="ag-na" type="number" value="140" step="0.1" min="100" max="170" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">Cl⁻</span><input class="cinp" id="ag-cl" type="number" value="104" step="0.1" min="70" max="130" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">HCO₃⁻</span><input class="cinp" id="ag-hco3" type="number" value="24" step="0.1" min="5" max="45" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="ag-val">--</span><span class="calc-unit">mEq/L</span><span class="calc-badge ok" id="ag-lev">--</span><span class="calc-interp" id="ag-interp"></span></div>
+        </div>
+        <span class="calc-src">AG = Na − Cl − HCO₃ | Norma: 8–12 mEq/L</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Wapń skorygowany</span><span class="L" style="color:var(--txm)">Corrected Calcium</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Ca całk.</span><input class="cinp" id="ca-total" type="number" value="9.0" step="0.1" min="4" max="16" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Albuminy</span><input class="cinp" id="ca-alb" type="number" value="4.0" step="0.1" min="1" max="6" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">g/dL</span></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="ca-val">--</span><span class="calc-unit">mg/dL</span><span class="calc-badge ok" id="ca-lev">--</span><span class="calc-interp" id="ca-interp"></span></div>
+        </div>
+        <span class="calc-src">Ca_corr = Ca + 0.8×(4.0−Alb) | Norma: 8.5–10.5 mg/dL</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">MELD-Na</span><span class="L" style="color:var(--txm)">Schyłkowa choroba wątroby</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Bilirubina</span><input class="cinp" id="meld-bil" type="number" value="1.0" step="0.1" min="0.1" max="40" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">INR</span><input class="cinp" id="meld-inr" type="number" value="1.0" step="0.01" min="0.5" max="10" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">Kreatynina</span><input class="cinp" id="meld-cr" type="number" value="1.0" step="0.1" min="0.1" max="15" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mg/dL</span></div>
+            <div class="crow"><span class="clbl">Na⁺</span><input class="cinp" id="meld-na" type="number" value="137" step="1" min="100" max="160" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="meld-dial" data-action-change="true"><span class="cchk-lbl">Dializa ≥2x/tyg w ost. 7 dni</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="meld-val">--</span><span class="calc-unit">pkt</span><span class="calc-badge info" id="meld-lev">--</span><span class="calc-interp" id="meld-interp"></span></div>
+        </div>
+        <span class="calc-src">OPTN/UNOS 2016 | Kamath PS et al, Hepatology 2001</span>
+      </div>
+    </div></div>
+
+    <div id="mp-oiom" class="mp"><div class="calc-row">
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">SOFA</span><span class="L" style="color:var(--txm)">Sequential Organ Failure Assessment</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 128px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <div class="crow"><span class="clbl" style="min-width:68px">PaO₂/FiO₂</span><select class="csel" id="sofa-resp" style="flex:1" data-action-change="true"><option value="0">≥400 (0)</option><option value="1">&lt;400 (1)</option><option value="2">&lt;300 (2)</option><option value="3">&lt;200 wentyl. (3)</option><option value="4">&lt;100 wentyl. (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Płytki ×10³</span><select class="csel" id="sofa-plt" style="flex:1" data-action-change="true"><option value="0">≥150 (0)</option><option value="1">&lt;150 (1)</option><option value="2">&lt;100 (2)</option><option value="3">&lt;50 (3)</option><option value="4">&lt;20 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Bilirubina</span><select class="csel" id="sofa-bil" style="flex:1" data-action-change="true"><option value="0">&lt;1.2 (0)</option><option value="1">1.2–1.9 (1)</option><option value="2">2.0–5.9 (2)</option><option value="3">6.0–11.9 (3)</option><option value="4">&gt;12.0 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Hipotensja</span><select class="csel" id="sofa-cv" style="flex:1" data-action-change="true"><option value="0">Brak (0)</option><option value="1">MAP&lt;70 (1)</option><option value="2">Dopa≤5/Dobu (2)</option><option value="3">Dopa&gt;5/Epi≤0.1 (3)</option><option value="4">Dopa&gt;15/Epi&gt;0.1 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">GCS</span><select class="csel" id="sofa-gcs" style="flex:1" data-action-change="true"><option value="0">15 (0)</option><option value="1">13–14 (1)</option><option value="2">10–12 (2)</option><option value="3">6–9 (3)</option><option value="4">&lt;6 (4)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:68px">Kreatynina</span><select class="csel" id="sofa-cr" style="flex:1" data-action-change="true"><option value="0">&lt;1.2 (0)</option><option value="1">1.2–1.9 (1)</option><option value="2">2.0–3.4 (2)</option><option value="3">3.5–4.9 (3)</option><option value="4">&gt;5.0 (4)</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="sofa-val">0</span><span class="calc-unit">/ 24 pkt</span><span class="calc-badge ok" id="sofa-lev">--</span><span class="calc-interp" id="sofa-interp"></span></div>
+        </div>
+        <span class="calc-src">Vincent JL et al, Intensive Care Med 1996 | Sepsis-3</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">qSOFA</span><span class="L" style="color:var(--txm)">Quick SOFA — Sepsis-3</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="qsofa-gcs" data-action-change="true"><span class="cchk-lbl">Zaburzenia świadomości (GCS &lt; 15)</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="qsofa-rr" data-action-change="true"><span class="cchk-lbl">Częstość oddechów ≥ 22/min</span><span class="cchk-pts">+1</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="qsofa-sbp" data-action-change="true"><span class="cchk-lbl">Ciśnienie skurczowe ≤ 100 mmHg</span><span class="cchk-pts">+1</span></label>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="qsofa-val">0</span><span class="calc-unit">/ 3 pkt</span><span class="calc-badge ok" id="qsofa-lev">--</span><span class="calc-interp" id="qsofa-interp"></span></div>
+        </div>
+        <span class="calc-src">Seymour CW et al, JAMA 2016 | Sepsis-3</span>
+      </div>
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">NEWS2</span><span class="L" style="color:var(--txm)">National Early Warning Score 2</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 128px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <div class="crow"><span class="clbl" style="min-width:52px">Oddech</span><select class="csel" id="news-rr" style="flex:1" data-action-change="true"><option value="3">≤8 (3)</option><option value="1">9–11 (1)</option><option value="0" selected>12–20 (0)</option><option value="2">21–24 (2)</option><option value="3b">≥25 (3)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">SpO₂</span><select class="csel" id="news-spo2" style="flex:1" data-action-change="true"><option value="3">≤91% (3)</option><option value="2">92–93% (2)</option><option value="1">94–95% (1)</option><option value="0" selected>≥96% (0)</option></select></div>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="news-copd" data-action-change="true"><span class="cchk-lbl">SpO₂ Scale 2 (COPD)</span></label>
+            <label class="cchk-row"><input type="checkbox" class="cchk" id="news-o2" data-action-change="true"><span class="cchk-lbl">Na tlenoterapii (+2)</span></label>
+            <div class="crow"><span class="clbl" style="min-width:52px">Temp.</span><select class="csel" id="news-temp" style="flex:1" data-action-change="true"><option value="3">≤35.0 (3)</option><option value="1">35.1–36.0 (1)</option><option value="0" selected>36.1–38.0 (0)</option><option value="1b">38.1–39.0 (1)</option><option value="2">≥39.1 (2)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">SBP</span><select class="csel" id="news-sbp" style="flex:1" data-action-change="true"><option value="3">≤90 (3)</option><option value="2">91–100 (2)</option><option value="1">101–110 (1)</option><option value="0" selected>111–219 (0)</option><option value="3b">≥220 (3)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">HR</span><select class="csel" id="news-hr" style="flex:1" data-action-change="true"><option value="3">≤40 (3)</option><option value="1">41–50 (1)</option><option value="0" selected>51–90 (0)</option><option value="1b">91–110 (1)</option><option value="2">111–130 (2)</option><option value="3b">≥131 (3)</option></select></div>
+            <div class="crow"><span class="clbl" style="min-width:52px">ACVPU</span><select class="csel" id="news-avpu" style="flex:1" data-action-change="true"><option value="0">Alert (0)</option><option value="3">Confusion (3)</option><option value="3b">Voice (3)</option><option value="3c">Pain (3)</option><option value="3d">Unresponsive (3)</option></select></div>
+          </div>
+          <div class="calc-res-col"><span class="calc-score" id="news-val">0</span><span class="calc-unit">pkt</span><span class="calc-badge ok" id="news-lev">--</span><span class="calc-interp" id="news-interp"></span></div>
+        </div>
+        <span class="calc-src">Royal College of Physicians, 2017</span>
+      </div>
+      <div class="calc-card" style="grid-column:span 2">
+        <div class="calc-ch"><span class="L">Henderson-Hasselbalch</span><span class="L" style="color:var(--txm)">Gazometria i równowaga kwasowo-zasadowa</span></div>
+        <div class="calc-body" style="grid-template-columns:1fr 180px">
+          <div class="calc-inp-col" style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem">
+            <div class="crow"><span class="clbl">pH</span><input class="cinp" id="hh-ph" type="number" value="7.40" step="0.01" min="6.8" max="7.8" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">PaCO₂</span><input class="cinp" id="hh-pco2" type="number" value="40" step="1" min="10" max="120" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mmHg</span></div>
+            <div class="crow"><span class="clbl">HCO₃⁻</span><input class="cinp" id="hh-hco3" type="number" value="24" step="0.1" min="5" max="50" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">PaO₂</span><input class="cinp" id="hh-pao2" type="number" value="95" step="1" min="20" max="600" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mmHg</span></div>
+            <div class="crow"><span class="clbl">FiO₂</span><input class="cinp" id="hh-fio2" type="number" value="21" step="1" min="21" max="100" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">%</span></div>
+            <div class="crow"><span class="clbl">Na⁺</span><input class="cinp" id="hh-na" type="number" value="140" step="1" min="100" max="170" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">Cl⁻</span><input class="cinp" id="hh-cl" type="number" value="104" step="1" min="70" max="130" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">mEq/L</span></div>
+            <div class="crow"><span class="clbl">Albuminy</span><input class="cinp" id="hh-alb" type="number" value="4.0" step="0.1" min="1" max="6" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">g/dL</span></div>
+          </div>
+          <div class="calc-res-col" style="min-width:160px;max-width:180px;font-size:clamp(.55rem,.52rem + .1vw,.65rem);text-align:left;align-items:flex-start;gap:.15rem"><span class="calc-interp" id="hh-interp" style="max-width:170px;text-align:left;white-space:pre-line"></span></div>
+        </div>
+        <span class="calc-src">Henderson 1908, Hasselbalch 1917 | Winter's formula</span>
+      </div>
+      <div class="calc-card">
+        <div class="calc-ch"><span class="L">Dawkowanie</span><span class="L" style="color:var(--txm)">mg/kg, mcg/kg/min</span></div>
+        <div class="calc-body">
+          <div class="calc-inp-col">
+            <div class="crow"><span class="clbl">Masa</span><input class="cinp" id="dose-wt" type="number" value="70" step="0.5" min="1" max="300" data-action-input="true"><span style="font-size:clamp(.6rem,.58rem + .12vw,.72rem);color:var(--txm)">kg</span></div>
+            <div class="crow"><span class="clbl">mg/kg</span><input class="cinp" id="dose-mgkg" type="number" value="" step="0.01" min="0" max="1000" placeholder="—" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">mcg/kg/min</span><input class="cinp" id="dose-mcgkgmin" type="number" value="" step="0.01" min="0" max="1000" placeholder="—" data-action-input="true"></div>
+            <div class="crow"><span class="clbl">Stężenie</span><input class="cinp" id="dose-conc" type="number" value="" step="0.01" min="0" max="10000" placeholder="mg/mL" data-action-input="true"></div>
+          </div>
+          <div class="calc-res-col" style="min-width:130px"><span class="calc-interp" id="dose-interp" style="max-width:120px;text-align:left;white-space:pre-line"></span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+    <div class="zone"><span class="L">E — Analytics</span><div class="zone-line"></div></div>
+    <div class="w c12" id="analytics-widget">
+      <div class="wh"><span class="L">Personal Analytics</span><span class="L a1">Trendy i korelacje</span></div>
+      <div class="analytics-section">
+        <div class="analytics-row">
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Trend nawyków (14d)</span></div>
+            <div id="analytics-trend-chart" style="width:100%;height:80px"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Heatmapa nawyków</span></div>
+            <div id="analytics-heatmap" style="width:100%"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Korelacje</span></div>
+            <div id="analytics-correlations"></div>
+          </div>
+        </div>
+        <div class="analytics-row" style="margin-top:.75rem;">
+          <div class="analytics-card" style="grid-column:span 2;">
+            <div class="wh"><span class="L">Multi-data Overlay (14d)</span><span class="L a1">Nawyki / Nootropy / Sen / Timer</span></div>
+            <div id="overlay-chart" style="width:100%;"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="wh"><span class="L">Habit Grid</span></div>
+            <div id="habit-grid" style="width:100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plugin Container Section -->
+    <div id="plugin-section" class="widget" style="display:none;" aria-label="Plugin widgets">
+      <h2 class="wttl">Rozszerzenia</h2>
+      <div id="plugins-container" class="plugins-grid"></div>
+    </div>
+
+<div style="padding:.5rem 1rem;text-align:center;border-top:1px solid var(--div);"><button class="pill a1" style="cursor:pointer;font-size:.6rem;padding:2px 12px;" data-action="showEventStore()">📊 Event Store</button></div>
+</main>
+</div>
+<div id="cal-modal" class="modal-overlay" style="display:none">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <span class="L">Nowe wydarzenie</span>
+      <button class="modal-close" onclick="closeCalModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="crow"><span class="clbl">Tytuł</span><input class="cinp" id="cal-evt-title" type="text" placeholder="Nazwa wydarzenia" style="width:100%;flex:1"></div>
+      <div class="crow"><span class="clbl">Data</span><input class="cinp" id="cal-evt-date" type="date" style="flex:1"></div>
+      <div class="crow"><span class="clbl">Godzina</span><input class="cinp" id="cal-evt-time" type="time" style="flex:1"></div>
+      <div class="crow"><span class="clbl">Opis</span><textarea class="cinp" id="cal-evt-desc" rows="2" placeholder="Opcjonalny opis" style="width:100%;flex:1;resize:vertical"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sec" onclick="closeCalModal()">Anuluj</button>
+      <button class="btn-pri" onclick="saveCalEvent()">Zapisz</button>
+    </div>
+  </div>
+</div>
+<!-- Noot Editor Modal -->
+<div id="noot-editor-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeNootEditor()">
+  <div class="modal-card" style="width:min(90vw,450px);">
+    <div class="modal-hdr"><span class="L">Edytuj stack nootropików</span><button class="modal-close" onclick="closeNootEditor()">&times;</button></div>
+    <div class="modal-body" id="noot-editor-list" style="max-height:300px;overflow-y:auto;"></div>
+    <div class="modal-footer">
+      <button class="btn-sec" data-action="addNootEntry()">+ Dodaj</button>
+      <button class="btn-pri" data-action="saveNootEditor()">Zapisz</button>
+    </div>
+  </div>
+</div>
+<!-- Archive Modal -->
+<div id="archive-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeArchive()">
+  <div class="modal-card" style="width:min(90vw,450px);">
+    <div class="modal-hdr"><span class="L">Archiwum zadań</span><button class="modal-close" onclick="closeArchive()">&times;</button></div>
+    <div class="modal-body" id="archive-list" style="max-height:350px;overflow-y:auto;"></div>
+  </div>
+</div>
+<!-- Event Store Modal -->
+<div id="eventstore-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeEventStore()">
+  <div class="modal-card" style="width:min(95vw,700px);">
+    <div class="modal-hdr"><span class="L">📊 Event Store</span><button class="modal-close" onclick="closeEventStore()">&times;</button></div>
+    <div style="display:flex;gap:.375rem;padding:.5rem;flex-wrap:wrap;">
+      <button class="pill a1" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('sleep')">Sen</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('habits')">Nawyki</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('nootropics')">Nootropy</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('todos')">Todo</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('timer')">Timer</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('weather')">Pogoda</button>
+      <button class="pill" style="cursor:pointer;font-size:.55rem;" data-action="renderEventStoreSheet('mood')">Nastrój</button>
+      <span style="margin-left:auto;"></span>
+      <button class="btn-sec" style="font-size:.55rem;padding:2px 8px;" data-action="exportESSheet('sleep')">CSV</button>
+    </div>
+    <div class="modal-body" id="es-content" style="max-height:400px;overflow:auto;padding:.5rem;"></div>
+  </div>
+</div>
+<!-- TradingView Widget Modal -->
+<div id="tv-widget-modal" class="modal-overlay" style="display:none">
+  <div class="modal-card" style="width:min(95vw,800px);height:500px;">
+    <div class="modal-hdr">
+      <span class="L" id="tv-title">NVDA</span>
+      <button class="modal-close" onclick="closeTVModal()">&times;</button>
+    </div>
+    <div id="tv-chart" style="height:calc(100% - 40px);"></div>
+  </div>
+</div>
+<script src="app.js" defer></script>
+</body>
+</html>
