@@ -22,6 +22,9 @@ const DEFAULT_LAYOUT: WidgetLayoutItem[] = [
   { id: 'notepad', w: 2, h: 2 },
   { id: 'analytics', w: 2, h: 2 },
   { id: 'finance', w: 2, h: 2 },
+  { id: 'air-quality', w: 2, h: 2 },
+  { id: 'fred', w: 2, h: 2 },
+  { id: 'eia', w: 2, h: 2 },
 ];
 
 export const useDashboardLayout = create<DashboardLayoutState>()(

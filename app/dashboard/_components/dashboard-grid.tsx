@@ -38,6 +38,9 @@ const NotepadWidget = lazy(() => import('./notepad-widget'));
 const AnalyticsWidget = lazy(() => import('./analytics-widget'));
 const FinanceWidgets = lazy(() => import('./finance-widgets'));
 const ProgressBars = lazy(() => import('./progress-bars'));
+const AirQualityWidget = lazy(() => import('./air-quality-widget'));
+const FREDWidget = lazy(() => import('./fred-widget'));
+const EIAWidget = lazy(() => import('./eia-widget'));
 
 function WidgetSkeleton() {
   return (
@@ -83,6 +86,9 @@ const WIDGET_REGISTRY: Record<string, ComponentType<{ id: string }>> = {
   analytics: wrap(AnalyticsWidget),
   finance: wrap(FinanceWidgets),
   progress: wrap(ProgressBars),
+  'air-quality': wrap(AirQualityWidget),
+  fred: wrap(FREDWidget),
+  eia: wrap(EIAWidget),
 };
 
 /** Widget title map for DragOverlay ghost preview */
@@ -100,6 +106,9 @@ const WIDGET_TITLES: Record<string, string> = {
   analytics: 'Analityka',
   finance: 'Finanse',
   progress: 'Postęp',
+  'air-quality': 'Jakość powietrza',
+  fred: 'FRED Makro',
+  eia: 'Energia',
 };
 
 function WidgetGhostPreview({ widgetId }: { widgetId: string }) {
