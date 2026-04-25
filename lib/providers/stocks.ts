@@ -171,9 +171,8 @@ export async function fetchYahoo(
   const baseUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=${range}&interval=${interval}`;
 
   const proxyUrls = [
+    `/api/proxy/yahoo?url=${encodeURIComponent(baseUrl)}`,
     baseUrl,
-    `https://corsproxy.io/?${encodeURIComponent(baseUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(baseUrl)}`,
   ];
 
   let lastError: Error | null = null;

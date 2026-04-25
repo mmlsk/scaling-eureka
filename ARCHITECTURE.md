@@ -36,8 +36,8 @@
 +-----------------------------------------------------------------+
            |
 +----------v------------------------------------------------------+
-|            Cloudflare Worker (proxy)                             |
-|  Rate limit (KV) -> Polygon, Finnhub, Alpha Vantage, etc.      |
+|            Next.js Route Handlers (/api/proxy/[provider])        |
+|  In-memory cache (60s), host whitelist, API key injection        |
 +-----------------------------------------------------------------+
 ```
 

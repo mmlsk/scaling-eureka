@@ -5,7 +5,7 @@ import prettier from 'eslint-config-prettier';
 
 export default [
   {
-    ignores: ['.next/', 'node_modules/', 'dist/', 'legacy/', 'proxy-worker.js'],
+    ignores: ['.next/', 'node_modules/', 'dist/', 'legacy/'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
