@@ -9,9 +9,18 @@ export interface PaletteSlice {
   setTheme: (theme: 'dark' | 'light') => void;
 }
 
+export interface SleepEntry {
+  bedtime: string;
+  waketime: string;
+  date: string;
+}
+
 export interface SleepUISlice {
   sleep: SleepState;
+  sleepLog: SleepEntry[];
   setSleep: (field: keyof SleepState, value: string | null) => void;
+  addSleepEntry: (entry: SleepEntry) => void;
+  getSleepDuration: (date: string) => number | null;
 }
 
 export interface FeelingsSlice {
@@ -34,6 +43,8 @@ export interface TimerUISlice {
   pauseTimer: () => void;
   resetTimer: () => void;
   cyclePreset: () => void;
+  setTimerPreset: (minutes: number) => void;
+  getTimerPreset: () => number;
 }
 
 export type LifeOsStore = PaletteSlice & SleepUISlice & FeelingsSlice & TimerUISlice;
@@ -59,7 +70,7 @@ const DEFAULT_FEELING_OPTIONS = [
 
 export const useLifeOsStore = create<LifeOsStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       // --- Palette / Theme ---
       palette: 'reaktor' as Palette,
       theme: 'dark' as const,
@@ -69,6 +80,7 @@ export const useLifeOsStore = create<LifeOsStore>()(
 
       // --- Sleep ---
       sleep: { start: null, stop: null, total: null },
+      sleepLog: [],
 
       setSleep: (field, value) =>
         set((state) => {
@@ -88,6 +100,23 @@ export const useLifeOsStore = create<LifeOsStore>()(
 
           return { sleep: updated };
         }),
+
+      addSleepEntry: (entry) =>
+        set((state) => ({
+          sleepLog: [...state.sleepLog, entry],
+        })),
+
+      getSleepDuration: (date: string): number | null => {
+        const { sleepLog } = get();
+        const entry = sleepLog.find((e) => e.date === date);
+        if (!entry) return null;
+        const bedMins = parseHHMM(entry.bedtime);
+        const wakeMins = parseHHMM(entry.waketime);
+        if (bedMins === null || wakeMins === null) return null;
+        let diff = wakeMins - bedMins;
+        if (diff <= 0) diff += 24 * 60;
+        return diff / 60;
+      },
 
       // --- Feelings ---
       feelings: [],
@@ -151,6 +180,29 @@ export const useLifeOsStore = create<LifeOsStore>()(
             },
           };
         }),
+
+      setTimerPreset: (minutes) =>
+        set((state) => {
+          const idx = state.timer.presets.findIndex((p) => p.work === minutes);
+          if (idx === -1) return state;
+          const preset = state.timer.presets[idx];
+          return {
+            timer: {
+              ...state.timer,
+              presetIndex: idx,
+              running: false,
+              remaining: preset.work * 60,
+              total: preset.work * 60,
+              session: 0,
+              lastTick: null,
+            },
+          };
+        }),
+
+      getTimerPreset: (): number => {
+        const { timer } = get();
+        return timer.presets[timer.presetIndex].work;
+      },
     }),
     {
       name: 'life-os-store',
@@ -158,6 +210,7 @@ export const useLifeOsStore = create<LifeOsStore>()(
         palette: state.palette,
         theme: state.theme,
         sleep: state.sleep,
+        sleepLog: state.sleepLog,
         feelings: state.feelings,
         timer: {
           presetIndex: state.timer.presetIndex,
