@@ -1,0 +1,8 @@
+# Default
+* @mmlsk
+
+# Critical infra
+/.github/workflows/  @mmlsk
+/lib/supabase/       @mmlsk
+/next.config.ts      @mmlsk
+/supabase/migrations/ @mmlsk
