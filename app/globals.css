@@ -133,6 +133,51 @@ html, body {
   letter-spacing: 0.05em;
 }
 
+.widget-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--txm);
+  cursor: grab;
+  padding: 2px 4px;
+  margin-right: 0.25rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.widget-drag-handle:hover {
+  color: var(--a1);
+}
+
+.widget-drag-handle:active {
+  cursor: grabbing;
+}
+
+.widget-title {
+  flex: 1;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+
+.widget-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.widget-error {
+  color: var(--az);
+  font-size: clamp(0.6rem, 0.58rem + 0.12vw, 0.72rem);
+}
+
 .widget-body {
   font-size: clamp(0.6rem, 0.58rem + 0.12vw, 0.72rem);
 }
