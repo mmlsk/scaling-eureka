@@ -1,7 +1,6 @@
 import type {
   WeatherForecastResponse,
   AirQualityResponse,
-  UVResponse,
 } from '@/types/api';
 import type { IMGWAlert } from '@/types/state';
 
@@ -150,27 +149,6 @@ export async function fetchAirQuality(
 }
 
 /**
- * Fetch UV index data from OpenUV API.
- */
-export async function fetchUV(
-  lat: number = LAT,
-  lon: number = LON,
-  apiKey: string,
-): Promise<UVResponse> {
-  const url = `https://api.openuv.io/api/v1/uv?lat=${lat}&lng=${lon}`;
-  const res = await fetch(url, {
-    headers: { 'x-access-token': apiKey },
-  });
-
-  if (!res.ok) {
-    throw new Error(`OpenUV API failed: ${res.status} ${res.statusText}`);
-  }
-
-  const data: UVResponse = await res.json();
-  return data;
-}
-
-/**
  * Fetch IMGW meteorological alerts and filter for zachodniopomorskie.
  */
 export async function fetchIMGWAlerts(): Promise<IMGWAlert[]> {
@@ -229,7 +207,6 @@ export function weatherIcon(code: number): string {
 export const WeatherProviders = {
   fetchWeatherForecast,
   fetchAirQuality,
-  fetchUV,
   fetchIMGWAlerts,
   fetchRainViewer,
   weatherLabel,
