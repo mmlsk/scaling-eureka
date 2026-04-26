@@ -42,7 +42,13 @@ export function WidgetShell({
         {actions && <div className="widget-actions">{actions}</div>}
       </header>
       <div className="widget-body" role="region" aria-busy={isLoading || undefined}>
-        {error ? (
+        {isLoading ? (
+          <div className="widget-skeleton" aria-hidden="true">
+            <div className="skeleton-line" style={{ width: '60%', height: '1rem', marginBottom: '0.5rem' }} />
+            <div className="skeleton-line" style={{ width: '85%', height: '1rem', marginBottom: '0.5rem' }} />
+            <div className="skeleton-line" style={{ width: '40%', height: '1rem' }} />
+          </div>
+        ) : error ? (
           <div className="widget-error" role="alert">{error}</div>
         ) : (
           children
