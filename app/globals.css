@@ -171,26 +171,6 @@ button:focus:not(:focus-visible) {
   cursor: grabbing;
 }
 
-.widget-title {
-  flex: 1;
-  margin: 0;
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
-  text-transform: inherit;
-  letter-spacing: inherit;
-}
-
-.widget-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.widget-error {
-  color: var(--az);
-  font-size: clamp(0.6rem, 0.58rem + 0.12vw, 0.72rem);
-}
 
 .widget-body {
   font-size: clamp(0.6rem, 0.58rem + 0.12vw, 0.72rem);
@@ -227,32 +207,6 @@ button:focus:not(:focus-visible) {
 .calc-badge.warn { background: rgba(196,162,74,.15); color: var(--a1); }
 .calc-badge.crit { background: rgba(194,49,39,.15); color: var(--az); }
 
-.btn-primary {
-  padding: 6px 14px;
-  border-radius: 6px;
-  background: var(--a1);
-  color: var(--txi);
-  border: none;
-  font-size: clamp(0.6rem, 0.58rem + 0.12vw, 0.72rem);
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.btn-primary:hover { background: var(--a1h); }
-
-.btn-secondary {
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: var(--soff);
-  color: var(--tx);
-  border: 1px solid var(--bor);
-  font-size: clamp(0.55rem, 0.52rem + 0.1vw, 0.65rem);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.btn-secondary:hover { background: var(--sdyn); }
 
 .input-field {
   width: 100%;
@@ -319,30 +273,6 @@ button:focus:not(:focus-visible) {
   transition: width 1s ease;
 }
 
-/* ══════════════════════════════════════════════════
-   MODAL
-   ══════════════════════════════════════════════════ */
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
-.modal-content {
-  background: var(--sur);
-  border: 1px solid var(--bor);
-  border-radius: 12px;
-  padding: 1.5rem;
-  max-width: 480px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-}
 
 /* ══════════════════════════════════════════════════
    DASHBOARD GRID
