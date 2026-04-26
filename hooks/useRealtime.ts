@@ -51,7 +51,9 @@ export function useRealtime(
   const callbackRef = useRef(callback);
 
   // Keep callback ref fresh without re-subscribing
-  callbackRef.current = callback;
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
 
   useEffect(() => {
     if (!supabaseUrl || !supabaseAnonKey) {
