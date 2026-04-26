@@ -16,6 +16,10 @@ const ALLOWED_HOSTS = [
   'www.googleapis.com',
 ];
 
+// Yahoo Finance query1/query2 endpoints are public and don't require API keys.
+// Listed here explicitly to make passthrough intentional (not a config bug).
+const NO_AUTH_PROVIDERS = new Set(['yahoo']);
+
 type AuthMethod = 'query' | 'header';
 const API_KEY_MAP: Record<string, { env: string; param: string; method: AuthMethod }> = {
   polygon:      { env: 'POLYGON_KEY',           param: 'apiKey',          method: 'query' },
@@ -69,14 +73,16 @@ export async function GET(
     Accept: 'application/json',
   };
 
-  const keyConfig = API_KEY_MAP[provider];
-  if (keyConfig) {
-    const apiKey = process.env[keyConfig.env];
-    if (apiKey) {
-      if (keyConfig.method === 'header') {
-        authHeaders[keyConfig.param] = apiKey;
-      } else {
-        target.searchParams.set(keyConfig.param, apiKey);
+  if (!NO_AUTH_PROVIDERS.has(provider)) {
+    const keyConfig = API_KEY_MAP[provider];
+    if (keyConfig) {
+      const apiKey = process.env[keyConfig.env];
+      if (apiKey) {
+        if (keyConfig.method === 'header') {
+          authHeaders[keyConfig.param] = apiKey;
+        } else {
+          target.searchParams.set(keyConfig.param, apiKey);
+        }
       }
     }
   }
