@@ -21,6 +21,7 @@ export function useHydration(): boolean {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: SSR hydration guard
     setHydrated(true);
   }, []);
 

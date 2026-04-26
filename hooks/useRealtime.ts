@@ -57,6 +57,7 @@ export function useRealtime(
 
   useEffect(() => {
     if (!supabaseUrl || !supabaseAnonKey) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: signal missing config on mount
       setStatus('error');
       return;
     }
