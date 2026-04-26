@@ -508,3 +508,52 @@ body::before {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   border: 1px solid var(--a1);
 }
+
+/* ══════════════════════════════════════════════════
+   iOS Safe Area — notch / Dynamic Island / home bar
+   ══════════════════════════════════════════════════ */
+
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   WIDGET SKELETON LOADER
+   ══════════════════════════════════════════════════ */
+
+.widget-skeleton { padding: 0.5rem; }
+
+.skeleton-line {
+  background: linear-gradient(90deg, var(--soff) 25%, var(--sdyn) 50%, var(--soff) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════
+   TOUCH-ACTION DnD (iOS Safari)
+   ══════════════════════════════════════════════════ */
+
+.widget-drag-handle {
+  touch-action: none;
+}
