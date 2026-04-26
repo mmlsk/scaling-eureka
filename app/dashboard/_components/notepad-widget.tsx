@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useHydration } from '@/hooks/useHydration';
 import { WidgetTabs } from '@/components/widget-parts/widget-tabs';
+import { Button } from '@/components/ui/button';
 
 type NoteTab = 'today' | 'week' | 'pinned';
 
@@ -117,23 +118,25 @@ export default function NotepadWidget() {
       <div className="widget-header">
         <span>Notatki</span>
         <div className="flex items-center gap-1">
-          <button
-            className="btn-secondary"
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleExport}
             aria-label="Eksportuj do pliku .md"
             title="Eksportuj .md"
             style={{ padding: '2px 6px' }}
           >
             \u2B07
-          </button>
-          <button
-            className="btn-secondary"
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={togglePreview}
             style={mdPreview ? { borderColor: 'var(--a1)', color: 'var(--a1)' } : {}}
             aria-label={mdPreview ? 'Przelacz na edycje' : 'Przelacz na podglad'}
           >
             {mdPreview ? 'Edytuj' : 'Podglad'}
-          </button>
+          </Button>
         </div>
       </div>
       <div className="widget-body">
@@ -150,7 +153,7 @@ export default function NotepadWidget() {
           />
         ) : (
           <textarea
-            className="input-field w-full resize-none"
+            className="w-full resize-none rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             style={{
               minHeight: '6rem',
               maxHeight: '12rem',

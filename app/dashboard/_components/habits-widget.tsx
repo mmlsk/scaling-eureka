@@ -5,6 +5,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createHabitsSlice, type HabitsSlice } from '@/store/slices/habits';
 import { useHydration } from '@/hooks/useHydration';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const useHabitsStore = create<HabitsSlice>()(
   persist(createHabitsSlice, { name: 'life-os-habits' }),
@@ -58,20 +60,21 @@ export default function HabitsWidget() {
               {todayStats.done}/{todayStats.total}
             </span>
           )}
-          <button
-            className="btn-secondary"
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setShowInput(!showInput)}
             aria-label="Dodaj nawyk"
           >
             + Dodaj
-          </button>
+          </Button>
         </div>
       </div>
       <div className="widget-body">
         {showInput && (
           <div className="flex gap-2 mb-3">
-            <input
-              className="input-field flex-1"
+            <Input
+              className="flex-1"
               placeholder="Nazwa nawyku..."
               value={newHabitName}
               onChange={(e) => setNewHabitName(e.target.value)}
@@ -81,9 +84,9 @@ export default function HabitsWidget() {
               autoFocus
               aria-label="Nazwa nowego nawyku"
             />
-            <button className="btn-primary" onClick={handleAddHabit}>
+            <Button size="sm" onClick={handleAddHabit}>
               OK
-            </button>
+            </Button>
           </div>
         )}
 

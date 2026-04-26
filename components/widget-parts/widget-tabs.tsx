@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+
 interface WidgetTabsProps<T extends string> {
   tabs: { key: T; label: string }[];
   activeTab: T;
@@ -16,11 +18,12 @@ export function WidgetTabs<T extends string>({
       {tabs.map((tab) => {
         const isActive = tab.key === activeTab;
         return (
-          <button
+          <Button
             key={tab.key}
             role="tab"
+            variant="outline"
+            size="xs"
             aria-selected={isActive}
-            className="btn-secondary"
             style={
               isActive
                 ? {
@@ -33,7 +36,7 @@ export function WidgetTabs<T extends string>({
             onClick={() => onTabChange(tab.key)}
           >
             {tab.label}
-          </button>
+          </Button>
         );
       })}
     </div>

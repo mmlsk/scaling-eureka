@@ -5,6 +5,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createNootropicsSlice, type NootropicsSlice } from '@/store/slices/nootropics';
 import { useHydration } from '@/hooks/useHydration';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const useNootropicsStore = create<NootropicsSlice>()(
   persist(createNootropicsSlice, { name: 'life-os-nootropics' }),
@@ -60,20 +62,21 @@ export default function NootropicsWidget() {
               {stats.taken}/{stats.total}
             </span>
           )}
-          <button
-            className="btn-secondary"
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setEditing(!editing)}
             aria-label={editing ? 'Zakoncz edycje' : 'Edytuj liste'}
           >
             {editing ? 'Gotowe' : 'Edytuj'}
-          </button>
+          </Button>
         </div>
       </div>
       <div className="widget-body">
         {editing && (
           <div className="flex gap-2 mb-3">
-            <input
-              className="input-field flex-1"
+            <Input
+              className="flex-1"
               placeholder="Nazwa..."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -82,8 +85,7 @@ export default function NootropicsWidget() {
               }}
               aria-label="Nazwa nowego nootropu"
             />
-            <input
-              className="input-field"
+            <Input
               style={{ width: '5rem' }}
               placeholder="Dawka"
               value={newDose}
@@ -93,9 +95,9 @@ export default function NootropicsWidget() {
               }}
               aria-label="Dawka nowego nootropu"
             />
-            <button className="btn-primary" onClick={handleAdd} aria-label="Dodaj nootrop">
+            <Button size="sm" onClick={handleAdd} aria-label="Dodaj nootrop">
               +
-            </button>
+            </Button>
           </div>
         )}
 
@@ -160,8 +162,9 @@ export default function NootropicsWidget() {
                   {noot.status === 'taken' ? '\u2713' : noot.status === 'skipped' ? '\u2717' : '\u2022'}
                 </span>
                 {editing && (
-                  <button
-                    className="btn-secondary"
+                  <Button
+                    variant="outline"
+                    size="sm"
                     style={{ padding: '2px 6px', fontSize: '0.6rem' }}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -170,7 +173,7 @@ export default function NootropicsWidget() {
                     aria-label={`Usun ${noot.name}`}
                   >
                     X
-                  </button>
+                  </Button>
                 )}
               </div>
             ))}

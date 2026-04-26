@@ -6,6 +6,8 @@ import { persist } from 'zustand/middleware';
 import { createTodosSlice, type TodosSlice } from '@/store/slices/todos';
 import { useHydration } from '@/hooks/useHydration';
 import type { LocalTodo } from '@/types/state';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const useTodosStore = create<TodosSlice>()(
   persist(createTodosSlice, { name: 'life-os-todos' }),
@@ -82,17 +84,17 @@ export default function TodoWidget() {
             {doneCount}/{todos.length}
           </span>
           {doneCount > 0 && (
-            <button className="btn-secondary" onClick={archiveDone} aria-label="Archiwizuj wykonane">
+            <Button variant="outline" size="sm" onClick={archiveDone} aria-label="Archiwizuj wykonane">
               Archiwizuj
-            </button>
+            </Button>
           )}
         </div>
       </div>
       <div className="widget-body">
         {/* Add Input */}
         <div className="flex gap-2 mb-2">
-          <input
-            className="input-field flex-1"
+          <Input
+            className="flex-1"
             placeholder="Nowe zadanie..."
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
@@ -109,9 +111,9 @@ export default function TodoWidget() {
           >
             {priority}
           </button>
-          <button className="btn-primary" onClick={handleAdd} aria-label="Dodaj zadanie">
+          <Button size="sm" onClick={handleAdd} aria-label="Dodaj zadanie">
             +
-          </button>
+          </Button>
         </div>
 
         {/* Progress bar */}

@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
 import { fmtTime } from '@/lib/utils/format';
+import { Button } from '@/components/ui/button';
 
 export default function TimerWidget() {
   const hydrated = useHydration();
@@ -120,20 +121,20 @@ export default function TimerWidget() {
         {/* Controls */}
         <div className="flex gap-2 justify-center">
           {timer.running ? (
-            <button className="btn-primary" onClick={pauseTimer}>
+            <Button size="sm" onClick={pauseTimer}>
               Pauza
-            </button>
+            </Button>
           ) : (
-            <button className="btn-primary" onClick={startTimer}>
+            <Button size="sm" onClick={startTimer}>
               Start
-            </button>
+            </Button>
           )}
-          <button className="btn-secondary" onClick={resetTimer}>
+          <Button variant="outline" size="sm" onClick={resetTimer}>
             Reset
-          </button>
-          <button className="btn-secondary" onClick={cyclePreset}>
+          </Button>
+          <Button variant="outline" size="sm" onClick={cyclePreset}>
             Preset
-          </button>
+          </Button>
         </div>
       </div>
     </div>
