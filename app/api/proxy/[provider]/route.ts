@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_cache } from 'next/cache';
 
-const CACHE_TTL_MS = 60_000; // 60s in-memory cache
-const cache = new Map<string, { ts: number; data: unknown }>();
+const CACHE_TTL_S = 60;
 
 const ALLOWED_HOSTS = [
   'query1.finance.yahoo.com',
@@ -13,17 +13,33 @@ const ALLOWED_HOSTS = [
   'www.alphavantage.co',
   'api.openuv.io',
   'api.openaq.org',
+  'www.googleapis.com',
 ];
 
-const API_KEY_MAP: Record<string, { env: string; param: string }> = {
-  polygon: { env: 'NEXT_PUBLIC_POLYGON_KEY', param: 'apiKey' },
-  finnhub: { env: 'NEXT_PUBLIC_FINNHUB_KEY', param: 'token' },
-  alphavantage: { env: 'NEXT_PUBLIC_ALPHAVANTAGE_KEY', param: 'apikey' },
-  fred: { env: 'NEXT_PUBLIC_FRED_KEY', param: 'api_key' },
-  eia: { env: 'NEXT_PUBLIC_EIA_KEY', param: 'api_key' },
-  openaq: { env: 'NEXT_PUBLIC_OPENAQ_KEY', param: 'apikey' },
-  openuv: { env: 'NEXT_PUBLIC_OPENUV_KEY', param: 'x-access-token' },
+type AuthMethod = 'query' | 'header';
+const API_KEY_MAP: Record<string, { env: string; param: string; method: AuthMethod }> = {
+  polygon:      { env: 'POLYGON_KEY',           param: 'apiKey',          method: 'query' },
+  finnhub:      { env: 'FINNHUB_NEWS_KEY',      param: 'token',           method: 'query' },
+  alphavantage: { env: 'ALPHA_VANTAGE_KEY',     param: 'apikey',          method: 'query' },
+  fred:         { env: 'FRED_API_KEY',          param: 'api_key',         method: 'query' },
+  eia:          { env: 'EIA_API_KEY',           param: 'api_key',         method: 'query' },
+  openaq:       { env: 'NEXT_PUBLIC_OPENAQ_KEY', param: 'X-API-Key',      method: 'header' },
+  openuv:       { env: 'NEXT_PUBLIC_OPENUV_KEY', param: 'x-access-token', method: 'header' },
+  googlecal:    { env: 'GOOGLE_CAL_API_KEY',    param: 'key',             method: 'query' },
 };
+
+const fetchUpstream = unstable_cache(
+  async (url: string, headersJson: string) => {
+    const headers: Record<string, string> = JSON.parse(headersJson);
+    const res = await fetch(url, { headers });
+    if (!res.ok) {
+      throw new Error(`Upstream returned ${res.status}`);
+    }
+    return await res.json();
+  },
+  ['proxy-upstream'],
+  { revalidate: CACHE_TTL_S, tags: ['proxy'] },
+);
 
 export async function GET(
   req: NextRequest,
@@ -47,21 +63,18 @@ export async function GET(
     return NextResponse.json({ error: 'host not allowed' }, { status: 403 });
   }
 
-  // In-memory cache
-  const cached = cache.get(url);
-  if (cached && Date.now() - cached.ts < CACHE_TTL_MS) {
-    return NextResponse.json(cached.data, {
-      headers: { 'Cache-Control': 'public, max-age=60, stale-while-revalidate=300' },
-    });
-  }
-
   // API key injection
+  const authHeaders: Record<string, string> = {
+    'User-Agent': 'LifeOS-Proxy/2.0',
+    Accept: 'application/json',
+  };
+
   const keyConfig = API_KEY_MAP[provider];
   if (keyConfig) {
     const apiKey = process.env[keyConfig.env];
     if (apiKey) {
-      if (keyConfig.param === 'x-access-token') {
-        // Header-based key (OpenUV)
+      if (keyConfig.method === 'header') {
+        authHeaders[keyConfig.param] = apiKey;
       } else {
         target.searchParams.set(keyConfig.param, apiKey);
       }
@@ -69,30 +82,16 @@ export async function GET(
   }
 
   try {
-    const headers: Record<string, string> = {
-      'User-Agent': 'LifeOS-Proxy/2.0',
-      Accept: 'application/json',
-    };
-
-    // OpenUV uses header-based auth
-    if (provider === 'openuv') {
-      const apiKey = process.env.NEXT_PUBLIC_OPENUV_KEY;
-      if (apiKey) headers['x-access-token'] = apiKey;
-    }
-
-    const res = await fetch(target.toString(), { headers });
-    const data = await res.json();
-
-    cache.set(url, { ts: Date.now(), data });
-
+    const data = await fetchUpstream(target.toString(), JSON.stringify(authHeaders));
     return NextResponse.json(data, {
-      status: res.status,
       headers: {
         'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
       },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'upstream error';
-    return NextResponse.json({ error: message }, { status: 502 });
+    return NextResponse.json(
+      { error: 'upstream failed', detail: (err as Error).message },
+      { status: 502 },
+    );
   }
 }

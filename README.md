@@ -80,16 +80,15 @@ Wszystkie kalkulatory zawieraja:
 | `NEXT_PUBLIC_SUPABASE_URL` | Tak | URL projektu Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Tak | Publiczny klucz anon Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Nie | Service role key (server-side only) |
-| `NEXT_PUBLIC_FINNHUB_API_KEY` | Nie | Finnhub stock data |
-| `ALPHA_VANTAGE_KEY` | Nie | Alpha Vantage stock data (fallback) |
-| `POLYGON_KEY` | Nie | Polygon.io stock data |
+| `POLYGON_KEY` | Nie | Polygon.io stock data (server-only) |
+| `FINNHUB_NEWS_KEY` | Nie | Finnhub stock/news (server-only) |
+| `ALPHA_VANTAGE_KEY` | Nie | Alpha Vantage stock data (server-only) |
+| `FRED_API_KEY` | Nie | FRED economic data (server-only) |
+| `EIA_API_KEY` | Nie | EIA energy data (server-only) |
 | `NEXT_PUBLIC_OPENAQ_KEY` | Nie | OpenAQ air quality |
 | `NEXT_PUBLIC_OPENUV_KEY` | Nie | OpenUV UV index |
-| `NEXT_PUBLIC_GOOGLE_CAL_API_KEY` | Nie | Google Calendar API |
+| `GOOGLE_CAL_API_KEY` | Nie | Google Calendar API (server-only) |
 | `GOOGLE_CAL_CALENDAR_ID` | Nie | Google Calendar ID |
-| `FINNHUB_NEWS_KEY` | Nie | Finnhub news feed |
-| `FRED_API_KEY` | Nie | FRED economic data |
-| `EIA_API_KEY` | Nie | EIA energy data |
 | `OPENAI_API_KEY` | Nie | OpenAI embeddings (AI assistant) |
 | `LATITUDE` | Nie | Szerokosc geograficzna (default: 53.43) |
 | `LONGITUDE` | Nie | Dlugosc geograficzna (default: 14.55) |

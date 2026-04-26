@@ -37,10 +37,10 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_POLYGON_KEY: ${{ secrets.NEXT_PUBLIC_POLYGON_KEY }}
-          NEXT_PUBLIC_ALPHAVANTAGE_KEY: ${{ secrets.NEXT_PUBLIC_ALPHAVANTAGE_KEY }}
-          NEXT_PUBLIC_FINNHUB_KEY: ${{ secrets.NEXT_PUBLIC_FINNHUB_KEY }}
+          POLYGON_KEY: ${{ secrets.POLYGON_KEY }}
+          ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+          FINNHUB_NEWS_KEY: ${{ secrets.FINNHUB_NEWS_KEY }}
           NEXT_PUBLIC_OPENAQ_KEY: ${{ secrets.NEXT_PUBLIC_OPENAQ_KEY }}
           NEXT_PUBLIC_OPENUV_KEY: ${{ secrets.NEXT_PUBLIC_OPENUV_KEY }}
-          NEXT_PUBLIC_FRED_KEY: ${{ secrets.NEXT_PUBLIC_FRED_KEY }}
-          NEXT_PUBLIC_EIA_KEY: ${{ secrets.NEXT_PUBLIC_EIA_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
