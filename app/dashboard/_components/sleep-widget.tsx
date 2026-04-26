@@ -4,6 +4,8 @@ import { useState, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 type SleepQuality = 'bad' | 'med' | 'good';
 
@@ -119,9 +121,9 @@ export default function SleepWidget() {
               Zasniecie
             </div>
             {editingField === 'start' ? (
-              <input
+              <Input
                 type="time"
-                className="input-field mono"
+                className="font-mono"
                 defaultValue={sleep.start ?? ''}
                 autoFocus
                 aria-label="Godzina zasniecia"
@@ -131,9 +133,9 @@ export default function SleepWidget() {
                 }}
               />
             ) : (
-              <button className="btn-secondary w-full text-left font-mono" onClick={() => setEditingField('start')}>
+              <Button variant="outline" size="sm" className="w-full justify-start font-mono" onClick={() => setEditingField('start')}>
                 {sleep.start ?? '--:--'}
-              </button>
+              </Button>
             )}
           </div>
           <div className="flex-1">
@@ -141,9 +143,9 @@ export default function SleepWidget() {
               Pobudka
             </div>
             {editingField === 'stop' ? (
-              <input
+              <Input
                 type="time"
-                className="input-field mono"
+                className="font-mono"
                 defaultValue={sleep.stop ?? ''}
                 autoFocus
                 aria-label="Godzina pobudki"
@@ -153,9 +155,9 @@ export default function SleepWidget() {
                 }}
               />
             ) : (
-              <button className="btn-secondary w-full text-left font-mono" onClick={() => setEditingField('stop')}>
+              <Button variant="outline" size="sm" className="w-full justify-start font-mono" onClick={() => setEditingField('stop')}>
                 {sleep.stop ?? '--:--'}
-              </button>
+              </Button>
             )}
           </div>
         </div>
