@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
 import { useHydration } from '@/hooks/useHydration';
 import { PIZZA_INDEX } from '@/lib/providers/finance';
 import type { PolymarketEvent, InsiderTrade, SECFiling, TrumpNewsItem } from '@/types/api';
@@ -67,9 +68,10 @@ export default function FinanceWidgets() {
         {/* Tab switcher */}
         <div className="flex gap-1 mb-3 flex-wrap">
           {(Object.keys(TAB_LABELS) as FinanceTab[]).map((t) => (
-            <button
+            <Button
               key={t}
-              className={`btn-secondary text-[clamp(0.45rem,0.43rem+0.08vw,0.55rem)]`}
+              variant="outline"
+              size="xs"
               style={
                 tab === t
                   ? { borderColor: 'var(--a1)', color: 'var(--a1)', background: 'var(--a1d)' }
@@ -78,7 +80,7 @@ export default function FinanceWidgets() {
               onClick={() => setTab(t)}
             >
               {TAB_LABELS[t]}
-            </button>
+            </Button>
           ))}
         </div>
 

@@ -2,6 +2,9 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useHydration } from '@/hooks/useHydration';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Modal } from '@/components/ui/modal';
 
 interface CalendarEvent {
   title: string;
@@ -122,19 +125,19 @@ export default function CalendarWidget() {
     <div className="widget">
       <div className="widget-header">
         <div className="flex items-center gap-2">
-          <button className="btn-secondary" onClick={prevMonth} style={{ padding: '2px 6px' }}>
+          <Button variant="outline" size="xs" onClick={prevMonth}>
             &lt;
-          </button>
+          </Button>
           <span>
             {MONTHS_PL[viewMonth]} {viewYear}
           </span>
-          <button className="btn-secondary" onClick={nextMonth} style={{ padding: '2px 6px' }}>
+          <Button variant="outline" size="xs" onClick={nextMonth}>
             &gt;
-          </button>
+          </Button>
         </div>
-        <button className="btn-secondary" onClick={() => setShowModal(true)}>
+        <Button variant="outline" size="sm" onClick={() => setShowModal(true)}>
           + Wydarzenie
-        </button>
+        </Button>
       </div>
       <div className="widget-body">
         {/* Day labels */}
@@ -197,43 +200,31 @@ export default function CalendarWidget() {
         </div>
       </div>
 
-      {/* Add Event Modal */}
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="widget-header mb-3">
-              <span>Nowe wydarzenie</span>
-              <button className="btn-secondary" onClick={() => setShowModal(false)}>
-                X
-              </button>
-            </div>
-            <div className="space-y-3">
-              <input
-                className="input-field"
-                placeholder="Tytuł..."
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                autoFocus
-              />
-              <input
-                type="date"
-                className="input-field mono"
-                value={newDate}
-                onChange={(e) => setNewDate(e.target.value)}
-              />
-              <input
-                type="time"
-                className="input-field mono"
-                value={newTime}
-                onChange={(e) => setNewTime(e.target.value)}
-              />
-              <button className="btn-primary w-full" onClick={handleAddEvent}>
-                Dodaj wydarzenie
-              </button>
-            </div>
-          </div>
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Nowe wydarzenie">
+        <div className="space-y-3">
+          <Input
+            placeholder="Tytuł..."
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            autoFocus
+          />
+          <Input
+            type="date"
+            className="font-mono"
+            value={newDate}
+            onChange={(e) => setNewDate(e.target.value)}
+          />
+          <Input
+            type="time"
+            className="font-mono"
+            value={newTime}
+            onChange={(e) => setNewTime(e.target.value)}
+          />
+          <Button className="w-full" onClick={handleAddEvent}>
+            Dodaj wydarzenie
+          </Button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 }
