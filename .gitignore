@@ -71,3 +71,4 @@ coverage/
 .editorconfig
 .gitattributes
 
+tsconfig.tsbuildinfo
