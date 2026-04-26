@@ -1,6 +1,8 @@
 'use client';
 
 import { type ReactNode } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface WidgetShellProps {
   id: string;
@@ -24,12 +26,13 @@ export function WidgetShell({
   dragHandleProps,
 }: WidgetShellProps) {
   return (
-    <article
-      className={`widget ${className ?? ''}`}
+    <Card
+      className={className}
       aria-label={`Widget: ${title}`}
       data-widget-id={id}
+      size="sm"
     >
-      <header className="widget-header">
+      <CardHeader className="flex flex-row items-center justify-between gap-2 py-0">
         <button
           type="button"
           className="widget-drag-handle"
@@ -38,22 +41,24 @@ export function WidgetShell({
         >
           <span aria-hidden="true">⋮⋮</span>
         </button>
-        <h3 className="widget-title">{title}</h3>
-        {actions && <div className="widget-actions">{actions}</div>}
-      </header>
-      <div className="widget-body" role="region" aria-busy={isLoading || undefined}>
+        <CardTitle className="flex-1 text-[length:clamp(0.65rem,0.62rem+0.14vw,0.78rem)] font-medium uppercase tracking-wider text-muted-foreground">
+          {title}
+        </CardTitle>
+        {actions && <div className="flex items-center gap-1">{actions}</div>}
+      </CardHeader>
+      <CardContent role="region" aria-busy={isLoading || undefined}>
         {isLoading ? (
-          <div className="widget-skeleton" aria-hidden="true">
-            <div className="skeleton-line" style={{ width: '60%', height: '1rem', marginBottom: '0.5rem' }} />
-            <div className="skeleton-line" style={{ width: '85%', height: '1rem', marginBottom: '0.5rem' }} />
-            <div className="skeleton-line" style={{ width: '40%', height: '1rem' }} />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-3/5" />
+            <Skeleton className="h-4 w-4/5" />
+            <Skeleton className="h-4 w-2/5" />
           </div>
         ) : error ? (
-          <div className="widget-error" role="alert">{error}</div>
+          <p className="text-sm text-destructive" role="alert">{error}</p>
         ) : (
           children
         )}
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 }
