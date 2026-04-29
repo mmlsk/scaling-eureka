@@ -20,7 +20,18 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    // Enhanced strict type checking
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "next-env.d.ts",
