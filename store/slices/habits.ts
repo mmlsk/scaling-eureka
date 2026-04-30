@@ -18,12 +18,12 @@ export const createHabitsSlice: StateCreator<HabitsSlice, [], [], HabitsSlice> =
   habits: [],
 
   addHabit: (name) =>
-    set((state) => ({
-      habits: [
-        ...state.habits,
-        { n: name, d: [], s: 0, lastDate: undefined },
-      ],
-    })),
+    set((state) => {
+      const newHabit: LocalHabit = { n: name, d: [], s: 0 };
+      return {
+        habits: [...state.habits, newHabit],
+      };
+    }),
 
   removeHabit: (index) =>
     set((state) => ({

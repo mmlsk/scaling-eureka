@@ -145,8 +145,8 @@ export default function WeatherWidget() {
                 { label: 'Wiatr', value: `${Math.round(cur.wind_speed_10m)} km/h` },
                 { label: 'Wilgotnosc', value: `${cur.relative_humidity_2m}%` },
                 { label: 'Cisnienie', value: `${Math.round(cur.surface_pressure)} hPa` },
-                ...(uvVal != null
-                  ? [{ label: 'UV', value: uvVal.toFixed(1), badge: uvInfo ? { text: uvInfo.label, cls: uvInfo.cls } as const : undefined }]
+                ...(uvVal != null && uvInfo
+                  ? [{ label: 'UV', value: uvVal.toFixed(1), badge: { text: uvInfo.label, cls: uvInfo.cls } as const }]
                   : []),
               ]}
             />
@@ -184,13 +184,13 @@ export default function WeatherWidget() {
                   <span style={{ color: 'var(--txm)', width: '3rem' }}>
                     {formatTime(time)}
                   </span>
-                  <span>{weatherIcon(weather.hourly.weather_code[i])}</span>
+                  <span>{weatherIcon(weather.hourly.weather_code[i]!)}</span>
                   <span className="font-mono" style={{ width: '2.5rem', textAlign: 'right' }}>
-                    {Math.round(weather.hourly.temperature_2m[i])}\u00B0C
+                    {Math.round(weather.hourly.temperature_2m[i]!)}\u00B0C
                   </span>
                   {weather.hourly.precipitation_probability?.[i] != null && (
                     <span style={{ color: 'var(--cold)', width: '2.5rem', textAlign: 'right' }}>
-                      {weather.hourly.precipitation_probability[i]}%
+                      {weather.hourly.precipitation_probability[i]!}%
                     </span>
                   )}
                 </div>
@@ -204,9 +204,9 @@ export default function WeatherWidget() {
           <div className="space-y-1">
             {weather.daily.time.map((date, idx) => {
               const dayLabel = new Date(date).toLocaleDateString('pl-PL', { weekday: 'short', day: 'numeric' });
-              const code = weather.daily.weather_code[idx];
-              const maxTemp = Math.round(weather.daily.temperature_2m_max[idx]);
-              const minTemp = Math.round(weather.daily.temperature_2m_min[idx]);
+              const code = weather.daily.weather_code[idx]!;
+              const maxTemp = Math.round(weather.daily.temperature_2m_max[idx]!);
+              const minTemp = Math.round(weather.daily.temperature_2m_min[idx]!);
               const range = maxTemp - minTemp;
 
               return (
@@ -256,9 +256,9 @@ export default function WeatherWidget() {
             {weather.daily?.sunrise?.[0] && (
               <MetricList
                 items={[
-                  { label: 'Wschod slonca', value: formatTime(weather.daily.sunrise[0]) },
-                  { label: 'Zachod slonca', value: formatTime(weather.daily.sunset[0]) },
-                  { label: 'Dlugosc dnia', value: dayLength(weather.daily.sunrise[0], weather.daily.sunset[0]) },
+                  { label: 'Wschod slonca', value: formatTime(weather.daily.sunrise[0]!) },
+                  { label: 'Zachod slonca', value: formatTime(weather.daily.sunset[0]!) },
+                  { label: 'Dlugosc dnia', value: dayLength(weather.daily.sunrise[0]!, weather.daily.sunset[0]!) },
                 ]}
               />
             )}

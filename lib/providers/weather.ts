@@ -166,10 +166,11 @@ export async function fetchIMGWAlerts(): Promise<IMGWAlert[]> {
       const voivodeship = (alert.woj ?? '').toLowerCase();
       return voivodeship.includes('zachodniopomorskie');
     })
+    .filter((alert) => alert.woj !== undefined && alert.opis !== undefined && alert.zjawisko !== undefined)
     .map((alert) => ({
-      voivodeship: alert.woj,
-      description: alert.opis,
-      phenomena: alert.zjawisko,
+      voivodeship: alert.woj!,
+      description: alert.opis!,
+      phenomena: alert.zjawisko!,
     }));
 
   return filtered;

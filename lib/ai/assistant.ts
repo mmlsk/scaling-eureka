@@ -124,8 +124,13 @@ export async function processQuery(
       content: item.content.slice(0, 200),
     }));
 
-  return {
+  const result: AIAssistantResponse = {
     response: responseText,
-    sources: sources.length > 0 ? sources : undefined,
   };
+
+  if (sources.length > 0) {
+    result.sources = sources;
+  }
+
+  return result;
 }

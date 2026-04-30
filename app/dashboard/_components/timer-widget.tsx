@@ -42,7 +42,7 @@ export default function TimerWidget() {
         const remaining = Math.max(0, state.timer.remaining - elapsed);
 
         if (remaining === 0) {
-          const preset = state.timer.presets[state.timer.presetIndex];
+          const preset = state.timer.presets[state.timer.presetIndex]!;
           return {
             timer: {
               ...state.timer,
@@ -84,7 +84,7 @@ export default function TimerWidget() {
     );
   }
 
-  const preset = timer.presets[timer.presetIndex];
+  const preset = timer.presets[timer.presetIndex]!;
   const progressPct = timer.total > 0 ? ((timer.total - timer.remaining) / timer.total) * 100 : 0;
 
   return (

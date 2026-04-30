@@ -64,8 +64,10 @@ function TrendChart({ data }: { data: number[] }) {
     .join(' ');
 
   const areaD =
-    pathD +
-    ` L ${points[points.length - 1].x} ${padY + plotH} L ${points[0].x} ${padY + plotH} Z`;
+    points.length > 0
+      ? pathD +
+        ` L ${points[points.length - 1]!.x} ${padY + plotH} L ${points[0]!.x} ${padY + plotH} Z`
+      : '';
 
   return (
     <svg width={CHART_W} height={CHART_H} className="w-full" viewBox={`0 0 ${CHART_W} ${CHART_H}`}>
@@ -119,7 +121,7 @@ function HeatmapGrid({ habits }: { habits: HabitsSlice['habits'] }) {
       const habitIdx = row;
 
       if (habitIdx < habits.length) {
-        const habit = habits[habitIdx];
+        const habit = habits[habitIdx]!;
         const done = habit.d.includes(dayOffset);
         const level = done ? 4 : 0;
         cells.push({ row, col, level });

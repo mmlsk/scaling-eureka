@@ -69,7 +69,7 @@ export function calcSleepTotal(start: string, stop: string): string | null {
 
   if ([sh, sm, eh, em].some((n) => Number.isNaN(n))) return null;
 
-  let mins = (eh * 60 + em) - (sh * 60 + sm);
+  let mins = (eh! * 60 + em!) - (sh! * 60 + sm!);
   if (mins < 0) mins += 24 * 60;
 
   const h = Math.floor(mins / 60);
@@ -82,7 +82,7 @@ export function calcSleepTotal(start: string, stop: string): string | null {
  * Get the full Polish weekday name for a Date.
  */
 export function getWeekDay(date: Date): string {
-  return DAYS_PL[date.getDay()];
+  return DAYS_PL[date.getDay()]!;
 }
 
 /**

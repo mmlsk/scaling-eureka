@@ -69,13 +69,15 @@ export async function fetchPolymarket(): Promise<PolymarketEvent[]> {
 
   const raw: PolymarketAPIResponse[] = await res.json();
 
-  const events: PolymarketEvent[] = raw.map((event) => ({
-    title: event.title,
-    markets: event.markets?.map((m) => ({
-      question: m.question,
-      outcomePrices: m.outcomePrices,
-    })),
-  }));
+  const events: PolymarketEvent[] = raw
+    .filter((event) => event.markets !== undefined)
+    .map((event) => ({
+      title: event.title,
+      markets: event.markets!.map((m) => ({
+        question: m.question,
+        outcomePrices: m.outcomePrices,
+      })),
+    }));
 
   return events;
 }

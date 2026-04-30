@@ -49,7 +49,7 @@ export default function TodoWidget() {
   const cyclePriority = useCallback(() => {
     const cycle: Priority[] = ['L', 'M', 'H'];
     const idx = cycle.indexOf(priority);
-    setPriority(cycle[(idx + 1) % cycle.length]);
+    setPriority(cycle[(idx + 1) % cycle.length]!);
   }, [priority]);
 
   const doneCount = useMemo(() => todos.filter((t) => t.done).length, [todos]);
