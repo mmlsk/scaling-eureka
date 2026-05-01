@@ -14,6 +14,7 @@ import type {
   SyncQueueEntry,
 } from '@/types/database';
 import { registerDashboardLayoutSchema } from '@/lib/db/schemas/dashboard-layout';
+import type { DashboardLayoutEntry } from '@/lib/db/schemas/dashboard-layout';
 
 export class LifeOSDB extends Dexie {
   /**
@@ -99,6 +100,13 @@ export class LifeOSDB extends Dexie {
    * @retention transient; entries removed after successful sync
    */
   syncQueue!: Table<SyncQueueEntry, number>;
+
+  /**
+   * @sensitivity MEDIUM — dashboard layout preferences (widget visibility, order)
+   * @encryption-at-rest NONE (browser IndexedDB is plaintext)
+   * @retention session-bound; cleared on logout via clearAllTables()
+   */
+  dashboardLayout!: Table<DashboardLayoutEntry, string>;
 
   constructor() {
     super('LifeOSDB');
