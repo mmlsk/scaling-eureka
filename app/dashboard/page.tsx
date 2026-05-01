@@ -1,5 +1,6 @@
 import { Header } from '@/components/layout/header';
 import { Sidebar } from '@/components/layout/sidebar';
+import { WidgetControls } from '@/components/layout/widget-controls';
 import { DashboardGrid } from './_components/dashboard-grid';
 
 export default function DashboardPage() {
@@ -9,6 +10,7 @@ export default function DashboardPage() {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <Sidebar />
         <main style={{ flex: 1, overflow: 'auto' }}>
+          <WidgetControls />
           <DashboardGrid />
         </main>
       </div>
