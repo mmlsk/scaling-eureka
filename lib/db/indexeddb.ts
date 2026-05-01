@@ -13,6 +13,7 @@ import type {
   EventStoreEntry,
   SyncQueueEntry,
 } from '@/types/database';
+import { registerDashboardLayoutSchema } from '@/lib/db/schemas/dashboard-layout';
 
 export class LifeOSDB extends Dexie {
   /**
@@ -116,6 +117,9 @@ export class LifeOSDB extends Dexie {
       eventStore: 'id, user_id, sheet, created_at',
       syncQueue: '++id, table, operation, record_id, synced, created_at',
     });
+
+    // Register dashboard layout schema (version 2)
+    registerDashboardLayoutSchema(this, 2);
   }
 }
 
