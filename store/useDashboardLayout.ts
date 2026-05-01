@@ -1,6 +1,28 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { WidgetLayoutItem } from '@/types/database';
+import { db } from '@/lib/db';
+
+const persistLayout = async (state: DashboardLayoutState) => {
+  // Save visible widgets
+  await db.dashboardLayout.put({
+    key: 'visibleWidgets',
+    value: state.visibleWidgets,
+    updatedAt: new Date(),
+  });
+
+  // Save widget order (sorted by order property)
+  const widgetOrder = state.widgets
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .map(w => w.id);
+
+  await db.dashboardLayout.put({
+    key: 'widgetOrder',
+    value: widgetOrder,
+    updatedAt: new Date(),
+  });
+};
 
 export interface WidgetConfig {
   id: string;
@@ -80,28 +102,44 @@ export const useDashboardLayout = create<DashboardLayoutState>()(
       widgets: DEFAULT_WIDGETS,
       visibleWidgets: DEFAULT_VISIBLE_WIDGETS,
 
-      addWidget: (widget) => set((state) => ({
-        widgets: [...state.widgets, { ...widget, order: state.widgets.length + 1 }],
-        visibleWidgets: [...state.visibleWidgets, widget.id],
-      })),
+      addWidget: async (widget) => {
+        set((state) => ({
+          widgets: [...state.widgets, { ...widget, order: state.widgets.length + 1 }],
+          visibleWidgets: [...state.visibleWidgets, widget.id],
+        }));
+        const state = useDashboardLayout.getState();
+        await persistLayout(state);
+      },
 
-      removeWidget: (id) => set((state) => ({
-        widgets: state.widgets.filter(w => w.id !== id),
-        visibleWidgets: state.visibleWidgets.filter(wId => wId !== id),
-      })),
+      removeWidget: async (id) => {
+        set((state) => ({
+          widgets: state.widgets.filter(w => w.id !== id),
+          visibleWidgets: state.visibleWidgets.filter(wId => wId !== id),
+        }));
+        const state = useDashboardLayout.getState();
+        await persistLayout(state);
+      },
 
-      toggleWidgetVisibility: (id) => set((state) => ({
-        visibleWidgets: state.visibleWidgets.includes(id)
-          ? state.visibleWidgets.filter(wId => wId !== id)
-          : [...state.visibleWidgets, id],
-      })),
+      toggleWidgetVisibility: async (id) => {
+        set((state) => ({
+          visibleWidgets: state.visibleWidgets.includes(id)
+            ? state.visibleWidgets.filter(wId => wId !== id)
+            : [...state.visibleWidgets, id],
+        }));
+        const state = useDashboardLayout.getState();
+        await persistLayout(state);
+      },
 
-      reorderWidgets: (newOrder) => set((state) => ({
-        widgets: state.widgets.map(w => ({
-          ...w,
-          order: newOrder.indexOf(w.id),
-        })),
-      })),
+      reorderWidgets: async (newOrder) => {
+        set((state) => ({
+          widgets: state.widgets.map(w => ({
+            ...w,
+            order: newOrder.indexOf(w.id),
+          })),
+        }));
+        const state = useDashboardLayout.getState();
+        await persistLayout(state);
+      },
     }),
     {
       name: 'dashboard-layout',
