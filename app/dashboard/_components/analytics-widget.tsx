@@ -7,6 +7,8 @@ import { createHabitsSlice, type HabitsSlice } from '@/store/slices/habits';
 import { createNootropicsSlice, type NootropicsSlice } from '@/store/slices/nootropics';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
+import { WidgetShell } from '@/components/ui/widget-shell';
+import { Badge } from '@/components/ui/badge';
 
 /** Isolate timer session count so ticking doesn't re-render analytics */
 const useTimerSession = () => useLifeOsStore((s) => s.timer.session);
@@ -41,7 +43,7 @@ function computeCompletionRates(habits: HabitsSlice['habits']): number[] {
 function TrendChart({ data }: { data: number[] }) {
   if (data.length < 2) {
     return (
-      <div className="text-center py-2" style={{ color: 'var(--txm)' }}>
+      <div className="text-center py-2 text-muted-foreground">
         Za mało danych
       </div>
     );
@@ -64,8 +66,10 @@ function TrendChart({ data }: { data: number[] }) {
     .join(' ');
 
   const areaD =
-    pathD +
-    ` L ${points[points.length - 1].x} ${padY + plotH} L ${points[0].x} ${padY + plotH} Z`;
+    points.length > 0
+      ? pathD +
+        ` L ${points[points.length - 1]!.x} ${padY + plotH} L ${points[0]!.x} ${padY + plotH} Z`
+      : '';
 
   return (
     <svg width={CHART_W} height={CHART_H} className="w-full" viewBox={`0 0 ${CHART_W} ${CHART_H}`}>
@@ -120,9 +124,13 @@ function HeatmapGrid({ habits }: { habits: HabitsSlice['habits'] }) {
 
       if (habitIdx < habits.length) {
         const habit = habits[habitIdx];
-        const done = habit.d.includes(dayOffset);
-        const level = done ? 4 : 0;
-        cells.push({ row, col, level });
+        if (habit) {
+          const done = habit.d.includes(dayOffset);
+          const level = done ? 4 : 0;
+          cells.push({ row, col, level });
+        } else {
+          cells.push({ row, col, level: 0 });
+        }
       } else {
         cells.push({ row, col, level: 0 });
       }
@@ -134,7 +142,7 @@ function HeatmapGrid({ habits }: { habits: HabitsSlice['habits'] }) {
       {cells.map((cell, idx) => (
         <div
           key={idx}
-          className={`heatmap-cell ${cell.level > 0 ? `l${cell.level}` : ''}`}
+          className={`w-3 h-3 rounded-sm ${cell.level > 0 ? 'bg-primary/80' : 'bg-muted'}`}
         />
       ))}
     </div>
@@ -154,12 +162,12 @@ function CorrelationBar({
 
   return (
     <div className="flex items-center gap-2 mb-1">
-      <span className="text-[clamp(0.45rem,0.43rem+0.08vw,0.55rem)] w-24 truncate" style={{ color: 'var(--txm)' }}>
+      <span className="text-[clamp(0.45rem,0.43rem+0.08vw,0.55rem)] w-24 truncate text-muted-foreground">
         {label}
       </span>
       <div className="flex-1">
-        <div className="progress-track">
-          <div className="progress-fill" style={{ width: `${pct}%`, background: 'var(--nom)' }} />
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} />
         </div>
       </div>
       <span className="font-mono text-[clamp(0.45rem,0.43rem+0.08vw,0.55rem)]" style={{ minWidth: '2rem', textAlign: 'right' }}>
@@ -189,75 +197,62 @@ export default function AnalyticsWidget() {
     return (taken / nootropics.length) * 100;
   }, [nootropics]);
 
-  if (!hydrated) {
-    return (
-      <div className="widget">
-        <div className="widget-header">Analityka</div>
-        <div className="widget-body">
-          <div className="skeleton" style={{ height: '6rem', width: '100%' }} />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="widget">
-      <div className="widget-header">
-        <span>Analityka</span>
-        <span className="pill">14-dniowa</span>
+    <WidgetShell
+      id="analytics"
+      title="Analityka"
+      isLoading={!hydrated}
+    >
+      {/* Summary pills */}
+      <div className="flex gap-2 mb-3">
+        <Badge variant={avgCompletion >= 70 ? 'default' : avgCompletion >= 40 ? 'secondary' : 'destructive'}>
+          Nawyki: {avgCompletion.toFixed(0)}%
+        </Badge>
+        <Badge variant={nootropicsTakenPct >= 80 ? 'default' : nootropicsTakenPct >= 50 ? 'secondary' : 'destructive'}>
+          Nootropy: {nootropicsTakenPct.toFixed(0)}%
+        </Badge>
+        <Badge variant="outline">
+          Pomodoro: {timerSession}
+        </Badge>
       </div>
-      <div className="widget-body">
-        {/* Summary pills */}
-        <div className="flex gap-2 mb-3">
-          <span className={`pill ${avgCompletion >= 70 ? 'ok' : avgCompletion >= 40 ? 'warn' : 'crit'}`}>
-            Nawyki: {avgCompletion.toFixed(0)}%
-          </span>
-          <span className={`pill ${nootropicsTakenPct >= 80 ? 'ok' : nootropicsTakenPct >= 50 ? 'warn' : 'crit'}`}>
-            Nootropy: {nootropicsTakenPct.toFixed(0)}%
-          </span>
-          <span className="pill">
-            Pomodoro: {timerSession}
-          </span>
-        </div>
 
-        {/* Trend chart */}
-        <div className="mb-3">
-          <div className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)] mb-1" style={{ color: 'var(--txm)' }}>
-            Ukończenie nawyków (14 dni)
-          </div>
-          <TrendChart data={completionRates} />
+      {/* Trend chart */}
+      <div className="mb-3">
+        <div className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)] mb-1 text-muted-foreground">
+          Ukończenie nawyków (14 dni)
         </div>
-
-        {/* Heatmap */}
-        <div className="mb-3">
-          <div className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)] mb-1" style={{ color: 'var(--txm)' }}>
-            Heatmapa nawyków
-          </div>
-          <HeatmapGrid habits={habits} />
-        </div>
-
-        {/* Correlations */}
-        <div>
-          <div className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)] mb-1" style={{ color: 'var(--txm)' }}>
-            Korelacje
-          </div>
-          <CorrelationBar
-            label="Nootropy vs Nawyki"
-            value={Math.min(nootropicsTakenPct, avgCompletion)}
-            maxValue={100}
-          />
-          <CorrelationBar
-            label="Pomodoro sesje"
-            value={Math.min(timerSession * 10, 100)}
-            maxValue={100}
-          />
-          <CorrelationBar
-            label="Ogólna produktywność"
-            value={(avgCompletion + nootropicsTakenPct + Math.min(timerSession * 10, 100)) / 3}
-            maxValue={100}
-          />
-        </div>
+        <TrendChart data={completionRates} />
       </div>
-    </div>
+
+      {/* Heatmap */}
+      <div className="mb-3">
+        <div className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)] mb-1 text-muted-foreground">
+          Heatmapa nawyków
+        </div>
+        <HeatmapGrid habits={habits} />
+      </div>
+
+      {/* Correlations */}
+      <div>
+        <div className="text-[clamp(0.5rem,0.48rem+0.1vw,0.6rem)] mb-1 text-muted-foreground">
+          Korelacje
+        </div>
+        <CorrelationBar
+          label="Nootropy vs Nawyki"
+          value={Math.min(nootropicsTakenPct, avgCompletion)}
+          maxValue={100}
+        />
+        <CorrelationBar
+          label="Pomodoro sesje"
+          value={Math.min(timerSession * 10, 100)}
+          maxValue={100}
+        />
+        <CorrelationBar
+          label="Ogólna produktywność"
+          value={(avgCompletion + nootropicsTakenPct + Math.min(timerSession * 10, 100)) / 3}
+          maxValue={100}
+        />
+      </div>
+    </WidgetShell>
   );
 }
