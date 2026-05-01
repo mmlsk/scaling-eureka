@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { calcHH, type HHInput } from '@/lib/calculators/formulas';
+import { calcHH } from '@/lib/calculators/formulas';
 
 export default function HHCalc() {
   const [ph, setPh] = useState<number>(7.40);
@@ -16,16 +16,17 @@ export default function HHCalc() {
 
   const isValid = ph > 0 && pco2 > 0 && hco3 > 0;
 
-  const input: HHInput = {
+  const input: any = {
     ph,
     pco2,
     hco3,
-    pao2: pao2 ? Number(pao2) : undefined,
-    fio2: fio2 ? Number(fio2) : undefined,
-    na: na ? Number(na) : undefined,
-    cl: cl ? Number(cl) : undefined,
-    alb: alb ? Number(alb) : undefined,
   };
+
+  if (pao2) input.pao2 = Number(pao2);
+  if (fio2) input.fio2 = Number(fio2);
+  if (na) input.na = Number(na);
+  if (cl) input.cl = Number(cl);
+  if (alb) input.alb = Number(alb);
 
   const result = isValid ? calcHH(input) : null;
 

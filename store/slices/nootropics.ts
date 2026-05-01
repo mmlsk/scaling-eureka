@@ -42,7 +42,7 @@ export const createNootropicsSlice: StateCreator<
   toggleNootropicStatus: (index) =>
     set((state) => {
       const today = new Date().toISOString().slice(0, 10);
-      const updated = state.nootropics.map((noot, i) => {
+      const updated: LocalNootropic[] = state.nootropics.map((noot, i) => {
         if (i !== index) return noot;
 
         const currentIdx = STATUS_CYCLE.indexOf(noot.status);
@@ -52,7 +52,7 @@ export const createNootropicsSlice: StateCreator<
       });
 
       const noot = state.nootropics[index];
-      if (!noot) return { nootropics: updated };
+      if (!noot) return { nootropics: updated, nootropicLog: state.nootropicLog };
 
       const nextStatus =
         STATUS_CYCLE[

@@ -328,7 +328,7 @@ export function calcNEWS2(input: NEWS2Input): CalcResult {
   s += input.rr;
   if (input.copd) {
     const m: Record<number, number> = { 3: 3, 2: 2, 1: 0, 0: 0 };
-    s += m[input.spo2] !== undefined ? m[input.spo2] : input.spo2;
+    s += m[input.spo2] !== undefined ? m[input.spo2]! : input.spo2;
   } else {
     s += input.spo2;
   }

@@ -28,7 +28,7 @@ export function Sparkline({
   const range = max - min || 1;
   const padding = 1;
 
-  const isUp = data[data.length - 1] >= data[0];
+  const isUp = data.length > 0 && data[data.length - 1]! >= data[0]!;
   const strokeColor = color ?? (isUp ? 'var(--nom)' : 'var(--az)');
 
   const points = data.map((v, i) => {
@@ -39,7 +39,9 @@ export function Sparkline({
 
   const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ');
 
-  const fillPath = `${linePath} L${points[points.length - 1].x},${height} L${points[0].x},${height} Z`;
+  const fillPath = points.length > 0
+    ? `${linePath} L${points[points.length - 1]!.x},${height} L${points[0]!.x},${height} Z`
+    : '';
 
   return (
     <svg

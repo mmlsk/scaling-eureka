@@ -33,7 +33,7 @@ async function fetchStockRows(tickers: TickerConfig[]): Promise<StockRow[]> {
   );
 
   return tickers.map((config, idx) => {
-    const result = results[idx];
+    const result = results[idx]!;
     return {
       config,
       quote: result.status === 'fulfilled' ? result.value : null,
