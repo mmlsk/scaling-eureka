@@ -2,6 +2,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { SleepState, TimerPreset, Palette } from '@/types/state';
 
+function parseHHMM(time: string): number | null {
+  const parts = time.split(':');
+  if (parts.length !== 2) return null;
+  const h = parseInt(parts[0], 10);
+  const m = parseInt(parts[1], 10);
+  if (isNaN(h) || isNaN(m)) return null;
+  return h * 60 + m;
+}
+
 export interface PaletteSlice {
   palette: Palette;
   theme: 'dark' | 'light';
@@ -252,11 +261,4 @@ export const useLifeOsStore = create<LifeOsStore>()(
   ),
 );
 
-function parseHHMM(time: string): number | null {
-  const parts = time.split(':');
-  if (parts.length !== 2) return null;
-  const h = parseInt(parts[0], 10);
-  const m = parseInt(parts[1], 10);
-  if (isNaN(h) || isNaN(m)) return null;
-  return h * 60 + m;
-}
+
