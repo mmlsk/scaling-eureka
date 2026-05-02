@@ -9,7 +9,7 @@ import { AppError, toAppError, getErrorMessage } from './custom-errors';
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onError?: (error: Error, _errorInfo: ErrorInfo) => void;
   resetKeys?: Array<string | number>;
   resetOnPropsChange?: boolean;
 }
@@ -20,7 +20,7 @@ interface ErrorBoundaryProps {
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
-  errorInfo: ErrorInfo | null;
+  _errorInfo: ErrorInfo | null;
 }
 
 /**
@@ -79,7 +79,7 @@ export class ErrorBoundary extends Component<
     this.state = {
       hasError: false,
       error: null,
-      errorInfo: null,
+      _errorInfo: null,
     };
     this.lastResetKey = this.getResetKey();
   }
@@ -91,25 +91,25 @@ export class ErrorBoundary extends Component<
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
     // Convert to AppError if needed
     const appError = toAppError(error);
 
     // Log error
     console.error('ErrorBoundary caught an error:', appError);
-    console.error('Error Info:', errorInfo);
+    console.error('Error Info:', _errorInfo);
 
     // Call custom error handler
-    this.props.onError?.(appError, errorInfo);
+    this.props.onError?.(appError, _errorInfo);
 
     // Update state with error info
     this.setState({
       error: appError,
-      errorInfo,
+      _errorInfo,
     });
   }
 
-  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+  override componentDidUpdate(prevProps: ErrorBoundaryProps) {
     const { resetKeys, resetOnPropsChange } = this.props;
     const currentResetKey = this.getResetKey();
 
@@ -134,11 +134,11 @@ export class ErrorBoundary extends Component<
     this.setState({
       hasError: false,
       error: null,
-      errorInfo: null,
+      _errorInfo: null,
     });
   };
 
-  render() {
+  override render() {
     const { hasError, error } = this.state;
     const { children, fallback } = this.props;
 
@@ -193,12 +193,12 @@ export class AsyncErrorBoundary extends Component<
     this.state = {
       hasError: false,
       error: null,
-      errorInfo: null,
+      _errorInfo: null,
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    super.componentDidCatch?.(error, errorInfo);
+  override componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
+    super.componentDidCatch?.(error, _errorInfo);
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -212,11 +212,11 @@ export class AsyncErrorBoundary extends Component<
     this.setState({
       hasError: false,
       error: null,
-      errorInfo: null,
+      _errorInfo: null,
     });
   };
 
-  render() {
+  override render() {
     const { hasError, error } = this.state;
     const { children, fallback } = this.props;
 
@@ -263,7 +263,7 @@ export function APIErrorBoundary({
           </div>
         )
       }
-      onError={(error, errorInfo) => {
+      onError={(error, _errorInfo) => {
         const appError = toAppError(error);
         if (appError.code === 'API_ERROR' || appError.code === 'NETWORK_ERROR') {
           onError?.(appError);
@@ -307,7 +307,7 @@ export function SyncErrorBoundary({
           </div>
         )
       }
-      onError={(error, errorInfo) => {
+      onError={(error, _errorInfo) => {
         const appError = toAppError(error);
         if (appError.code === 'SYNC_ERROR') {
           onError?.(appError);
@@ -351,7 +351,7 @@ export function ValidationErrorBoundary({
           </div>
         )
       }
-      onError={(error, errorInfo) => {
+      onError={(error, _errorInfo) => {
         const appError = toAppError(error);
         if (appError.code === 'VALIDATION_ERROR') {
           onError?.(appError);
