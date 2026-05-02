@@ -72,3 +72,5 @@ coverage/
 .gitattributes
 
 tsconfig.tsbuildinfo
+*.txt
+docs/superpowers/plans/*.md
