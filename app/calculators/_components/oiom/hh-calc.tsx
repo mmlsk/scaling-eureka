@@ -3,6 +3,17 @@
 import { useState } from 'react';
 import { calcHH } from '@/lib/calculators/formulas';
 
+interface HHInput {
+  ph: number;
+  pco2: number;
+  hco3: number;
+  pao2?: number;
+  fio2?: number;
+  na?: number;
+  cl?: number;
+  alb?: number;
+}
+
 export default function HHCalc() {
   const [ph, setPh] = useState<number>(7.40);
   const [pco2, setPco2] = useState<number>(40);
@@ -16,7 +27,7 @@ export default function HHCalc() {
 
   const isValid = ph > 0 && pco2 > 0 && hco3 > 0;
 
-  const input: any = {
+  const input: HHInput = {
     ph,
     pco2,
     hco3,

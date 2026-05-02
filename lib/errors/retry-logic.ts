@@ -353,7 +353,7 @@ export async function retryWithFallback<T>(
 ): Promise<T> {
   try {
     return await retryWithBackoff(fn, options);
-  } catch (error) {
+  } catch {
     return await fallback();
   }
 }

@@ -13,7 +13,7 @@ describe('TimerWidget', () => {
   });
 
   it('uses shadcn Button for start/stop controls', () => {
-    const { container } = render(<TimerWidget />);
+    const { container: _container } = render(<TimerWidget />);
     const startButtons = screen.getAllByRole('button', { name: 'Start' });
     expect(startButtons.length).toBe(1);
     expect(startButtons[0]).toHaveClass('bg-primary');

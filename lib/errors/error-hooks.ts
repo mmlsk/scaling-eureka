@@ -412,8 +412,8 @@ export function useErrorLogger() {
 
     // Send to error tracking service (placeholder)
     // This is where you would integrate with Sentry, LogRocket, etc.
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
-      (window as any).Sentry.captureException(appError, {
+    if (typeof window !== 'undefined' && (window as unknown as { Sentry?: { captureException: (...args: unknown[]) => void } }).Sentry) {
+      (window as unknown as { Sentry?: { captureException: (...args: unknown[]) => void } }).Sentry.captureException(appError, {
         contexts: { custom: context },
       });
     }

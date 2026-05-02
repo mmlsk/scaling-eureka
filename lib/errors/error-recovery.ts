@@ -222,7 +222,7 @@ async function executeFallbackRecovery<T>(
     result.success = true;
     config.onRecovery?.(result);
     return value;
-  } catch (error) {
+  } catch {
     // Return fallback value
     result.success = true;
     config.onRecovery?.(result);
@@ -269,7 +269,7 @@ async function executeDegradeRecovery<T>(
     result.success = true;
     config.onRecovery?.(result);
     return value;
-  } catch (error) {
+  } catch {
     // Return degraded functionality
     result.success = true;
     config.onRecovery?.(result);
@@ -496,7 +496,7 @@ export async function recoveryWithDegradation<T>(
 
     try {
       return await fallbackOperation();
-    } catch (fallbackError) {
+    } catch {
       // Both failed, try recovery
       return executeRecovery(appError, primaryOperation, customConfig);
     }

@@ -2,7 +2,7 @@ import { Dexie } from 'dexie';
 
 export interface DashboardLayoutEntry {
   key: string;
-  value: any;
+  value: unknown;
   updatedAt: Date;
 }
 

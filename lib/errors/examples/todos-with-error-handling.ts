@@ -12,8 +12,8 @@ import {
 } from '@/lib/validation';
 import {
   useErrorHandler,
-  useAPICall,
-  useDatabaseOperation,
+  _useAPICall,
+  _useDatabaseOperation,
   APIError,
   DatabaseError,
   ValidationError,

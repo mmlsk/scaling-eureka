@@ -412,7 +412,7 @@ export function createErrorFromResponse(response: Response, body?: unknown): App
       return new ConcurrencyError(message, 'resource', 'current', 'attempted', { response: body });
     case 422:
       return new BusinessLogicError(message, 'validation', { response: body });
-    case 429:
+    case 429: {
       const retryAfter = response.headers.get('Retry-After');
       return new RateLimitError(
         message,
@@ -420,6 +420,7 @@ export function createErrorFromResponse(response: Response, body?: unknown): App
         retryAfter ? parseInt(retryAfter, 10) : 60,
         { response: body }
       );
+    }
     case 500:
       return new APIError(message, 'endpoint', 'GET', status, { response: body });
     case 503:

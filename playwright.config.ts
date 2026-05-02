@@ -14,7 +14,7 @@ const config = {
 };
 
 if (!process.env.PLAYWRIGHT_BASE_URL) {
-  (config as any).webServer = {
+  (config as Record<string, unknown>).webServer = {
     command: 'npm run build && npm run start',
     port: 3000,
     timeout: 120_000,
