@@ -1,6 +1,8 @@
 'use client';
 
-import { lazy, Suspense, useMemo, useState, type ComponentType } from 'react';
+import type { ComponentType } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
+import type { DragEndEvent } from '@dnd-kit/core';
 import {
   DndContext,
   DragOverlay,
@@ -10,7 +12,6 @@ import {
   KeyboardSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from '@dnd-kit/core';
 import {
   SortableContext,

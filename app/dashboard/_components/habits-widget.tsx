@@ -3,7 +3,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createHabitsSlice, type HabitsSlice } from '@/store/slices/habits';
+import type { HabitsSlice } from '@/store/slices/habits';
+import { createHabitsSlice } from '@/store/slices/habits';
 import { useHydration } from '@/hooks/useHydration';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

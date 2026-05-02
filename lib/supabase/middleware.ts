@@ -2,7 +2,8 @@
 // Refreshes the auth session on every request so tokens stay valid.
 
 import { createServerClient } from '@supabase/ssr';
-import { type NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Refresh the Supabase auth session via middleware.

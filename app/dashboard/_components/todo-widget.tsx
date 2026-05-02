@@ -3,7 +3,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createTodosSlice, type TodosSlice } from '@/store/slices/todos';
+import type { TodosSlice } from '@/store/slices/todos';
+import { createTodosSlice } from '@/store/slices/todos';
 import { useHydration } from '@/hooks/useHydration';
 import type { LocalTodo } from '@/types/state';
 import { Button } from '@/components/ui/button';

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { AIAssistantResponse } from '@/types/api';
-import { generateEmbedding, searchSimilar, type SimilarityResult } from './embeddings';
+import type { SimilarityResult } from './embeddings';
+import { generateEmbedding, searchSimilar } from './embeddings';
 
 // ── OpenAI Chat Response Shape ──
 interface OpenAIChatResponse {

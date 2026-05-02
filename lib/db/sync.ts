@@ -1,8 +1,9 @@
-import { createClient, type SupabaseClient, type RealtimeChannel } from '@supabase/supabase-js';
+import type { SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+import type { RealtimePostgresChangesPayload } from '@supabase/realtime-js';
 import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  type RealtimePostgresChangesPayload,
 } from '@supabase/realtime-js';
 import { db } from './indexeddb';
 import type { SyncQueueEntry } from '@/types/database';

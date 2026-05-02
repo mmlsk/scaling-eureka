@@ -3,8 +3,10 @@
 import { useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createHabitsSlice, type HabitsSlice } from '@/store/slices/habits';
-import { createNootropicsSlice, type NootropicsSlice } from '@/store/slices/nootropics';
+import type { HabitsSlice } from '@/store/slices/habits';
+import { createHabitsSlice } from '@/store/slices/habits';
+import type { NootropicsSlice } from '@/store/slices/nootropics';
+import { createNootropicsSlice } from '@/store/slices/nootropics';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
 import { WidgetShell } from '@/components/ui/widget-shell';
