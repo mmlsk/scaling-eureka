@@ -133,7 +133,7 @@ export function isSleepEntryData(value: unknown): value is {
     (value.sleep_start === null || isString(value.sleep_start)) &&
     (value.sleep_stop === null || isString(value.sleep_stop)) &&
     (value.total_minutes === null || isNumber(value.total_minutes)) &&
-    (value.quality === null || ['bad', 'med', 'good'].includes(value.quality))
+    (value.quality === null || (typeof value.quality === 'string' && ['bad', 'med', 'good'].includes(value.quality)))
   );
 }
 
@@ -387,7 +387,8 @@ export function validateRequiredProperties<T extends Record<string, unknown>>(
     throw new Error('Expected a plain object');
   }
   for (const prop of requiredProperties) {
-    if (!(prop in obj) || obj[prop] === undefined) {
+    const key = prop as string;
+    if (!(key in obj) || obj[key] === undefined) {
       throw new Error(`Missing required property: ${String(prop)}`);
     }
   }
@@ -422,13 +423,14 @@ export function validateWidgetLayoutItem(item: unknown): {
   if (item.y !== undefined && (!isNumber(item.y) || item.y < 0)) {
     throw new Error('Widget layout item y position must be a non-negative number');
   }
-  return {
+  const result: { id: string; w: number; h: number; x?: number; y?: number } = {
     id: item.id,
     w: item.w,
     h: item.h,
-    x: item.x,
-    y: item.y,
   };
+  if (item.x !== undefined) result.x = item.x;
+  if (item.y !== undefined) result.y = item.y;
+  return result;
 }
 
 /**

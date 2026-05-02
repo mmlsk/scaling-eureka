@@ -12,8 +12,7 @@ export * from './error-recovery';
 // Error boundaries
 export * from './error-boundary';
 
-// Error hooks
-export * from './error-hooks';
+// Error hooks - explicitly exported below
 
 // Re-export commonly used items
 export {

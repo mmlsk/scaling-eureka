@@ -14,7 +14,7 @@ export const ProfileSchema = z.object({
     x: z.number().optional(),
     y: z.number().optional(),
   })),
-  settings: z.record(z.unknown()),
+  settings: z.record(z.string(), z.unknown()),
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -115,7 +115,7 @@ export const EventStoreEntrySchema = z.object({
   id: z.string(),
   user_id: z.string(),
   sheet: z.string(),
-  data: z.record(z.unknown()),
+  data: z.record(z.string(), z.unknown()),
   created_at: z.string(),
 });
 
@@ -146,7 +146,7 @@ export const SyncQueueEntrySchema = z.object({
   ]),
   operation: z.enum(['insert', 'update', 'delete']),
   record_id: z.string(),
-  data: z.record(z.unknown()),
+  data: z.record(z.string(), z.unknown()),
   synced: z.boolean(),
   created_at: z.string(),
 });
@@ -242,6 +242,17 @@ export function isTimerSession(data: unknown): data is z.infer<typeof TimerSessi
 export function isSyncQueueEntry(data: unknown): data is z.infer<typeof SyncQueueEntrySchema> {
   return SyncQueueEntrySchema.safeParse(data).success;
 }
+
+// ── Inferred Types ──
+export type Profile = z.infer<typeof ProfileSchema>;
+export type Habit = z.infer<typeof HabitSchema>;
+export type Todo = z.infer<typeof TodoSchema>;
+export type SleepEntry = z.infer<typeof SleepEntrySchema>;
+export type CalendarEvent = z.infer<typeof CalendarEventSchema>;
+export type Note = z.infer<typeof NoteSchema>;
+export type MoodEntry = z.infer<typeof MoodEntrySchema>;
+export type TimerSession = z.infer<typeof TimerSessionSchema>;
+export type SyncQueueEntry = z.infer<typeof SyncQueueEntrySchema>;
 
 // ── Validation Functions ──
 export function validateProfile(data: unknown): z.infer<typeof ProfileSchema> {

@@ -3,7 +3,7 @@ export * from './api-schemas';
 export * from './database-schemas';
 export * from './type-guards';
 
-// Re-export commonly used types
+// Re-export commonly used types from api-schemas
 export type {
   WeatherExtended,
   AirQualityExtended,
@@ -11,16 +11,23 @@ export type {
   QuoteResult,
   FREDResponse,
   EIAResponse,
+} from './api-schemas';
+
+// Re-export commonly used types from database-schemas
+export type {
   Profile,
   Habit,
   Todo,
   SleepEntry,
   CalendarEvent,
   Note,
+} from './database-schemas';
+
+export type {
   MoodEntry,
   TimerSession,
   SyncQueueEntry,
-} from './api-schemas';
+} from './database-schemas';
 
 export type {
   Profile as DBProfile,

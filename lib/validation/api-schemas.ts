@@ -56,7 +56,7 @@ export const AirQualityExtendedSchema = z.object({
 export const UVResultSchema = z.object({
   uv: z.number(),
   uv_max: z.number(),
-  safe_exposure_time: z.record(z.number().nullable()),
+  safe_exposure_time: z.record(z.string(), z.number().nullable()),
   sun_info: z.object({
     sun_times: z.object({
       sunrise: z.string(),
@@ -68,7 +68,7 @@ export const UVResultSchema = z.object({
 export const UVExtendedSchema = z.object({
   uv: z.number(),
   uv_max: z.number(),
-  safe_exposure_time: z.record(z.number().nullable()),
+  safe_exposure_time: z.record(z.string(), z.number().nullable()),
   sun_info: z.object({
     sun_times: z.object({
       sunrise: z.string(),
@@ -169,7 +169,7 @@ export const NagerHolidaySchema = z.object({
 // ── AI API Schemas ──
 export const AIAssistantRequestSchema = z.object({
   message: z.string(),
-  context: z.record(z.unknown()).optional(),
+  context: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const AIAssistantResponseSchema = z.object({
@@ -253,3 +253,11 @@ export function validateFREDResponse(data: unknown): z.infer<typeof FREDResponse
 export function validateEIAResponse(data: unknown): z.infer<typeof EIAResponseSchema> {
   return EIAResponseSchema.parse(data);
 }
+
+// ── Inferred Types ──
+export type WeatherExtended = z.infer<typeof WeatherExtendedSchema>;
+export type AirQualityExtended = z.infer<typeof AirQualityExtendedSchema>;
+export type UVExtended = z.infer<typeof UVExtendedSchema>;
+export type QuoteResult = z.infer<typeof QuoteResultSchema>;
+export type FREDResponse = z.infer<typeof FREDResponseSchema>;
+export type EIAResponse = z.infer<typeof EIAResponseSchema>;
