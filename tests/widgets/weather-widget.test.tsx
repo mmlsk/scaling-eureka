@@ -64,7 +64,7 @@ describe('WeatherWidget', () => {
   it('uses WidgetShell with shadcn Card', () => {
     renderWithProviders(<WeatherWidget />);
     const widget = screen.getAllByLabelText(/Widget: Pogoda/i)[0];
-    expect(widget).toHaveClass('rounded-lg');
+    expect(widget).toHaveClass('rounded-xl');
   });
 
   it('displays temperature', () => {

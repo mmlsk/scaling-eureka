@@ -30,8 +30,8 @@ describe('Layout Persistence', () => {
 
   it('saves widget order when reordered', async () => {
     const { reorderWidgets } = useDashboardLayout.getState();
-    await reorderWidgets(['todo', 'weather', 'analytics']);
+    await reorderWidgets(['todo', 'weather', 'analytics', 'calendar', 'sleep', 'timer']);
     const saved = await db.dashboardLayout.get('widgetOrder');
-    expect(saved?.value).toEqual(['todo', 'weather', 'analytics']);
+    expect(saved?.value).toEqual(['todo', 'weather', 'analytics', 'calendar', 'sleep', 'timer']);
   });
 });

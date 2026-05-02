@@ -77,6 +77,31 @@ const DEFAULT_WIDGETS: WidgetConfig[] = [
 
 const DEFAULT_VISIBLE_WIDGETS: string[] = ['analytics', 'calendar', 'sleep', 'timer', 'todo', 'weather'];
 
+const storage = {
+  getItem: (name: string) => {
+    try {
+      const value = localStorage.getItem(name);
+      return value ? JSON.parse(value) : null;
+    } catch {
+      return null;
+    }
+  },
+  setItem: (name: string, value: unknown) => {
+    try {
+      localStorage.setItem(name, JSON.stringify(value));
+    } catch {
+      // Ignore storage errors
+    }
+  },
+  removeItem: (name: string) => {
+    try {
+      localStorage.removeItem(name);
+    } catch {
+      // Ignore storage errors
+    }
+  },
+};
+
 export const useDashboardLayout = create<DashboardLayoutState>()(
   persist(
     (set) => ({
@@ -143,6 +168,7 @@ export const useDashboardLayout = create<DashboardLayoutState>()(
     }),
     {
       name: 'dashboard-layout',
+      storage,
     },
   ),
 );

@@ -68,6 +68,31 @@ const DEFAULT_FEELING_OPTIONS = [
   'foggy',
 ];
 
+const storage = {
+  getItem: (name: string) => {
+    try {
+      const value = localStorage.getItem(name);
+      return value ? JSON.parse(value) : null;
+    } catch {
+      return null;
+    }
+  },
+  setItem: (name: string, value: unknown) => {
+    try {
+      localStorage.setItem(name, JSON.stringify(value));
+    } catch {
+      // Ignore storage errors
+    }
+  },
+  removeItem: (name: string) => {
+    try {
+      localStorage.removeItem(name);
+    } catch {
+      // Ignore storage errors
+    }
+  },
+};
+
 export const useLifeOsStore = create<LifeOsStore>()(
   persist(
     (set, get) => ({
@@ -206,6 +231,7 @@ export const useLifeOsStore = create<LifeOsStore>()(
     }),
     {
       name: 'life-os-store',
+      storage,
       partialize: (state) => ({
         palette: state.palette,
         theme: state.theme,
