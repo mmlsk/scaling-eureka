@@ -19,6 +19,7 @@ import {
   globalRecoveryManager,
   
 } from './error-recovery';
+import { logger } from '@/lib/logger';
 
 /**
  * Error state
@@ -404,7 +405,7 @@ export function useErrorLogger() {
     const appError = toAppError(error);
 
     // Log to console
-    console.error('Error logged:', {
+    logger.error('Error logged', {
       error: appError.toJSON(),
       context,
       timestamp: new Date().toISOString(),
@@ -420,7 +421,7 @@ export function useErrorLogger() {
   }, []);
 
   const logInfo = useCallback((message: string, data?: Record<string, unknown>) => {
-    console.info('Info logged:', {
+    logger.info('Info logged', {
       message,
       data,
       timestamp: new Date().toISOString(),
@@ -428,7 +429,7 @@ export function useErrorLogger() {
   }, []);
 
   const logWarning = useCallback((message: string, data?: Record<string, unknown>) => {
-    console.warn('Warning logged:', {
+    logger.warn('Warning logged', {
       message,
       data,
       timestamp: new Date().toISOString(),
@@ -453,14 +454,14 @@ export function useErrorToast() {
     // This is a placeholder - integrate with your toast library
     // For example: toast.error(message, { duration: 5000 })
 
-    console.error('Toast shown:', message);
+    logger.error('Toast shown', { message });
   }, []);
 
   const showSuccess = useCallback((message: string) => {
     // This is a placeholder - integrate with your toast library
     // For example: toast.success(message, { duration: 3000 })
 
-    console.log('Success toast shown:', message);
+    logger.info('Success toast shown', { message });
   }, []);
 
   const showInfo = useCallback((message: string) => {
