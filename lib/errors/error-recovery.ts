@@ -1,6 +1,6 @@
 // Error recovery mechanisms and utilities
 
-import { AppError, toAppError, getErrorCode, getErrorMessage } from './custom-errors';
+import { toAppError } from './custom-errors';
 
 /**
  * Recovery strategy type
@@ -126,7 +126,7 @@ export async function executeRecovery<T>(
   error: Error,
   operation: () => Promise<T>,
   customConfig?: Partial<RecoveryConfig>
-): Promise<T> {
+): Promise<RecoveryResult> {
   const appError = toAppError(error);
   const config = { ...getRecoveryConfig(appError), ...customConfig };
 

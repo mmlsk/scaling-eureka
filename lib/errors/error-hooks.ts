@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
-  AppError,
+  
   toAppError,
   getErrorCode,
   getErrorMessage,
-  getErrorStatusCode,
+  
 } from './custom-errors';
 import {
   retryWithBackoff,
@@ -17,7 +17,7 @@ import {
 import {
   executeWithGlobalRecovery,
   globalRecoveryManager,
-  getRecoveryConfig,
+  
 } from './error-recovery';
 
 /**
@@ -203,6 +203,7 @@ export function useAPICall<T>(
       const interval = setInterval(execute, options.refetchInterval);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [execute, options.refetchInterval]);
 
   return {
@@ -445,24 +446,24 @@ export function useErrorLogger() {
  * Use error toast hook (placeholder for toast notifications)
  */
 export function useErrorToast() {
-  const showToast = useCallback((error: Error, options?: { duration?: number }) => {
+  const showToast = useCallback((error: Error) => {
     const appError = toAppError(error);
     const message = getErrorMessage(appError);
 
     // This is a placeholder - integrate with your toast library
-    // For example: toast.error(message, { duration: options?.duration || 5000 })
+    // For example: toast.error(message, { duration: 5000 })
 
     console.error('Toast shown:', message);
   }, []);
 
-  const showSuccess = useCallback((message: string, options?: { duration?: number }) => {
+  const showSuccess = useCallback((message: string) => {
     // This is a placeholder - integrate with your toast library
-    // For example: toast.success(message, { duration: options?.duration || 3000 })
+    // For example: toast.success(message, { duration: 3000 })
 
     console.log('Success toast shown:', message);
   }, []);
 
-  const showInfo = useCallback((message: string, options?: { duration?: number }) => {
+  const showInfo = useCallback((message: string) => {
     // This is a placeholder - integrate with your toast library
     // For example: toast.info(message, { duration: options?.duration || 3000 })
 

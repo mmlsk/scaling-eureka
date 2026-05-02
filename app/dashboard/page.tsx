@@ -1,6 +1,8 @@
+'use client';
+
 import { Header } from '@/components/layout/header';
 import { Sidebar } from '@/components/layout/sidebar';
-import { WidgetControls } from '@/components/layout/widget-controls';
+import WidgetControls from '@/components/layout/widget-controls';
 import { DashboardGrid } from './_components/dashboard-grid';
 
 export default function DashboardPage() {
