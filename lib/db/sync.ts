@@ -6,6 +6,7 @@ import {
 } from '@supabase/realtime-js';
 import { db } from './indexeddb';
 import type { SyncQueueEntry } from '@/types/database';
+import { logger } from '@/lib/logger';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
@@ -114,6 +115,7 @@ export async function flushSyncQueue(): Promise<{ synced: number; failed: number
       }
 
       if (error) {
+        logger.warn('Sync operation failed', { table: remoteTable, operation: entry.operation, error: error.message });
         failed++;
         continue;
       }
@@ -122,7 +124,12 @@ export async function flushSyncQueue(): Promise<{ synced: number; failed: number
         await db.syncQueue.update(entry.id, { synced: true });
       }
       synced++;
-    } catch {
+    } catch (err) {
+      logger.error('Sync operation threw an exception', {
+        table: remoteTable,
+        operation: entry.operation,
+        error: err instanceof Error ? err.message : String(err),
+      });
       failed++;
     }
   }
@@ -150,7 +157,7 @@ export async function onRealtimeChange(payload: {
   switch (payload.eventType) {
     case 'INSERT':
     case 'UPDATE': {
-      if (payload.new && typeof payload.new === 'object' && 'id' in payload.new) {
+      if (payload.new && typeof payload.new === 'object' && 'id' in payload.new && payload.new.id) {
         await table.put(payload.new);
       }
       break;
