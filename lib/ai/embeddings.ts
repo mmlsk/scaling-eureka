@@ -160,7 +160,7 @@ export async function upsertEmbedding(
         .from('note_embeddings')
         .update({
           content,
-          embedding: embedding as unknown as string,
+          embedding,
           created_at: new Date().toISOString(),
         })
         .eq('id', existing.id);
@@ -179,7 +179,7 @@ export async function upsertEmbedding(
       source_type: sourceType,
       source_id: sourceId,
       content,
-      embedding: embedding as unknown as string,
+      embedding,
     });
 
   if (insertError) {

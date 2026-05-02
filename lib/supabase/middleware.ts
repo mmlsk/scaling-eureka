@@ -59,11 +59,9 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // IMPORTANT: Do NOT call supabase.auth.signInWith*, signUp, or
-  // signOut here. Only getUser() is safe in middleware because it
-  // reads/refreshes tokens without side-effects beyond cookie updates.
-  // Avoid supabase.auth.getSession() — it reads from storage without
-  // guaranteeing the token is still valid.
+  // IMPORTANT: Only use getUser() in middleware — it verifies the JWT with Supabase Auth server.
+  // Do NOT use getSession() — it only reads from cookies without verification (unsafe for authz).
+  // Do NOT call signInWith*, signUp, or signOut here — middleware should only refresh sessions.
   await supabase.auth.getUser();
 
   return supabaseResponse;
