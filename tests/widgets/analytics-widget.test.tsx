@@ -12,7 +12,7 @@ describe('AnalyticsWidget', () => {
   it('uses WidgetShell with shadcn Card', () => {
     render(<AnalyticsWidget />);
     const elements = screen.getAllByLabelText(/Widget: Analityka/i);
-    expect(elements[0]).toHaveClass('rounded-lg');
+    expect(elements[0]).toHaveClass('rounded-xl');
   });
 
   it('displays summary badges', () => {

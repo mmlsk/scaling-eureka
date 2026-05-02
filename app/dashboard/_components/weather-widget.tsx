@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { weatherLabel, weatherIcon } from '@/lib/providers/weather';
-import { DEFAULT_LOCATION } from '@/lib/config/location';
 import { useWeather } from '@/lib/queries/use-weather';
 import { Sparkline } from '@/components/widget-parts/sparkline';
 import { MetricList } from '@/components/widget-parts/metric-list';
@@ -89,16 +88,14 @@ export default function WeatherWidget() {
       id="weather"
       title="Pogoda"
       isLoading={isLoading || !data}
-      error={error?.message}
+      error={error?.message || null}
       actions={actions}
     >
       {(() => {
-        const { weather, airQuality, uvData, fetchedAt } = data;
+        const { weather, airQuality, uvData, fetchedAt } = data!
         const cur = weather.current;
         const uvVal = airQuality?.current?.uv_index ?? uvData?.uv ?? null;
         const uvInfo = uvVal != null ? uvSeverity(uvVal) : null;
-        const pm25 = airQuality?.current?.pm2_5 ?? null;
-        const aq = pm25 != null ? aqBadge(pm25) : null;
 
         const TABS: { key: WeatherTab; label: string }[] = [
           { key: 'teraz', label: 'Teraz' },
