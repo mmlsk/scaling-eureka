@@ -3,7 +3,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { createNootropicsSlice, type NootropicsSlice } from '@/store/slices/nootropics';
+import type { NootropicsSlice } from '@/store/slices/nootropics';
+import { createNootropicsSlice } from '@/store/slices/nootropics';
 import { useHydration } from '@/hooks/useHydration';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

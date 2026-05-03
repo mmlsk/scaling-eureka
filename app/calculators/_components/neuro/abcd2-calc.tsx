@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { calcABCD2, type ABCD2Input } from '@/lib/calculators/formulas';
+import type { ABCD2Input } from '@/lib/calculators/formulas';
+import { calcABCD2 } from '@/lib/calculators/formulas';
 
 interface CheckItem {
   key: keyof ABCD2Input;

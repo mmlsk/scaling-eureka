@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useFRED, FRED_TABS, type FREDSeriesData } from '@/lib/queries/use-fred';
+import type { FREDSeriesData } from '@/lib/queries/use-fred';
+import { useFRED, FRED_TABS } from '@/lib/queries/use-fred';
 import { Sparkline } from '@/components/widget-parts/sparkline';
 import { WidgetTabs } from '@/components/widget-parts/widget-tabs';
 import { LastUpdated } from '@/components/widget-parts/last-updated';

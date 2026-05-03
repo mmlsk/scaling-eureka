@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { calcNEWS2, type NEWS2Input } from '@/lib/calculators/formulas';
+import type { NEWS2Input } from '@/lib/calculators/formulas';
+import { calcNEWS2 } from '@/lib/calculators/formulas';
 
 interface SelectCategory {
   key: keyof Omit<NEWS2Input, 'copd' | 'supplementalO2'>;

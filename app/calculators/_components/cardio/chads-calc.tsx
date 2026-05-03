@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { calcCHADS, type CHADSInput } from '@/lib/calculators/formulas';
+import type { CHADSInput } from '@/lib/calculators/formulas';
+import { calcCHADS } from '@/lib/calculators/formulas';
 
 interface CheckboxItem {
   key: keyof CHADSInput;
