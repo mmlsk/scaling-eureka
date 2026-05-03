@@ -121,6 +121,7 @@ export default function CalculatorsPage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
+                aria-label={`Przełącz na zakładkę: ${tab.label}`}
                 style={{
                   padding: '0.375rem 0.75rem',
                   borderRadius: '6px 6px 0 0',

@@ -53,6 +53,7 @@ export default function RootLayout({
     >
       <head>
         <ThemeScript />
+        <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>
         <QueryProvider>
