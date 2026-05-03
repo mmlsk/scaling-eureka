@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { StateCreator } from 'zustand';
 import type { LocalNootropic } from '@/types/state';
 

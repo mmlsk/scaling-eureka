@@ -3,7 +3,7 @@ import { setupTestDb, cleanupTestDb } from '@/tests/utils/db-test-utils';
 import Dexie from 'dexie';
 
 describe('Dashboard Layout Persistence', () => {
-  let db: Dexie;
+  let db: Dexie & { dashboardLayout: any };
 
   beforeEach(async () => {
     db = setupTestDb();

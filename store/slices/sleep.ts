@@ -69,8 +69,8 @@ export const createSleepSlice: StateCreator<SleepSlice, [], [], SleepSlice> = (s
 function parseTimeToMinutes(time: string): number | null {
   const parts = time.split(':');
   if (parts.length !== 2) return null;
-  const h = parseInt(parts[0], 10);
-  const m = parseInt(parts[1], 10);
+  const h = parseInt(parts[0]!, 10);
+  const m = parseInt(parts[1]!, 10);
   if (isNaN(h) || isNaN(m)) return null;
   return h * 60 + m;
 }

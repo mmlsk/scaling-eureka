@@ -116,6 +116,7 @@ export const useDashboardLayout = create<DashboardLayoutState>()(
 
           const updated = [...state.layout];
           const [moved] = updated.splice(fromIndex, 1);
+          if (!moved) return state;
           updated.splice(toIndex, 0, moved);
 
           return { layout: updated };
