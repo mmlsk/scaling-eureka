@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { StateCreator } from 'zustand';
 import type { TimerState, TimerPreset } from '@/types/state';
 

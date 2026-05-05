@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { setupTestDb, cleanupTestDb } from '@/tests/utils/db-test-utils';
 import Dexie from 'dexie';
+import { Table } from 'dexie';
+import type { DashboardLayoutEntry } from '@/lib/db/schemas/dashboard-layout';
 
 describe('Dashboard Layout Persistence', () => {
-  let db: Dexie & { dashboardLayout: any };
+  let db: Dexie & { dashboardLayout: Table<DashboardLayoutEntry, string> };
 
   beforeEach(async () => {
     db = setupTestDb();

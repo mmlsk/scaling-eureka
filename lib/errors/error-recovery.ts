@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Error recovery mechanisms and utilities
 
 import { toAppError } from './custom-errors';

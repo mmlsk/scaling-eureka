@@ -2,8 +2,9 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   // Public (client + server)
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(20),
+  // Made optional for build-time; validated at runtime in createClient()
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(20).optional(),
   NEXT_PUBLIC_OPENAQ_KEY: z.string().optional(),
   NEXT_PUBLIC_OPENUV_KEY: z.string().optional(),
   NEXT_PUBLIC_LATITUDE: z.string().optional(),
@@ -49,6 +50,31 @@ function parseEnv() {
 let _env: z.infer<typeof envSchema> | undefined;
 
 export function getEnv() {
+  // Skip validation during build/prerender when env vars are not available
+  if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+    // During build/prerender, return a minimal stub
+    return {
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+      NEXT_PUBLIC_OPENAQ_KEY: process.env.NEXT_PUBLIC_OPENAQ_KEY,
+      NEXT_PUBLIC_OPENUV_KEY: process.env.NEXT_PUBLIC_OPENUV_KEY,
+      NEXT_PUBLIC_LATITUDE: process.env.NEXT_PUBLIC_LATITUDE,
+      NEXT_PUBLIC_LONGITUDE: process.env.NEXT_PUBLIC_LONGITUDE,
+      NEXT_PUBLIC_TIMEZONE: process.env.NEXT_PUBLIC_TIMEZONE,
+      NEXT_PUBLIC_CITY: process.env.NEXT_PUBLIC_CITY,
+      NEXT_PUBLIC_COUNTRY: process.env.NEXT_PUBLIC_COUNTRY,
+      POLYGON_KEY: process.env.POLYGON_KEY,
+      FINNHUB_NEWS_KEY: process.env.FINNHUB_NEWS_KEY,
+      ALPHA_VANTAGE_KEY: process.env.ALPHA_VANTAGE_KEY,
+      FRED_API_KEY: process.env.FRED_API_KEY,
+      EIA_API_KEY: process.env.EIA_API_KEY,
+      GOOGLE_CAL_API_KEY: process.env.GOOGLE_CAL_API_KEY,
+      GOOGLE_CAL_CALENDAR_ID: process.env.GOOGLE_CAL_CALENDAR_ID,
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    } as z.infer<typeof envSchema>;
+  }
+
   if (!_env) {
     _env = parseEnv();
   }

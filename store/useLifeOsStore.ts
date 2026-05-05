@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { SleepState, TimerPreset, Palette } from '@/types/state';
@@ -187,7 +186,7 @@ export const useLifeOsStore = create<LifeOsStore>()(
 
       resetTimer: () =>
         set((state) => {
-          const preset = state.timer.presets[state.timer.presetIndex] || DEFAULT_PRESETS[0];
+          const preset = (state.timer.presets[state.timer.presetIndex] || DEFAULT_PRESETS[0]) as TimerPreset;
           return {
             timer: {
               ...state.timer,
@@ -202,7 +201,7 @@ export const useLifeOsStore = create<LifeOsStore>()(
       cyclePreset: () =>
         set((state) => {
           const nextIdx = (state.timer.presetIndex + 1) % state.timer.presets.length;
-          const preset = state.timer.presets[nextIdx] || DEFAULT_PRESETS[0];
+          const preset = (state.timer.presets[nextIdx] || DEFAULT_PRESETS[0]) as TimerPreset;
           return {
             timer: {
               ...state.timer,
@@ -236,7 +235,7 @@ export const useLifeOsStore = create<LifeOsStore>()(
 
       getTimerPreset: (): number => {
         const { timer } = get();
-        return timer.presets[timer.presetIndex].work;
+        return timer.presets[timer.presetIndex]!.work;
       },
     }),
     {

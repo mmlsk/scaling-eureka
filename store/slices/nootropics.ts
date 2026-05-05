@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { StateCreator } from 'zustand';
 import type { LocalNootropic } from '@/types/state';
 
@@ -47,7 +46,7 @@ export const createNootropicsSlice: StateCreator<
         if (i !== index) return noot;
 
         const currentIdx = STATUS_CYCLE.indexOf(noot.status);
-        const nextStatus = STATUS_CYCLE[(currentIdx + 1) % STATUS_CYCLE.length];
+        const nextStatus = STATUS_CYCLE[(currentIdx + 1) % STATUS_CYCLE.length] as LocalNootropic['status'];
 
         return { ...noot, status: nextStatus };
       });
@@ -58,17 +57,20 @@ export const createNootropicsSlice: StateCreator<
       const nextStatus =
         STATUS_CYCLE[
           (STATUS_CYCLE.indexOf(noot.status) + 1) % STATUS_CYCLE.length
-        ];
+        ] as LocalNootropic['status'];
+
+      const todayEntry = state.nootropicLog[today];
+      const updatedLog = { ...state.nootropicLog };
+
+      if (todayEntry) {
+        updatedLog[today] = { ...todayEntry, [noot.name]: nextStatus } as Record<string, string>;
+      } else {
+        updatedLog[today] = { [noot.name]: nextStatus } as Record<string, string>;
+      }
 
       return {
         nootropics: updated,
-        nootropicLog: {
-          ...state.nootropicLog,
-          [today]: {
-            ...state.nootropicLog[today],
-            [noot.name]: nextStatus,
-          },
-        },
+        nootropicLog: updatedLog,
       };
     }),
 });

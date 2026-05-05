@@ -32,7 +32,10 @@ type SyncableTable =
   | 'notes'
   | 'moodEntries'
   | 'timerSessions'
-  | 'eventStore';
+  | 'eventStore'
+  | 'rooms'
+  | 'pins'
+  | 'checklist_items';
 
 const TABLE_MAP: Record<SyncableTable, string> = {
   habits: 'habits',
@@ -46,6 +49,9 @@ const TABLE_MAP: Record<SyncableTable, string> = {
   moodEntries: 'mood_entries',
   timerSessions: 'timer_sessions',
   eventStore: 'event_store',
+  rooms: 'rooms',
+  pins: 'pins',
+  checklist_items: 'checklist_items',
 };
 
 /**
