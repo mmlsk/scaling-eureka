@@ -1,3 +1,6 @@
+-- Enable the vector extension for pgvector support
+CREATE EXTENSION IF NOT EXISTS vector;
+
 -- Create function to search for similar embeddings using cosine distance
 CREATE OR REPLACE FUNCTION match_embeddings(
   query_embedding vector(1536),
