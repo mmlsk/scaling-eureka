@@ -112,7 +112,7 @@ export interface EventStoreEntry {
 export interface NoteEmbedding {
   id: string;
   user_id: string;
-  source_type: 'note' | 'todo' | 'habit' | 'mood';
+  source_type: 'note' | 'todo' | 'habit' | 'mood' | 'sleep' | 'calendar' | 'nootropic' | 'timer' | 'event';
   source_id: string | null;
   content: string;
   embedding: number[];
