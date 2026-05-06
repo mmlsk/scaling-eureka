@@ -99,7 +99,7 @@ export interface AIAssistantRequest {
 }
 
 export interface AIAssistantResponse {
-  response: string;
+  response: ReadableStream | string;
   sources?: { type: string; content: string }[];
 }
 
