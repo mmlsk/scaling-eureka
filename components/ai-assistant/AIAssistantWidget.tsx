@@ -24,7 +24,7 @@ export function AIAssistantWidget() {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="chat" className="text-xs gap-1">
             <MessageSquare className="h-3.5 w-3.5" />
-            Chat
+            Rozmowa
           </TabsTrigger>
           <TabsTrigger value="insights" className="text-xs gap-1">
             <Lightbulb className="h-3.5 w-3.5" />

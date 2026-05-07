@@ -1,6 +1,7 @@
 'use client';
 
 import type { UIMessage } from 'ai';
+import { isToolUIPart, getToolName } from 'ai';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -54,15 +55,31 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 </details>
               );
             }
-            if (part.type.startsWith('tool-')) {
-              return (
-                <div
-                  key={`${message.id}-tool-${i}`}
-                  className="text-xs opacity-60 italic"
-                >
-                  Użyto narzędzia: {part.type.replace('tool-', '')}
-                </div>
-              );
+            if (isToolUIPart(part)) {
+              const toolName = getToolName(part);
+              const toolPart = part as { state: string; input?: unknown; output?: unknown };
+              if (toolPart.state !== 'output-available') {
+                return (
+                  <div
+                    key={`${message.id}-tool-call-${i}`}
+                    className="text-xs opacity-60 italic"
+                  >
+                    Narzędzie: {toolName}
+                    {toolPart.input != null && (
+                      <pre className="mt-1 text-[10px] opacity-80">{JSON.stringify(toolPart.input, null, 2)}</pre>
+                    )}
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    key={`${message.id}-tool-result-${i}`}
+                    className="text-xs opacity-60 italic"
+                  >
+                    Wynik: {toolPart.output != null ? JSON.stringify(toolPart.output) : ''}
+                  </div>
+                );
+              }
             }
             return null;
           })}

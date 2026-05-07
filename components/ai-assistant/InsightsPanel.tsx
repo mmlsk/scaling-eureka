@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -30,15 +30,24 @@ export function InsightsPanel() {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const fetchInsights = async () => {
+    if (isLoading) return;
+
     setIsLoading(true);
     setError(null);
+
+    // Abort any pending request
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     try {
       const response = await fetch('/api/ai/insights', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -73,7 +82,19 @@ export function InsightsPanel() {
 
       setInsights(parsedInsights);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      // Ignore abort errors
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        return;
+      }
+
+      // Map errors to Polish
+      if (err instanceof TypeError) {
+        setError('Błąd połączenia');
+      } else if (err instanceof Error && err.message.includes('500')) {
+        setError('Błąd serwera');
+      } else {
+        setError('Wystąpił błąd');
+      }
     } finally {
       setIsLoading(false);
     }

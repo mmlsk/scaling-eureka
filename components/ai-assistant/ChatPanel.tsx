@@ -52,10 +52,10 @@ export function ChatPanel() {
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
-            {status === 'streaming' && (
+            {((status as string) === 'streaming' || status === 'submitted') && (
               <div className="flex justify-start mb-3">
                 <div className="bg-muted text-muted-foreground rounded-lg rounded-bl-sm px-3 py-2 text-sm flex items-center gap-2">
-                  <span className="animate-pulse">AI pisze...</span>
+                  <span className="animate-pulse">{status === 'submitted' ? 'AI myśli...' : 'AI pisze...'}</span>
                 </div>
               </div>
             )}
@@ -72,13 +72,14 @@ export function ChatPanel() {
 
       {/* Input area */}
       <div className="border-t border-[var(--bor)] p-2">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2" aria-label="Chat z asystentem AI">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Napisz wiadomość..."
-            disabled={status !== 'ready'}
+            disabled={(status as string) === 'streaming' || status === 'submitted'}
             className="text-sm"
+            aria-label="Wiadomość dla asystenta AI"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -86,7 +87,7 @@ export function ChatPanel() {
               }
             }}
           />
-          {status === 'streaming' ? (
+          {(status as string) === 'streaming' ? (
             <Button
               type="button"
               variant="destructive"
@@ -99,7 +100,7 @@ export function ChatPanel() {
             <Button
               type="submit"
               size="sm"
-              disabled={!input.trim() || status !== 'ready'}
+              disabled={!input.trim() || status === 'streaming' || status === 'submitted'}
             >
               Wyślij
             </Button>
