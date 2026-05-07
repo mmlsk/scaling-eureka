@@ -75,7 +75,11 @@ const DEFAULT_WIDGETS: WidgetConfig[] = [
   { id: 'weather', name: 'Weather', component: 'WeatherWidget', defaultVisible: true, order: 6 },
 ];
 
-const DEFAULT_VISIBLE_WIDGETS: string[] = ['analytics', 'calendar', 'sleep', 'timer', 'todo', 'weather'];
+const DEFAULT_VISIBLE_WIDGETS: string[] = [
+  'clock', 'sleep', 'habits', 'nootropics', 'todo', 'calendar',
+  'timer', 'weather', 'stocks', 'notepad', 'analytics', 'finance',
+  'progress', 'air-quality', 'fred', 'eia', 'ai-insights',
+];
 
 const storage = {
   getItem: (name: string) => {
