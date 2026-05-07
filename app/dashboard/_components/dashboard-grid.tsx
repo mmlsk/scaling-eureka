@@ -42,6 +42,7 @@ const ProgressBars = lazy(() => import('./progress-bars'));
 const AirQualityWidget = lazy(() => import('./air-quality-widget'));
 const FREDWidget = lazy(() => import('./fred-widget'));
 const EIAWidget = lazy(() => import('./eia-widget'));
+const AIInsightsWidget = lazy(() => import('./ai-insights-widget'));
 
 function WidgetSkeleton() {
   return (
@@ -90,6 +91,7 @@ const WIDGET_REGISTRY: Record<string, ComponentType<{ id: string }>> = {
   'air-quality': wrap(AirQualityWidget),
   fred: wrap(FREDWidget),
   eia: wrap(EIAWidget),
+  'ai-insights': wrap(AIInsightsWidget),
 };
 
 /** Widget title map for DragOverlay ghost preview */
@@ -110,6 +112,7 @@ const WIDGET_TITLES: Record<string, string> = {
   'air-quality': 'Jakość powietrza',
   fred: 'FRED Makro',
   eia: 'Energia',
+  'ai-insights': 'AI Insights',
 };
 
 function WidgetGhostPreview({ widgetId }: { widgetId: string }) {
@@ -165,10 +168,16 @@ function SortableWidget({ item, isMobile }: SortableWidgetProps) {
 
 export function DashboardGrid() {
   const layout = useDashboardLayout((s) => s.layout);
+  const visibleWidgets = useDashboardLayout((s) => s.visibleWidgets);
   const setLayout = useDashboardLayout((s) => s.setLayout);
   const hydrated = useHydration();
   const isMobile = useMediaQuery('(max-width: 640px)');
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  const visibleLayout = useMemo(
+    () => layout.filter((item) => visibleWidgets.includes(item.id)),
+    [layout, visibleWidgets],
+  );
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -180,7 +189,7 @@ export function DashboardGrid() {
     useSensor(KeyboardSensor),
   );
 
-  const itemIds = useMemo(() => layout.map((w) => w.id), [layout]);
+  const itemIds = useMemo(() => visibleLayout.map((w) => w.id), [visibleLayout]);
 
   function handleDragEnd(event: DragEndEvent) {
     setActiveId(null);
@@ -217,7 +226,7 @@ export function DashboardGrid() {
     >
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div className="dashboard-grid">
-          {layout.map((item) => (
+          {visibleLayout.map((item) => (
             <SortableWidget key={item.id} item={item} isMobile={isMobile} />
           ))}
         </div>

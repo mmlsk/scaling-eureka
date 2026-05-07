@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLifeOsStore } from '@/store/useLifeOsStore';
 import { useHydration } from '@/hooks/useHydration';
+import { useAIAssistantUIStore } from '@/store/slices/ai-assistant-ui';
 import type { Palette } from '@/types/state';
 
 const PALETTES: { id: Palette; color: string; label: string }[] = [
@@ -80,6 +81,8 @@ export function Header() {
   const setPalette = useLifeOsStore((s) => s.setPalette);
   const setTheme = useLifeOsStore((s) => s.setTheme);
   const hydrated = useHydration();
+  const isAIAssistantOpen = useAIAssistantUIStore((s) => s.isOpen);
+  const setAIAssistantOpen = useAIAssistantUIStore((s) => s.setOpen);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
