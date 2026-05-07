@@ -119,8 +119,27 @@ export interface NoteEmbedding {
   created_at: string;
 }
 
+export type WidgetType =
+  | 'clock'
+  | 'sleep'
+  | 'habits'
+  | 'nootropics'
+  | 'todo'
+  | 'calendar'
+  | 'timer'
+  | 'weather'
+  | 'stocks'
+  | 'notepad'
+  | 'analytics'
+  | 'finance'
+  | 'progress'
+  | 'air-quality'
+  | 'fred'
+  | 'eia'
+  | 'ai-insights';
+
 export interface WidgetLayoutItem {
-  id: string;
+  id: WidgetType;
   w: number;
   h: number;
   x?: number;
