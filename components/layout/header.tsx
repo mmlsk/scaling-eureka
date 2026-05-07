@@ -75,6 +75,26 @@ function GearIcon() {
   );
 }
 
+
+function AIChatIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <path d="M8 10h.01M12 10h.01M16 10h.01" />
+      <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+    </svg>
+  );
+}
+
 export function Header() {
   const palette = useLifeOsStore((s) => s.palette);
   const theme = useLifeOsStore((s) => s.theme);
@@ -166,6 +186,28 @@ export function Header() {
           }}
         >
           {hydrated && (theme === 'dark' ? <SunIcon /> : <MoonIcon />)}
+        </button>
+
+
+        <button
+          type="button"
+          onClick={() => setAIAssistantOpen(!isAIAssistantOpen)}
+          aria-label="Toggle AI Assistant"
+          title="AI Assistant"
+          style={{
+            background: isAIAssistantOpen ? 'var(--primary)' : 'none',
+            border: isAIAssistantOpen ? '1px solid var(--primary)' : '1px solid transparent',
+            color: isAIAssistantOpen ? 'var(--primary-foreground)' : 'var(--txm)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '4px',
+            borderRadius: '4px',
+            fontSize: '0.8rem',
+            fontWeight: 600,
+          }}
+        >
+          AI
         </button>
 
         {/* Settings dropdown */}
