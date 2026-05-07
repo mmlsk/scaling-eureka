@@ -92,7 +92,8 @@ export default function WeatherWidget() {
       actions={actions}
     >
       {(() => {
-        const { weather, airQuality, uvData, fetchedAt } = data!
+        if (!data) return null;
+        const { weather, airQuality, uvData, fetchedAt } = data
         const cur = weather.current;
         const uvVal = airQuality?.current?.uv_index ?? uvData?.uv ?? null;
         const uvInfo = uvVal != null ? uvSeverity(uvVal) : null;

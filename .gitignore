@@ -74,3 +74,5 @@ coverage/
 tsconfig.tsbuildinfo
 *.txt
 docs/superpowers/plans/*.md
+.vercel
+.env*.local

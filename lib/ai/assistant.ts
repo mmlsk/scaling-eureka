@@ -1,5 +1,4 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { AIAssistantResponse } from '@/types/api';
 import type { SimilarityResult } from './embeddings';
 import { generateEmbedding, searchSimilar } from './embeddings';
 import { streamText } from 'ai';

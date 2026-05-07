@@ -8,8 +8,8 @@ export function generateTextRepresentation(
   switch (sourceType) {
     case 'habit': {
       const h = record as Partial<Habit>;
-      const entries = (relatedData as Partial<{ completed: boolean }[]>) || [];
-      const completedCount = entries.filter(e => e.completed).length;
+      const entries: Partial<{ completed: boolean }[]> = (relatedData as Partial<{ completed: boolean }[]>) ?? [];
+            const completedCount = entries.filter((e): e is { completed: boolean } => e != null && e.completed).length;
       const rate = entries.length > 0 ? Math.round((completedCount / entries.length) * 100) : 0;
       return `Habit: ${h.name || 'Unknown'}. Status: ${h.archived ? 'archived' : 'active'}. Completion rate: ${rate}%.`;
     }
@@ -23,7 +23,7 @@ export function generateTextRepresentation(
     }
     case 'mood': {
       const m = record as Partial<MoodEntry>;
-      const feelings = (m.feelings as string[]) || [];
+      const feelings = (m.feelings as string[]) ?? [];
       return `Mood: ${m.date || 'unknown'}. Feelings: ${feelings.join(', ')}.`;
     }
     case 'calendar': {

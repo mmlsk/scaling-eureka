@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return new Response('Unauthorized', { status: 401 });
@@ -31,5 +31,5 @@ export async function GET(request: Request) {
     temperature: 0.7,
   });
 
-  return result.toDataStreamResponse();
+  return result.toTextStreamResponse();
 }
