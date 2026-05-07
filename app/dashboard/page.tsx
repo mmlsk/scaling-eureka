@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/header';
 import { Sidebar } from '@/components/layout/sidebar';
 import WidgetControls from '@/components/layout/widget-controls';
 import { DashboardGrid } from './_components/dashboard-grid';
-import AIAssistant from '@/components/ai/ai-assistant';
+import { AIAssistantWidget } from '@/components/ai-assitant/ai-assitant-widget';
 
 export default function DashboardPage() {
   return (
@@ -17,11 +17,11 @@ export default function DashboardPage() {
           <div style={{ flex: 1, overflow: 'auto', padding: '0.5rem' }}>
             <WidgetControls />
             <Suspense fallback={<div className="skeleton" style={{ height: '200px', width: '100%' }} />}>
-            <DashboardGrid />
+              <DashboardGrid />
             </Suspense>
           </div>
-          <AIAssistant />
         </main>
+        <AIAssistantWidget />
       </div>
     </div>
   );

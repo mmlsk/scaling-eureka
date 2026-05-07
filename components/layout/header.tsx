@@ -76,24 +76,6 @@ function GearIcon() {
 }
 
 
-function AIChatIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="2" y="3" width="20" height="14" rx="2" />
-      <path d="M8 10h.01M12 10h.01M16 10h.01" />
-      <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-    </svg>
-  );
-}
 
 export function Header() {
   const palette = useLifeOsStore((s) => s.palette);

@@ -4,38 +4,43 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('@ai-sdk/react', () => ({
   useChat: () => ({
     messages: [],
-    input: '',
-    handleInputChange: vi.fn(),
-    handleSubmit: vi.fn(),
-    isLoading: false,
-    append: vi.fn(),
+    sendMessage: vi.fn(),
+    status: 'ready',
+    error: undefined,
+    setMessages: vi.fn(),
+    reload: vi.fn(),
+    stop: vi.fn(),
+    resumeStream: vi.fn(),
+    addToolResult: vi.fn(),
+    addToolOutput: vi.fn(),
+    addToolApprovalResponse: vi.fn(),
   }),
 }));
 
-import { useAIChat } from './use-ai-chat';
+import { useAIchat } from './use-ai-chat';
 
-describe('useAIChat', () => {
-  it('should export useAIChat hook', () => {
-    expect(typeof useAIChat).toBe('function');
+describe('useAIchat', () => {
+  it('should export useAIchat hook', () => {
+    expect(typeof useAIchat).toBe('function');
   });
 
   it('should return messages array', () => {
-    const { messages } = useAIChat();
+    const { messages } = useAIchat();
     expect(Array.isArray(messages)).toBe(true);
   });
 
-  it('should return input string', () => {
-    const { input } = useAIChat();
-    expect(typeof input).toBe('string');
+  it('should return sendMessage function', () => {
+    const { sendMessage } = useAIchat();
+    expect(typeof sendMessage).toBe('function');
   });
 
-  it('should return handleSubmit function', () => {
-    const { handleSubmit } = useAIChat();
-    expect(typeof handleSubmit).toBe('function');
+  it('should return status', () => {
+    const { status } = useAIchat();
+    expect(['streaming', 'ready', 'submitted', 'error']).toContain(status);
   });
 
-  it('should return append function', () => {
-    const { append } = useAIChat();
-    expect(typeof append).toBe('function');
+  it('should return setMessages function', () => {
+    const { setMessages } = useAIchat();
+    expect(typeof setMessages).toBe('function');
   });
 });

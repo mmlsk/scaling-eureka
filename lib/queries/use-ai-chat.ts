@@ -2,36 +2,11 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import type { Message } from 'ai';
+import type { UseChatHelpers, UIMessage } from '@ai-sdk/react';
 
-export interface UseAIChatReturn {
-  messages: Message[];
-  input: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent) => void;
-  isLoading: boolean;
-  append: (message: { role: 'user'; content: string }) => void;
-}
+export type UseAIchatReturn = UseChatHelpers<UIMessage>;
 
-export function useAIChat(): UseAIChatReturn {
-  const {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-    append,
-  } = useChat({
-    api: '/api/ai/chat',
-    initialMessages: [],
+export function useAIchat(): UseAIchatReturn {
+  return useChat({
   });
-
-  return {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-    append,
-  };
 }
