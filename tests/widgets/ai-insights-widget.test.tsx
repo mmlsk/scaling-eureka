@@ -36,7 +36,7 @@ afterEach(() => {
 describe('AIInsightsWidget', () => {
   it('renders without crashing', () => {
     renderWithProviders(<AIInsightsWidget />);
-    expect(screen.getByLabelText('Widget: AI Insights')).toBeInTheDocument();
+    expect(screen.getByLabelText('Widget: Spostrzeżenia AI')).toBeInTheDocument();
   });
 
   it('displays insights', () => {

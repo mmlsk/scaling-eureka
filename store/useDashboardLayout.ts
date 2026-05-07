@@ -64,15 +64,17 @@ const DEFAULT_LAYOUT: WidgetLayoutItem[] = [
   { id: 'air-quality', w: 2, h: 2 },
   { id: 'fred', w: 2, h: 2 },
   { id: 'eia', w: 2, h: 2 },
+  { id: 'ai-insights', w: 2, h: 2 },
 ];
 
 const DEFAULT_WIDGETS: WidgetConfig[] = [
-  { id: 'analytics', name: 'Analytics', component: 'AnalyticsWidget', defaultVisible: true, order: 1 },
-  { id: 'calendar', name: 'Calendar', component: 'CalendarWidget', defaultVisible: true, order: 2 },
-  { id: 'sleep', name: 'Sleep', component: 'SleepWidget', defaultVisible: true, order: 3 },
+  { id: 'analytics', name: 'Analityka', component: 'AnalyticsWidget', defaultVisible: true, order: 1 },
+  { id: 'calendar', name: 'Kalendarz', component: 'CalendarWidget', defaultVisible: true, order: 2 },
+  { id: 'sleep', name: 'Sen', component: 'SleepWidget', defaultVisible: true, order: 3 },
   { id: 'timer', name: 'Timer', component: 'TimerWidget', defaultVisible: true, order: 4 },
   { id: 'todo', name: 'Todo', component: 'TodoWidget', defaultVisible: true, order: 5 },
-  { id: 'weather', name: 'Weather', component: 'WeatherWidget', defaultVisible: true, order: 6 },
+  { id: 'weather', name: 'Pogoda', component: 'WeatherWidget', defaultVisible: true, order: 6 },
+  { id: 'ai-insights', name: 'Spostrzeżenia AI', component: 'AIInsightsWidget', defaultVisible: true, order: 7 },
 ];
 
 const DEFAULT_VISIBLE_WIDGETS: string[] = [

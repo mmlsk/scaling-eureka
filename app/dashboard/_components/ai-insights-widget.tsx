@@ -16,7 +16,7 @@ export default function AIInsightsWidget() {
   return (
     <WidgetShell
       id="ai-insights"
-      title="AI Insights"
+      title="Spostrzeżenia AI"
       isLoading={isLoading}
       error={error?.message || null}
       actions={actions}

@@ -112,7 +112,7 @@ const WIDGET_TITLES: Record<string, string> = {
   'air-quality': 'Jakość powietrza',
   fred: 'FRED Makro',
   eia: 'Energia',
-  'ai-insights': 'AI Insights',
+  'ai-insights': 'Spostrzeżenia AI',
 };
 
 function WidgetGhostPreview({ widgetId }: { widgetId: string }) {
