@@ -1,7 +1,12 @@
 // app/api/ai/insights/route.ts
 import { streamText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai';
 import { createClient } from '@/lib/supabase/server';
+
+const openrouter = createOpenAI({
+  baseURL: 'https://openrouter.ai/api/v1',
+  apiKey: process.env.OPENROUTER_API_KEY!,
+});
 
 export const runtime = 'edge';
 
@@ -25,7 +30,7 @@ export async function GET(_request: Request) {
   const dataSummary = JSON.stringify({ habits, todos, sleepLogs, moodEntries }, null, 2);
 
   const result = streamText({
-    model: openai('gpt-4o-mini'),
+    model: openrouter('google/gemini-2.0-flash-001'),
     system: `You are a personal AI assistant. Analyze the user's data and provide personalized insights, pattern recognition, and smart suggestions. Be concise and actionable.`,
     prompt: `Analyze this user data and provide insights:\n${dataSummary}`,
     temperature: 0.7,
