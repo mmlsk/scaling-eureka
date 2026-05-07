@@ -5,7 +5,7 @@ import { Header } from '@/components/layout/header';
 import { Sidebar } from '@/components/layout/sidebar';
 import WidgetControls from '@/components/layout/widget-controls';
 import { DashboardGrid } from './_components/dashboard-grid';
-import { AIAssistantWidget } from '@/components/ai-assitant/ai-assitant-widget';
+import { AIAssistantWidget } from '@/components/ai-assistant/AIAssistantWidget';
 
 export default function DashboardPage() {
   return (
