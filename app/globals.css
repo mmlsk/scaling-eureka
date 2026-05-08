@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:is([data-theme="dark"] *));
 
+html[data-theme] * {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
 /* ══════════════════════════════════════════════════
    PALETTE & THEME CSS VARIABLES (from vanilla)
    ══════════════════════════════════════════════════ */
@@ -280,17 +284,21 @@ button:focus:not(:focus-visible) {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 0.75rem;
   padding: 0.75rem;
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 768px) {
   .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 640px) {
-  .dashboard-grid { grid-template-columns: 1fr; }
+@media (min-width: 1024px) {
+  .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1280px) {
+  .dashboard-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 /* ══════════════════════════════════════════════════
@@ -436,11 +444,22 @@ body::before {
 .dragging {
   opacity: 0.5;
   z-index: 50;
+  @apply scale-105 shadow-2xl;
 }
 
 .drag-overlay {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   border: 1px solid var(--a1);
+  @apply animate-in zoom-in-95;
+}
+
+.drop-indicator {
+  position: absolute;
+  height: 4px;
+  background: var(--a1);
+  border-radius: 2px;
+  margin: 4px 0;
+  transition: opacity 0.2s ease;
 }
 
 /* ══════════════════════════════════════════════════

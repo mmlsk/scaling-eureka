@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { WidgetShell } from '@/components/ui/widget-shell';
 import { Badge } from '@/components/ui/badge';
+import { toast } from "@/lib/utils/toast";
 
 const useTodosStore = create<TodosSlice>()(
   persist(createTodosSlice, { name: 'life-os-todos' }),
@@ -40,6 +41,7 @@ export default function TodoWidget() {
     const trimmed = newText.trim();
     if (!trimmed) return;
     addTodo(trimmed, priority);
+    toast.success("Zadanie dodane");
     setNewText('');
   }, [newText, priority, addTodo]);
 
@@ -71,7 +73,7 @@ export default function TodoWidget() {
           {doneCount}/{todos.length}
         </Badge>
         {doneCount > 0 && (
-          <Button variant="outline" size="sm" onClick={archiveDone} aria-label="Archiwizuj wykonane">
+          <Button variant="outline" size="sm" onClick={() => { archiveDone(); toast.success("Wykonane zadania zarchiwizowane"); }} aria-label="Archiwizuj wykonane">
             Archiwizuj
           </Button>
         )}
@@ -126,7 +128,10 @@ export default function TodoWidget() {
             <div
               key={`${todo.t}-${todo.origIdx}`}
               className="flex items-center gap-2 py-1 cursor-pointer border-b border-border"
-              onClick={() => toggleTodo(todo.origIdx)}
+              onClick={() => {
+                toggleTodo(todo.origIdx);
+                toast.success("Zadanie zaktualizowane");
+              }}
               role="button"
               tabIndex={0}
               aria-label={`${todo.t} - priorytet ${PRIORITY_LABELS[todo.p]}, ${todo.done ? 'wykonane' : 'do zrobienia'}`}
@@ -134,6 +139,7 @@ export default function TodoWidget() {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   toggleTodo(todo.origIdx);
+                  toast.success("Zadanie zaktualizowane");
                 }
               }}
             >

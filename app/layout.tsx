@@ -4,6 +4,7 @@ import { ThemeProvider, ThemeScript } from '@/components/providers/theme-provide
 import { QueryProvider } from '@/components/providers/query-provider';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Toaster } from "@/components/ui/sonner";
 import './globals.css';
 
 const inter = Inter({
@@ -57,11 +58,20 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded"
+        >
+          Przejdź do treści
+        </a>
         <QueryProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <main id="main-content">{children}</main>
+          </ThemeProvider>
         </QueryProvider>
         <Analytics />
         <SpeedInsights />
+        <Toaster />
       </body>
     </html>
   );

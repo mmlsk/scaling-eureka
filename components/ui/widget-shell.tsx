@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -27,7 +28,7 @@ export function WidgetShell({
 }: WidgetShellProps) {
   return (
     <Card
-      className={className}
+      className={cn(className)}
       aria-label={`Widget: ${title}`}
       data-widget-id={id}
       size="sm"
@@ -48,15 +49,25 @@ export function WidgetShell({
       </CardHeader>
       <CardContent role="region" aria-busy={isLoading || undefined}>
         {isLoading ? (
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-3/5" />
-            <Skeleton className="h-4 w-4/5" />
-            <Skeleton className="h-4 w-2/5" />
+          <div className="space-y-3">
+            {/* Polish: Enhanced loading state with header + content skeletons */}
+            {/* Header skeleton simulating widget title */}
+            <Skeleton variant="text" className="h-6 w-32" />
+            {/* Content skeletons with varying widths */}
+            <Skeleton variant="text" className="h-4 w-full" />
+            <Skeleton variant="text" className="h-4 w-5/6" />
+            <Skeleton variant="text" className="h-4 w-3/4" />
           </div>
         ) : error ? (
           <p className="text-sm text-destructive" role="alert">{error}</p>
         ) : (
-          children
+          <div
+            data-loading={isLoading}
+            className="hover:scale-[1.02] transition-transform duration-200 animate-in fade-in duration-300"
+          >
+            {/* Polish: Fade-in transition when content loads */}
+            {children}
+          </div>
         )}
       </CardContent>
     </Card>

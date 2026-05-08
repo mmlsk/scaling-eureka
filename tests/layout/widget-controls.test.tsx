@@ -27,11 +27,11 @@ describe('WidgetControls', () => {
 
   it('shows add button for hidden widgets', () => {
     render(<WidgetControls />);
-    expect(screen.getByRole('button', { name: /add todo/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /dodaj/i })).toBeInTheDocument();
   });
 
   it('shows reset layout button', () => {
     render(<WidgetControls />);
-    expect(screen.getByRole('button', { name: /reset layout/i })).toBeInTheDocument();
+    expect(screen.getByText('Resetuj układ')).toBeInTheDocument();
   });
 });
