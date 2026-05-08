@@ -24,9 +24,12 @@ import { useDashboardLayout } from '@/store/useDashboardLayout';
 import { useHydration } from '@/hooks/useHydration';
 import { useMediaQuery } from '@/lib/hooks/use-media-query';
 import type { WidgetLayoutItem } from '@/types/database';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from '@/lib/utils/toast';
 
 /* ─── Lazy-loaded widgets ─── */
-const ClockWidget = lazy(() => import('./clock-widget'));
+	const ClockWidget = lazy(() => import('./clock-widget'));
 const SleepWidget = lazy(() => import('./sleep-widget'));
 const HabitsWidget = lazy(() => import('./habits-widget'));
 const NootropicsWidget = lazy(() => import('./nootropics-widget'));
@@ -44,10 +47,22 @@ const FREDWidget = lazy(() => import('./fred-widget'));
 const EIAWidget = lazy(() => import('./eia-widget'));
 const AIInsightsWidget = lazy(() => import('./ai-insights-widget'));
 
+/** Polish: Enhanced widget-shaped skeleton for Suspense fallback */
 function WidgetSkeleton() {
   return (
     <div className="widget">
-      <div className="skeleton" style={{ height: '80px', width: '100%' }} />
+      <Card size="sm">
+        <CardHeader className="py-0">
+          <Skeleton variant="text" className="h-6 w-32" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Skeleton variant="text" className="h-4 w-full" />
+            <Skeleton variant="text" className="h-4 w-5/6" />
+            <Skeleton variant="text" className="h-4 w-3/4" />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -134,7 +149,7 @@ interface SortableWidgetProps {
   isMobile: boolean;
 }
 
-function SortableWidget({ item, isMobile }: SortableWidgetProps) {
+function SortableWidget({ item, isMobile, isOver }: SortableWidgetProps & { isOver?: boolean }) {
   const {
     attributes,
     listeners,
@@ -158,10 +173,13 @@ function SortableWidget({ item, isMobile }: SortableWidgetProps) {
   const WidgetComponent = WIDGET_REGISTRY[item.id] ?? PlaceholderWidget;
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <Suspense fallback={<WidgetSkeleton />}>
-        <WidgetComponent id={item.id} />
-      </Suspense>
+    <div ref={setNodeRef} style={{ ...style, position: 'relative' }} {...attributes} {...listeners}>
+      {isOver && !isDragging && <div className="drop-indicator" />}
+      <div className="animate-in slide-in-from-bottom-4 fade-in duration-300">
+        <Suspense fallback={<WidgetSkeleton />}>
+          <WidgetComponent id={item.id} />
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -173,6 +191,7 @@ export function DashboardGrid() {
   const hydrated = useHydration();
   const isMobile = useMediaQuery('(max-width: 640px)');
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [overId, setOverId] = useState<string | null>(null);
 
   const visibleLayout = useMemo(
     () => layout.filter((item) => visibleWidgets.includes(item.id)),
@@ -193,6 +212,7 @@ export function DashboardGrid() {
 
   function handleDragEnd(event: DragEndEvent) {
     setActiveId(null);
+    setOverId(null);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -202,14 +222,27 @@ export function DashboardGrid() {
 
     const reordered = arrayMove(layout, oldIndex, newIndex);
     setLayout(reordered);
+    toast.success("Układ zapisany");
   }
 
   if (!hydrated) {
     return (
-      <div className="dashboard-grid">
-        {Array.from({ length: 12 }).map((_, i) => (
+      <div className="dashboard-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
+        {/* Polish: Render 8 skeleton widgets with card shapes */}
+        {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="widget">
-            <div className="skeleton" style={{ height: '80px', width: '100%' }} />
+            <Card size="sm">
+              <CardHeader className="py-0">
+                <Skeleton variant="text" className="h-6 w-32" />
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Skeleton variant="text" className="h-4 w-full" />
+                  <Skeleton variant="text" className="h-4 w-5/6" />
+                  <Skeleton variant="text" className="h-4 w-3/4" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         ))}
       </div>
@@ -222,12 +255,13 @@ export function DashboardGrid() {
       collisionDetection={closestCenter}
       onDragStart={(e) => setActiveId(String(e.active.id))}
       onDragEnd={handleDragEnd}
-      onDragCancel={() => setActiveId(null)}
+      onDragOver={(e) => setOverId(e.over ? String(e.over.id) : null)}
+      onDragCancel={() => { setActiveId(null); setOverId(null); }}
     >
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
-        <div className="dashboard-grid">
+        <div className="dashboard-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 p-3">
           {visibleLayout.map((item) => (
-            <SortableWidget key={item.id} item={item} isMobile={isMobile} />
+            <SortableWidget key={item.id} item={item} isMobile={isMobile} isOver={overId === item.id} />
           ))}
         </div>
       </SortableContext>

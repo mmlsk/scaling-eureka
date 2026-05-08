@@ -14,7 +14,7 @@ export default function DashboardPage() {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <Sidebar />
         <main style={{ flex: 1, overflow: 'auto', display: 'flex' }}>
-          <div style={{ flex: 1, overflow: 'auto', padding: '0.5rem' }}>
+          <div style={{ flex: 1, overflow: 'auto', padding: '0.5rem' }} className="animate-in fade-in duration-500">
             <WidgetControls />
             <Suspense fallback={<div className="skeleton" style={{ height: '200px', width: '100%' }} />}>
               <DashboardGrid />

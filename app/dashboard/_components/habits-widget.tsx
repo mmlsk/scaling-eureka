@@ -8,6 +8,7 @@ import { createHabitsSlice } from '@/store/slices/habits';
 import { useHydration } from '@/hooks/useHydration';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { toast } from "@/lib/utils/toast";
 
 const useHabitsStore = create<HabitsSlice>()(
   persist(createHabitsSlice, { name: 'life-os-habits' }),
@@ -126,7 +127,10 @@ export default function HabitsWidget() {
                       <button
                         key={dayIdx}
                         className={`habit-dot ${isDone ? 'done' : ''} ${isToday ? 'cur' : ''}`}
-                        onClick={() => toggleHabitDay(hIdx, offset)}
+                        onClick={() => {
+                          toggleHabitDay(hIdx, offset);
+                          toast.success("Nawyk zaktualizowany");
+                        }}
                         title={`${offset === 0 ? 'Dzis' : `${offset}d temu`}`}
                         aria-label={`${habit.n}, ${offset === 0 ? 'dzis' : `${offset} dni temu`}: ${isDone ? 'zrobione' : 'niezrobione'}`}
                       />

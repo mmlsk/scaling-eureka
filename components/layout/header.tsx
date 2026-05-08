@@ -199,6 +199,8 @@ export function Header() {
             onClick={() => setSettingsOpen((prev) => !prev)}
             aria-label="Settings"
             title="Settings"
+            aria-controls="settings-panel"
+            aria-expanded={settingsOpen}
             style={{
               background: 'none',
               border: 'none',
@@ -214,6 +216,8 @@ export function Header() {
 
           {settingsOpen && (
             <div
+              id="settings-panel"
+              role="menu"
               style={{
                 position: 'absolute',
                 right: 0,

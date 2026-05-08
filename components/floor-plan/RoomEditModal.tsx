@@ -53,9 +53,9 @@ export function RoomEditModal({ room, onClose }: RoomEditModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="room-edit-title">
       <div className="bg-[#1e1e2e] rounded-lg p-4 w-80" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-sm font-medium mb-4">Edytuj pokój</h3>
+        <h3 id="room-edit-title" className="text-sm font-medium mb-4">Edytuj pokój</h3>
         <div className="space-y-3">
           <div>
             <label className="text-xs text-[#888]">Nazwa</label>
@@ -108,6 +108,7 @@ export function RoomEditModal({ room, onClose }: RoomEditModalProps) {
               disabled={uploading}
               className="mt-1 px-2 py-1 text-xs bg-[#2a2a3e] rounded hover:bg-[#3a3a4e] transition-colors"
             >
+              {uploading && <span className="inline-block animate-spin">⟳</span>}
               {uploading ? 'Wysyłanie...' : room.image_url ? 'Zmień obraz' : 'Dodaj obraz'}
             </button>
           </div>
